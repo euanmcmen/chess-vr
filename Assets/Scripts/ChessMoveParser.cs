@@ -21,6 +21,10 @@ public static class ChessMoveParser
 {
     private const string PawnMoveRegex = "^[a-h][1-9]$";
 
+    private const string MoveRegex = "^(?'piece'[NBRQK]?)(?'originCol'[a-h]?)(?'originRow'[1-9]?)(?'isCapture'[xX]?)(?'destNotation'[a-h][1-9])(?'isCheckCheckmate'[+#]?)$";
+
+    // https://regex101.com/r/nLXEql/1
+
     private static readonly Dictionary<char, ChessPieceType> ChessPieceLetterMap = new Dictionary<char, ChessPieceType>()
     {
         { 'N', ChessPieceType.Knight },
@@ -36,11 +40,16 @@ public static class ChessMoveParser
         {
             return ResolveCastleNotation(team, notation);
         }
+        
+        return ResolveChessMoveNotation(team, notation);
+    }
 
-        if (IsPawnMove(notation))
-        {
-            return ResolvePawnMove(team, notation);
-        }
+    private static List<ChessMove> ResolveChessMoveNotation(ChessPieceTeam team, string notation)
+    {
+        //if (IsPawnMove(notation))
+        //{
+        //    return ResolvePawnMove(team, notation);
+        //}
 
         // If capture notation, add a capture event on the target square.
 
@@ -73,23 +82,15 @@ public static class ChessMoveParser
 
         var kingMove = new ChessMove
         {
-            //DestinationColumnLetter = ChessBoardColumnLetter.g,
             DestinationRowNumber = rowNumber,
-            //DestinationNotation = $"g{rowNumber}",
-            //DisambiguationOriginColumnLetter = ChessBoardColumnLetter.e,
             DisambiguationOriginRowNumber = rowNumber,
-            //DisambiguationOriginNotation = $"e{rowNumber}",
             PieceType = ChessPieceType.King
         };
 
         var rookMove = new ChessMove
         {
-            //DestinationColumnLetter = ChessBoardColumnLetter.f,
             DestinationRowNumber = rowNumber,
-            //DestinationNotation = $"f{rowNumber}",
-            //DisambiguationOriginColumnLetter = ChessBoardColumnLetter.h,
             DisambiguationOriginRowNumber = rowNumber,
-            //DisambiguationOriginNotation = $"h{rowNumber}",
             PieceType = ChessPieceType.Rook
         };
 
@@ -99,23 +100,17 @@ public static class ChessMoveParser
             kingMove = new ChessMove
             {
                 DestinationColumnLetter = ChessBoardColumnLetter.g,
-                //DestinationRowNumber = rowNumber,
-                DestinationNotation = $"g{rowNumber}",
+                DestinationNotation = $"{ChessBoardColumnLetter.g}{rowNumber}",
                 DisambiguationOriginColumnLetter = ChessBoardColumnLetter.e,
-                //DisambiguationOriginRowNumber = rowNumber,
-                DisambiguationOriginNotation = $"e{rowNumber}",
-                //PieceType = ChessPieceType.King
+                DisambiguationOriginNotation = $"{ChessBoardColumnLetter.e}{rowNumber}",
             };
 
             rookMove = new ChessMove
             {
                 DestinationColumnLetter = ChessBoardColumnLetter.f,
-                //DestinationRowNumber = rowNumber,
-                DestinationNotation = $"f{rowNumber}",
+                DestinationNotation = $"{ChessBoardColumnLetter.f}{rowNumber}",
                 DisambiguationOriginColumnLetter = ChessBoardColumnLetter.h,
-                //DisambiguationOriginRowNumber = rowNumber,
-                DisambiguationOriginNotation = $"h{rowNumber}",
-                //PieceType = ChessPieceType.Rook
+                DisambiguationOriginNotation = $"{ChessBoardColumnLetter.h}{rowNumber}",
             };
 
         }
@@ -126,23 +121,17 @@ public static class ChessMoveParser
             kingMove = new ChessMove
             {
                 DestinationColumnLetter = ChessBoardColumnLetter.c,
-                //DestinationRowNumber = rowNumber,
-                DestinationNotation = $"c{rowNumber}",
+                DestinationNotation = $"{ChessBoardColumnLetter.c}{rowNumber}",
                 DisambiguationOriginColumnLetter = ChessBoardColumnLetter.e,
-                //DisambiguationOriginRowNumber = rowNumber,
-                DisambiguationOriginNotation = $"e{rowNumber}",
-                //PieceType = ChessPieceType.King
+                DisambiguationOriginNotation = $"{ChessBoardColumnLetter.e}{rowNumber}",
             };
 
             rookMove = new ChessMove
             {
                 DestinationColumnLetter = ChessBoardColumnLetter.d,
-                //DestinationRowNumber = rowNumber,
-                DestinationNotation = $"f{rowNumber}",
+                DestinationNotation = $"{ChessBoardColumnLetter.d}{rowNumber}",
                 DisambiguationOriginColumnLetter = ChessBoardColumnLetter.a,
-                //DisambiguationOriginRowNumber = rowNumber,
-                DisambiguationOriginNotation = $"a{rowNumber}",
-                //PieceType = ChessPieceType.Rook
+                DisambiguationOriginNotation = $"{ChessBoardColumnLetter.a}{rowNumber}",
             };
         }
 
@@ -153,29 +142,29 @@ public static class ChessMoveParser
         return result;
     }
 
-    private static List<ChessMove> ResolvePawnMove(ChessPieceTeam team, string notation)
-    {
-        // e4
-        // f2
-        // a6
+    //private static List<ChessMove> ResolvePawnMove(ChessPieceTeam team, string notation)
+    //{
+    //    // e4
+    //    // f2
+    //    // a6
 
-        var result = new List<ChessMove>();
+    //    var result = new List<ChessMove>();
 
-        var positionNotation = GetDestinationPosition(notation);
-        var positionRow = GetDestinationRowNumberFromNotation(positionNotation);
-        var positionColumn = GetDestinationColumnLetterFromNotation(positionNotation);
+    //    var positionNotation = GetDestinationPosition(notation);
+    //    var positionRow = GetDestinationRowNumberFromNotation(positionNotation);
+    //    var positionColumn = GetDestinationColumnLetterFromNotation(positionNotation);
 
-        result.Add(new ChessMove
-        {
-            DestinationColumnLetter = positionColumn,
-            DestinationRowNumber = positionRow,
-            DestinationNotation = positionNotation,
-            DisambiguationOriginColumnLetter= positionColumn,
-            PieceType = ChessPieceType.Pawn
-        });
+    //    result.Add(new ChessMove
+    //    {
+    //        DestinationColumnLetter = positionColumn,
+    //        DestinationRowNumber = positionRow,
+    //        DestinationNotation = positionNotation,
+    //        DisambiguationOriginColumnLetter= positionColumn,
+    //        PieceType = ChessPieceType.Pawn
+    //    });
 
-        return result;
-    }
+    //    return result;
+    //}
 
 
     private static int GetCastleRowNumberForTeam(ChessPieceTeam team)
