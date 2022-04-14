@@ -1,3 +1,4 @@
+using Assets.Scripts.Parser;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -91,6 +92,11 @@ public class BoardScript : MonoBehaviour
     {
     }
 
+    public GameObject GetTileByNotation(string notation)
+    {
+        return transform.Find(notation.ToLower()).gameObject;
+    }
+
     private IEnumerator TurnLoop()
     {
         yield return StartCoroutine(HandleTurn());
@@ -124,40 +130,42 @@ public class BoardScript : MonoBehaviour
             PieceScript piece = null;
 
             // If we have a fully disambiguated move, use the piece on that origin tile.
-            if (!string.IsNullOrEmpty(move.DisambiguationOriginNotation))
+            // A partially disambiguated move contains only the letter.
+            if (move.DisambiguationOriginBoardPosition != null)
             {
-                piece = transform.GetComponentsInChildren<PieceScript>()
-                    .Single(x => x.Team == team && x.Type == move.PieceType && x.CurrentPositionNotation == move.DisambiguationOriginNotation);
-            }
+                if (!move.DisambiguationOriginBoardPosition.IsPartialNotation)
+                {
+                    piece = transform.GetComponentsInChildren<PieceScript>()
+                        .Single(x => TeamAndTypeMatch(x, team, move.PieceType) 
+                            && x.CurrentBoardPosition.Notation == move.DisambiguationOriginBoardPosition.Notation);
+                }
+                else
+                {
+                    piece = transform.GetComponentsInChildren<PieceScript>()
+                        .Single(x => TeamAndTypeMatch(x, team, move.PieceType) 
+                            && x.CurrentBoardPosition.ColumnLetter == move.DisambiguationOriginBoardPosition.ColumnLetter);
+                }
 
-            //If we have a partially disambiguated move, use the piece on that row or column.
-            else if (move.DisambiguationOriginColumnLetter != ChessBoardColumnLetter.None)
-            {
-                piece = transform.GetComponentsInChildren<PieceScript>()
-                    .Single(x => x.Team == team && x.Type == move.PieceType && x.CurrentPositionColumnLetter == move.DisambiguationOriginColumnLetter);
-            }
-            else if (move.DisambiguationOriginRowNumber != 0)
-            {
-                piece = transform.GetComponentsInChildren<PieceScript>()
-                    .Single(x => x.Team == team && x.Type == move.PieceType && x.CurrentPositionRowNumber == move.DisambiguationOriginRowNumber);
             }
 
             //If we have no disambiguation, find the piece for which the move is valid.
             else
             {
                 piece = transform.GetComponentsInChildren<PieceScript>()
-                    .Single(x => x.Team == team && x.Type == move.PieceType && IsMoveValid(team, x, move));
+                    .Single(x => TeamAndTypeMatch(x, team, move.PieceType) && IsMoveValid(team, x, move));
             }
 
-            yield return StartCoroutine(piece.HandleMovement(move.DestinationNotation));
+            yield return StartCoroutine(piece.HandleMovement(move.DestinationBoardPosition.Notation));
         }
+    }
+
+    private static bool TeamAndTypeMatch(PieceScript pieceScript, ChessPieceTeam team, ChessPieceType type)
+    {
+        return pieceScript.Team == team && pieceScript.Type == type;
     }
 
     private bool IsMoveValid(ChessPieceTeam team, PieceScript piece, ChessMove move)
     {
-        //if (!HasLineOfSight(team, piece, move))
-        //    return false;
-
         if (move.PieceType == ChessPieceType.Pawn)
         {
             return IsPawnMoveValid(team, piece, move);
@@ -187,102 +195,55 @@ public class BoardScript : MonoBehaviour
         return false;
     }
 
-    //private bool HasLineOfSight(ChessPieceTeam team, PieceScript piece, ChessMove move)
-    //{
-    //    // Return true if move.IsJump is true.  This is true for Knights and Castle-move instructions.
-
-    //    //Fire a ray cast from the piece to the destination tile.  Return whether the ray hits a piece on the same team.
-    //    var currentPosition = piece.transform.position;
-    //    var targetTile = GetTileByNotation(move.DestinationNotation);
-
-    //    //var targetPosition = new Vector3(targetTile.transform.position.x - targetTile.transform.localScale.x, 
-    //    //    currentPosition.y, 
-    //    //    targetTile.transform.position.z - targetTile.transform.localScale.z);
-
-    //    var targetPosition = new Vector3(targetTile.transform.position.x, targetTile.transform.position.y + 0.1f, targetTile.transform.position.z);
-
-    //    var direction = targetPosition - currentPosition;
-    //    //var distance = Vector3.Distance(currentPosition, targetPosition);
-    //    //var safeDistance = distance - targetTile.transform.localScale.x;
-        
-    //    var ray = new Ray(piece.transform.position, direction);
-
-    //    var hits = Physics.SphereCastAll(ray, 1);
-
-    //    var result = true;
-
-    //    foreach (var hit in hits)
-    //    {
-    //        var hitPiece = hit.collider.gameObject.GetComponent<PieceScript>();
-
-    //        if (hitPiece == null)
-    //            continue;
-
-    //        result = false;
-    //    }
-
-    //    return result;
-    //}
-
     //
     // NOTE
     //
     // This only works for pawn movement instructions where it moves forwards.
-    // Pawn captures diagonally.
-    // Pawn captures should 
     private bool IsPawnMoveValid(ChessPieceTeam team, PieceScript piece, ChessMove move)
     {
-        if (move.DestinationColumnLetter != piece.CurrentPositionColumnLetter)
+        if (move.DestinationBoardPosition.ColumnLetter != piece.CurrentBoardPosition.ColumnLetter)
             return false;
 
         switch (team)
         {
             case ChessPieceTeam.Light:
                 // A pawn on e2 can move to e3 or e4.
-                return piece.CurrentPositionRowNumber == (move.DestinationRowNumber - 1) || piece.CurrentPositionRowNumber == (move.DestinationRowNumber - 2);
+                return piece.CurrentBoardPosition.RowNumber == (move.DestinationBoardPosition.RowNumber - 1) || piece.CurrentBoardPosition.RowNumber == (move.DestinationBoardPosition.RowNumber - 2);
             case ChessPieceTeam.Dark:
                 // A pawn on e7 can move to e6 or e5.
-                return piece.CurrentPositionRowNumber == (move.DestinationRowNumber + 1) || piece.CurrentPositionRowNumber == (move.DestinationRowNumber + 2);
+                return piece.CurrentBoardPosition.RowNumber == (move.DestinationBoardPosition.RowNumber + 1) || piece.CurrentBoardPosition.RowNumber == (move.DestinationBoardPosition.RowNumber + 2);
         }
 
         return false;
     }
 
-    public bool IsKnightMoveValid(ChessPieceTeam team, PieceScript piece, ChessMove move)
+    private bool IsKnightMoveValid(ChessPieceTeam team, PieceScript piece, ChessMove move)
     {
-        // Two increments of a row, one increment of a column.
-        // Two increments of a column, one increment of a row.
-
-        var a = Math.Abs(move.DestinationRowNumber - piece.CurrentPositionRowNumber);
-        var b = Math.Abs((int)move.DestinationColumnLetter - (int)piece.CurrentPositionColumnLetter);
-        return (a == 2 && b == 1) || (a == 1 && b == 2);
+        var distance = GetAbsoluteBoardDistance(piece.CurrentBoardPosition, move.DestinationBoardPosition);
+        return (distance.x == 2 && distance.y == 1) || (distance.x == 1 && distance.y == 2);
     }
 
-    public bool IsBishopMoveValid(ChessPieceTeam team, PieceScript piece, ChessMove move)
+    private bool IsBishopMoveValid(ChessPieceTeam team, PieceScript piece, ChessMove move)
     {
-        var a = Math.Abs(move.DestinationRowNumber - piece.CurrentPositionRowNumber);
-        var b = Math.Abs((int)move.DestinationColumnLetter - (int)piece.CurrentPositionColumnLetter);
-        return a == b;
+        var distance = GetAbsoluteBoardDistance(piece.CurrentBoardPosition, move.DestinationBoardPosition);
+        return distance.x == distance.y;
     }
 
-    public bool IsRoyalMoveValid(ChessPieceTeam team, PieceScript piece, ChessMove move)
+    private bool IsRookMoveValid(ChessPieceTeam team, PieceScript piece, ChessMove move)
     {
-        //var a = Math.Abs(move.DestinationRowNumber - piece.CurrentPositionRowNumber);
-        //var b = Math.Abs((int)move.DestinationColumnLetter - (int)piece.CurrentPositionColumnLetter);
-        //return a == 1 || a == 2 || b == 1 || b == 2;
+        var distance = GetAbsoluteBoardDistance(piece.CurrentBoardPosition, move.DestinationBoardPosition);
+        return (distance.x > 0 && distance.y == 0) || (distance.y > 0 && distance.x == 0);
+    }
 
+    private bool IsRoyalMoveValid(ChessPieceTeam team, PieceScript piece, ChessMove move)
+    {
         return true;
     }
 
-    public bool IsRookMoveValid(ChessPieceTeam team, PieceScript piece, ChessMove move)
+    private Vector2Int GetAbsoluteBoardDistance(ChessBoardPosition currentPosition, ChessBoardPosition destinationPosition)
     {
-        var a = Math.Abs(move.DestinationRowNumber - piece.CurrentPositionRowNumber);
-        var b = Math.Abs((int)move.DestinationColumnLetter - (int)piece.CurrentPositionColumnLetter);
-        return (a > 0 && b == 0) || (b > 0 && a == 0);
-    }
-
-    public GameObject GetTileByNotation(string notation)
-    {
-        return transform.Find(notation.ToLower()).gameObject;
+        var columnDifference = Math.Abs((int)destinationPosition.ColumnLetter - (int)currentPosition.ColumnLetter);
+        var rowDifference = Math.Abs(destinationPosition.RowNumber - currentPosition.RowNumber);
+        return new Vector2Int(columnDifference, rowDifference);
     }
 }
