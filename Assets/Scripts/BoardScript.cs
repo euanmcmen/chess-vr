@@ -1,3 +1,4 @@
+using Assets.Scripts.LineOfSight;
 using Assets.Scripts.Parser;
 using System;
 using System.Collections;
@@ -121,9 +122,9 @@ public class BoardScript : MonoBehaviour
 
     private IEnumerator HandleTeamMove(ChessPieceTeam team, string notation)
     {
-        Debug.LogFormat("Executing {0} team move: {1}", team, notation);
+        Debug.LogFormat("Turn {2} - Executing {0} team move: {1}", team, notation, turnIndex);
 
-        var moves = ChessMoveParser.ResolveChessNotation(team, notation);
+        var moves = ChessParser.ResolveChessNotation(team, notation);
 
         foreach (var move in moves)
         {
@@ -226,13 +227,27 @@ public class BoardScript : MonoBehaviour
     private bool IsBishopMoveValid(ChessPieceTeam team, PieceScript piece, ChessMove move)
     {
         var distance = GetAbsoluteBoardDistance(piece.CurrentBoardPosition, move.DestinationBoardPosition);
-        return distance.x == distance.y;
+        if (!(distance.x == distance.y))
+            return false;
+
+        var moveBlocked = AnyPiecesOnPositionsBetween(piece.CurrentBoardPosition, move.DestinationBoardPosition);
+        if (moveBlocked)
+            return false;
+
+        return true;
     }
 
     private bool IsRookMoveValid(ChessPieceTeam team, PieceScript piece, ChessMove move)
     {
         var distance = GetAbsoluteBoardDistance(piece.CurrentBoardPosition, move.DestinationBoardPosition);
-        return (distance.x > 0 && distance.y == 0) || (distance.y > 0 && distance.x == 0);
+        if (!(distance.x > 0 && distance.y == 0) || (distance.y > 0 && distance.x == 0))
+            return false;
+
+        var moveBlocked = AnyPiecesOnPositionsBetween(piece.CurrentBoardPosition, move.DestinationBoardPosition);
+        if (moveBlocked)
+            return false;
+
+        return true;
     }
 
     private bool IsRoyalMoveValid(ChessPieceTeam team, PieceScript piece, ChessMove move)
@@ -245,5 +260,21 @@ public class BoardScript : MonoBehaviour
         var columnDifference = Math.Abs((int)destinationPosition.ColumnLetter - (int)currentPosition.ColumnLetter);
         var rowDifference = Math.Abs(destinationPosition.RowNumber - currentPosition.RowNumber);
         return new Vector2Int(columnDifference, rowDifference);
+    }
+
+    private bool AnyPiecesOnPositionsBetween(ChessBoardPosition currentPosition, ChessBoardPosition destinationPosition)
+    {
+        var positions = LineOfSightResolver.GetBoardTileNotationInRange(currentPosition, destinationPosition);
+
+        foreach (var position in positions)
+        {
+            var positionTile = GetTileByNotation(position.Notation);
+            var tileScript = positionTile.GetComponent<BoardTileScript>();
+
+            if (tileScript.Piece != null)
+                return true;
+        }
+
+        return false;
     }
 }

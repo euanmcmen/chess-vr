@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -14,12 +13,6 @@ public class PieceScript : MonoBehaviour
     public string InitialPositionNotation;
 
     private BoardScript board;
-
-    //public string CurrentPositionNotation { get; private set; }
-
-    //public ChessBoardColumnLetter CurrentPositionColumnLetter { get; private set; }
-
-    //public int CurrentPositionRowNumber { get; private set; }
 
     public ChessBoardPosition CurrentBoardPosition { get; private set; }
 
@@ -42,8 +35,6 @@ public class PieceScript : MonoBehaviour
         var currentPositionFloating = GetFloatPositionForPosition(currentPosition);
         var targetPositionFloating = GetFloatPositionForPosition(targetPosition);
 
-        // Current -> CurrentFloating -> TargetFloating -> Target
-
         yield return StartCoroutine(HandleLerp(currentPosition, currentPositionFloating, board.pieceMoveCompletesAfterSeconds));
 
         yield return StartCoroutine(HandleLerp(currentPositionFloating, targetPositionFloating, board.pieceMoveCompletesAfterSeconds));
@@ -53,6 +44,15 @@ public class PieceScript : MonoBehaviour
         transform.position = targetPosition;
 
         SetCurrentPosition(destinationNotation);
+    }
+
+    public void GetCaptured()
+    {
+        board.GetTileByNotation(CurrentBoardPosition.Notation)
+            .GetComponent<BoardTileScript>()
+            .Piece = null;
+
+        Destroy(gameObject);
     }
 
     private IEnumerator HandleLerp(Vector3 current, Vector3 target, float timeToComplete)
@@ -81,10 +81,17 @@ public class PieceScript : MonoBehaviour
 
     private void SetCurrentPosition(string notation)
     {
+        if (CurrentBoardPosition != null)
+        {
+            board.GetTileByNotation(CurrentBoardPosition.Notation)
+                .GetComponent<BoardTileScript>()
+                .Piece = null;
+        }
+
         CurrentBoardPosition = new ChessBoardPosition(notation);
 
-        //CurrentPositionNotation = notation;
-        //CurrentPositionColumnLetter = Enum.Parse<ChessBoardColumnLetter>(notation[0].ToString());
-        //CurrentPositionRowNumber = int.Parse(notation[1].ToString());
+        board.GetTileByNotation(CurrentBoardPosition.Notation)
+            .GetComponent<BoardTileScript>()
+            .Piece = this;
     }
 }

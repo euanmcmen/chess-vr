@@ -2,12 +2,12 @@ using Assets.Scripts.Parser;
 using NUnit.Framework;
 using System.Linq;
 
-public class ChessParserTests
+public class ChessParserEditTests
 {
     [Test]
     public void ShouldResolvePawnToE4()
     {
-        var move = ChessMoveParser.ResolveChessNotation(ChessPieceTeam.Light, "e4")
+        var move = ChessParser.ResolveChessNotation(ChessPieceTeam.Light, "e4")
             .Single();
 
         Assert.AreEqual("e4", move.DestinationBoardPosition.Notation);
@@ -19,7 +19,7 @@ public class ChessParserTests
     [Test]
     public void ShouldResolveKnightToF3()
     {
-        var move = ChessMoveParser.ResolveChessNotation(ChessPieceTeam.Light, "Nf3")
+        var move = ChessParser.ResolveChessNotation(ChessPieceTeam.Light, "Nf3")
             .Single();
 
         Assert.AreEqual("f3", move.DestinationBoardPosition.Notation);
@@ -29,7 +29,7 @@ public class ChessParserTests
     [Test]
     public void ShouldResolveBishopToB5()
     {
-        var move = ChessMoveParser.ResolveChessNotation(ChessPieceTeam.Light, "Bb5")
+        var move = ChessParser.ResolveChessNotation(ChessPieceTeam.Light, "Bb5")
             .Single();
 
         Assert.AreEqual("b5", move.DestinationBoardPosition.Notation);
@@ -39,7 +39,7 @@ public class ChessParserTests
     [Test]
     public void ShouldResolveBKnightToD2()
     {
-        var move = ChessMoveParser.ResolveChessNotation(ChessPieceTeam.Light, "Nbd2")
+        var move = ChessParser.ResolveChessNotation(ChessPieceTeam.Light, "Nbd2")
             .Single();
 
         Assert.AreEqual("d2", move.DestinationBoardPosition.Notation);
@@ -50,7 +50,7 @@ public class ChessParserTests
     [Test]
     public void ShouldResolveH1RookToH6()
     {
-        var move = ChessMoveParser.ResolveChessNotation(ChessPieceTeam.Light, "Rh1h6")
+        var move = ChessParser.ResolveChessNotation(ChessPieceTeam.Light, "Rh1h6")
             .Single();
 
         Assert.AreEqual("h6", move.DestinationBoardPosition.Notation);
@@ -61,7 +61,7 @@ public class ChessParserTests
     [Test]
     public void ShouldResolveCPawnCaptureOnD4()
     {
-        var moves = ChessMoveParser.ResolveChessNotation(ChessPieceTeam.Light, "cxd4");
+        var moves = ChessParser.ResolveChessNotation(ChessPieceTeam.Light, "cxd4");
 
         //var captureEvent = moves.Single(x => x.PieceMoveType == ChessPieceMoveType.Capture);
         //Assert.AreEqual("d4", captureEvent.DestinationNotation);
@@ -76,7 +76,7 @@ public class ChessParserTests
     [Test]
     public void ShouldResolveDarkTeamKingSideCastle()
     {
-        var moves = ChessMoveParser.ResolveChessNotation(ChessPieceTeam.Dark, "O-O");
+        var moves = ChessParser.ResolveChessNotation(ChessPieceTeam.Dark, "O-O");
 
         var rookMove = moves.Single(x => x.PieceType == ChessPieceType.Rook);
         var kingMove = moves.Single(x => x.PieceType == ChessPieceType.King);
