@@ -4,15 +4,7 @@
 
     public ChessBoardPosition DestinationBoardPosition { get; set; }
 
-    //public int DisambiguationOriginRowNumber { get; set; }
-    //public ChessBoardColumnLetter DisambiguationOriginColumnLetter { get; set; }
-    //public string DisambiguationOriginNotation { get; set; }
-
-    //public int DestinationRowNumber { get; set; }
-    //public ChessBoardColumnLetter DestinationColumnLetter { get; set; }
-    //public string DestinationNotation { get; set; }
-
     public ChessPieceType PieceType { get; set; }
 
-    public ChessPieceMoveType PieceMoveType { get; set; }
+    public bool CaptureOnDestinationTile { get; set; }
 }

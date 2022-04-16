@@ -28,8 +28,6 @@ public class PieceScript : MonoBehaviour
 
     public IEnumerator HandleMovement(string destinationNotation)
     {
-        Debug.LogFormat("{0}: Moving to {1}.", gameObject.name, destinationNotation);
-
         var currentPosition = transform.position;
         var targetPosition = GetBoardTilePosition(destinationNotation);
         var currentPositionFloating = GetFloatPositionForPosition(currentPosition);
@@ -44,15 +42,6 @@ public class PieceScript : MonoBehaviour
         transform.position = targetPosition;
 
         SetCurrentPosition(destinationNotation);
-    }
-
-    public void GetCaptured()
-    {
-        board.GetTileByNotation(CurrentBoardPosition.Notation)
-            .GetComponent<BoardTileScript>()
-            .Piece = null;
-
-        Destroy(gameObject);
     }
 
     private IEnumerator HandleLerp(Vector3 current, Vector3 target, float timeToComplete)
@@ -83,15 +72,11 @@ public class PieceScript : MonoBehaviour
     {
         if (CurrentBoardPosition != null)
         {
-            board.GetTileByNotation(CurrentBoardPosition.Notation)
-                .GetComponent<BoardTileScript>()
-                .Piece = null;
+            board.SetPieceOnTileByNotation(CurrentBoardPosition.Notation, null);
         }
 
         CurrentBoardPosition = new ChessBoardPosition(notation);
 
-        board.GetTileByNotation(CurrentBoardPosition.Notation)
-            .GetComponent<BoardTileScript>()
-            .Piece = this;
+        board.SetPieceOnTileByNotation(CurrentBoardPosition.Notation, this);
     }
 }

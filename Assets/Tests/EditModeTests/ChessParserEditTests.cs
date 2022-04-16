@@ -10,6 +10,7 @@ public class ChessParserEditTests
         var move = ChessParser.ResolveChessNotation(ChessPieceTeam.Light, "e4")
             .Single();
 
+        Assert.False(move.CaptureOnDestinationTile);
         Assert.AreEqual("e4", move.DestinationBoardPosition.Notation);
         Assert.AreEqual(ChessBoardColumnLetter.e, move.DestinationBoardPosition.ColumnLetter);
         Assert.AreEqual(ChessBoardColumnLetter.e, move.DisambiguationOriginBoardPosition.ColumnLetter);
@@ -22,6 +23,7 @@ public class ChessParserEditTests
         var move = ChessParser.ResolveChessNotation(ChessPieceTeam.Light, "Nf3")
             .Single();
 
+        Assert.False(move.CaptureOnDestinationTile);
         Assert.AreEqual("f3", move.DestinationBoardPosition.Notation);
         Assert.AreEqual(ChessPieceType.Knight, move.PieceType);
     }
@@ -32,6 +34,7 @@ public class ChessParserEditTests
         var move = ChessParser.ResolveChessNotation(ChessPieceTeam.Light, "Bb5")
             .Single();
 
+        Assert.False(move.CaptureOnDestinationTile);
         Assert.AreEqual("b5", move.DestinationBoardPosition.Notation);
         Assert.AreEqual(ChessPieceType.Bishop, move.PieceType);
     }
@@ -42,6 +45,7 @@ public class ChessParserEditTests
         var move = ChessParser.ResolveChessNotation(ChessPieceTeam.Light, "Nbd2")
             .Single();
 
+        Assert.False(move.CaptureOnDestinationTile);
         Assert.AreEqual("d2", move.DestinationBoardPosition.Notation);
         Assert.AreEqual(ChessBoardColumnLetter.b, move.DisambiguationOriginBoardPosition.ColumnLetter);
         Assert.AreEqual(ChessPieceType.Knight, move.PieceType);
@@ -53,6 +57,7 @@ public class ChessParserEditTests
         var move = ChessParser.ResolveChessNotation(ChessPieceTeam.Light, "Rh1h6")
             .Single();
 
+        Assert.False(move.CaptureOnDestinationTile);
         Assert.AreEqual("h6", move.DestinationBoardPosition.Notation);
         Assert.AreEqual("h1", move.DisambiguationOriginBoardPosition.Notation);
         Assert.AreEqual(ChessPieceType.Rook, move.PieceType);
@@ -61,17 +66,25 @@ public class ChessParserEditTests
     [Test]
     public void ShouldResolveCPawnCaptureOnD4()
     {
-        var moves = ChessParser.ResolveChessNotation(ChessPieceTeam.Light, "cxd4");
+        var move = ChessParser.ResolveChessNotation(ChessPieceTeam.Light, "cxd4")
+            .Single();
 
-        //var captureEvent = moves.Single(x => x.PieceMoveType == ChessPieceMoveType.Capture);
-        //Assert.AreEqual("d4", captureEvent.DestinationNotation);
-
-        var pawnMove = moves.Single(x => x.PieceMoveType == ChessPieceMoveType.Move);
-        Assert.AreEqual("d4", pawnMove.DestinationBoardPosition.Notation);
-        Assert.AreEqual(ChessBoardColumnLetter.c, pawnMove.DisambiguationOriginBoardPosition.ColumnLetter);
-        Assert.AreEqual(ChessPieceType.Pawn, pawnMove.PieceType);
+        Assert.True(move.CaptureOnDestinationTile);
+        Assert.AreEqual("d4", move.DestinationBoardPosition.Notation);
+        Assert.AreEqual(ChessBoardColumnLetter.c, move.DisambiguationOriginBoardPosition.ColumnLetter);
+        Assert.AreEqual(ChessPieceType.Pawn, move.PieceType);
     }
 
+    [Test]
+    public void ShouldResolveRookCaptureOnA5()
+    {
+        var move = ChessParser.ResolveChessNotation(ChessPieceTeam.Light, "Rxa5")
+            .Single();
+
+        Assert.True(move.CaptureOnDestinationTile);
+        Assert.AreEqual("a5", move.DestinationBoardPosition.Notation);
+        Assert.AreEqual(ChessPieceType.Rook, move.PieceType);
+    }
 
     [Test]
     public void ShouldResolveDarkTeamKingSideCastle()

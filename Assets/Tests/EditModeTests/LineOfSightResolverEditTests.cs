@@ -76,4 +76,17 @@ public class LineOfSightResolverEditTests
 
         Assert.AreEqual(0, result.Count);
     }
+
+    [Test]
+    public void ShouldResolveA8toA5()
+    {
+        var origin = new ChessBoardPosition("a8");
+        var destination = new ChessBoardPosition("a5");
+
+        var result = LineOfSightResolver.GetBoardTileNotationInRange(origin, destination);
+
+        Assert.AreEqual(2, result.Count);
+        Assert.AreEqual("a6", result[0].Notation);
+        Assert.AreEqual("a7", result[1].Notation);
+    }
 }

@@ -91,22 +91,6 @@ namespace Assets.Scripts.LineOfSight
             var columns = new List<ChessBoardColumnLetter>(2) { startPosition.ColumnLetter, endPosition.ColumnLetter };
             var rows = new List<int>(2) { startPosition.RowNumber, endPosition.RowNumber };
 
-            //a1
-            //b2
-            //c3
-
-            //f1
-            //e2
-            //d3
-
-            //c3
-            //b2
-            //b1
-
-            //d3
-            //e2
-            //f1
-
             bool columnAscending = columns[0] < columns[1];
             bool rowAscending = rows[0] < rows[1];
 

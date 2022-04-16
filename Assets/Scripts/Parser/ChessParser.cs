@@ -1,15 +1,28 @@
+using System;
 using System.Collections.Generic;
 
 namespace Assets.Scripts.Parser
 {
     public static class ChessParser
     {
-
         public static List<ChessMove> ResolveChessNotation(ChessPieceTeam team, string notation)
         {
-            return IsCastleMove(notation)
-                ? ChessCastleMoveParser.ResolveCastleNotation(team, notation)
-                : ChessStandardMoveParser.ResolveChessMoveNotation(team, notation);
+            if (IsCastleMove(notation))
+            {
+                return ChessCastleMoveParser.ResolveCastleNotation(team, notation);
+            }
+
+            else if (IsWinConditionNotation(notation))
+            {
+                return null;
+            }
+
+            return ChessStandardMoveParser.ResolveChessMoveNotation(team, notation);
+        }
+
+        private static bool IsWinConditionNotation(string notation)
+        {
+            return notation == "1-0" || notation == "0-1";
         }
 
         private static bool IsCastleMove(string notation)

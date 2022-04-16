@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Assets.Scripts.Parser
 {
@@ -32,8 +29,10 @@ namespace Assets.Scripts.Parser
 
             var matchedResult = new ChessMove();
 
-            // Add Piece.
-            // Pawn if piece is empty, otherwise use the table.
+            var destinationNotation = matchKeys["destNotation"].Value;
+            matchedResult.DestinationBoardPosition = new ChessBoardPosition(destinationNotation);
+
+            // Add Piece.  Pawn if piece is empty, otherwise use the table.
             if (!string.IsNullOrEmpty(matchKeys["piece"].Value))
             {
                 matchedResult.PieceType = ChessPieceLetterMap[matchKeys["piece"].Value];
@@ -50,23 +49,18 @@ namespace Assets.Scripts.Parser
                 matchedResult.DisambiguationOriginBoardPosition = new ChessBoardPosition(value);
             }
 
+            // Add capture flag.
             if (!string.IsNullOrEmpty(matchKeys["isCapture"].Value))
             {
-                // Add capture instruction to move list.  Don't modify matchedResult.
+                matchedResult.CaptureOnDestinationTile = true;
             }
 
-            if (!string.IsNullOrEmpty(matchKeys["destNotation"].Value))
+            // Infer pawn origin from destination notation if disambiguator was not provided.
+            if (matchedResult.PieceType == ChessPieceType.Pawn &&
+                matchedResult.DisambiguationOriginBoardPosition == null)
             {
-                var value = matchKeys["destNotation"].Value;
-                matchedResult.DestinationBoardPosition = new ChessBoardPosition(value);
-
-                // Infer pawn origin from destination notation if disambiguator was not provided.
-                if (matchedResult.PieceType == ChessPieceType.Pawn &&
-                    matchedResult.DisambiguationOriginBoardPosition == null)
-                {
-                    matchedResult.DisambiguationOriginBoardPosition =
-                        new ChessBoardPosition(matchedResult.DestinationBoardPosition.ColumnLetter);
-                }
+                matchedResult.DisambiguationOriginBoardPosition =
+                    new ChessBoardPosition(matchedResult.DestinationBoardPosition.ColumnLetter);
             }
 
             result.Add(matchedResult);

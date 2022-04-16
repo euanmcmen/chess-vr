@@ -17,6 +17,8 @@ public class BoardScript : MonoBehaviour
 
     private List<string> turns;
 
+    private bool isGameFinished;
+
     private void Awake()
     {
         turnIndex = 0;
@@ -98,15 +100,28 @@ public class BoardScript : MonoBehaviour
         return transform.Find(notation.ToLower()).gameObject;
     }
 
+    public PieceScript GetPieceOnTileByNotation(string notation)
+    {
+        return transform.Find(notation.ToLower()).GetComponent<BoardTileScript>().Piece;
+    }
+
+    public void SetPieceOnTileByNotation(string notation, PieceScript piece)
+    {
+        transform.Find(notation.ToLower()).GetComponent<BoardTileScript>().Piece = piece;
+    }
+
     private IEnumerator TurnLoop()
     {
         yield return StartCoroutine(HandleTurn());
 
         yield return new WaitForSeconds(nextMoveAfterSeconds);
 
-        turnIndex++;
+        if (!isGameFinished)
+        {
+            turnIndex++;
 
-        StartCoroutine(TurnLoop());
+            StartCoroutine(TurnLoop());
+        }
     }
 
     private IEnumerator HandleTurn()
@@ -126,6 +141,12 @@ public class BoardScript : MonoBehaviour
 
         var moves = ChessParser.ResolveChessNotation(team, notation);
 
+        if (moves == null)
+        {
+            isGameFinished = true;
+            yield break;
+        }
+
         foreach (var move in moves)
         {
             PieceScript piece = null;
@@ -137,13 +158,13 @@ public class BoardScript : MonoBehaviour
                 if (!move.DisambiguationOriginBoardPosition.IsPartialNotation)
                 {
                     piece = transform.GetComponentsInChildren<PieceScript>()
-                        .Single(x => TeamAndTypeMatch(x, team, move.PieceType) 
+                        .Single(x => TeamAndTypeMatch(x, team, move.PieceType)
                             && x.CurrentBoardPosition.Notation == move.DisambiguationOriginBoardPosition.Notation);
                 }
                 else
                 {
                     piece = transform.GetComponentsInChildren<PieceScript>()
-                        .Single(x => TeamAndTypeMatch(x, team, move.PieceType) 
+                        .Single(x => TeamAndTypeMatch(x, team, move.PieceType)
                             && x.CurrentBoardPosition.ColumnLetter == move.DisambiguationOriginBoardPosition.ColumnLetter);
                 }
 
@@ -154,6 +175,11 @@ public class BoardScript : MonoBehaviour
             {
                 piece = transform.GetComponentsInChildren<PieceScript>()
                     .Single(x => TeamAndTypeMatch(x, team, move.PieceType) && IsMoveValid(team, x, move));
+            }
+
+            if (move.CaptureOnDestinationTile)
+            {
+                Destroy(GetPieceOnTileByNotation(move.DestinationBoardPosition.Notation).gameObject);
             }
 
             yield return StartCoroutine(piece.HandleMovement(move.DestinationBoardPosition.Notation));
@@ -196,9 +222,7 @@ public class BoardScript : MonoBehaviour
         return false;
     }
 
-    //
     // NOTE
-    //
     // This only works for pawn movement instructions where it moves forwards.
     private bool IsPawnMoveValid(ChessPieceTeam team, PieceScript piece, ChessMove move)
     {
@@ -240,7 +264,7 @@ public class BoardScript : MonoBehaviour
     private bool IsRookMoveValid(ChessPieceTeam team, PieceScript piece, ChessMove move)
     {
         var distance = GetAbsoluteBoardDistance(piece.CurrentBoardPosition, move.DestinationBoardPosition);
-        if (!(distance.x > 0 && distance.y == 0) || (distance.y > 0 && distance.x == 0))
+        if (!((distance.x > 0 && distance.y == 0) || (distance.x == 0 && distance.y > 0)))
             return false;
 
         var moveBlocked = AnyPiecesOnPositionsBetween(piece.CurrentBoardPosition, move.DestinationBoardPosition);
@@ -268,10 +292,8 @@ public class BoardScript : MonoBehaviour
 
         foreach (var position in positions)
         {
-            var positionTile = GetTileByNotation(position.Notation);
-            var tileScript = positionTile.GetComponent<BoardTileScript>();
-
-            if (tileScript.Piece != null)
+            var piece = GetPieceOnTileByNotation(position.Notation);
+            if (piece != null)
                 return true;
         }
 

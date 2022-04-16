@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Assets.Scripts.Parser
 {
@@ -39,7 +35,6 @@ namespace Assets.Scripts.Parser
                 DisambiguationOriginBoardPosition = new ChessBoardPosition($"{kingOrigin}{rowNumber}"),
                 DestinationBoardPosition = new ChessBoardPosition($"{kingDestination}{rowNumber}"),
                 PieceType = ChessPieceType.King,
-                PieceMoveType = ChessPieceMoveType.Move
             };
 
             var rookMove = new ChessMove
@@ -47,7 +42,6 @@ namespace Assets.Scripts.Parser
                 DisambiguationOriginBoardPosition = new ChessBoardPosition($"{rookOrigin}{rowNumber}"),
                 DestinationBoardPosition = new ChessBoardPosition($"{rookDestination}{rowNumber}"),
                 PieceType = ChessPieceType.Rook,
-                PieceMoveType = ChessPieceMoveType.Move
             };
 
             result.Add(kingMove);
