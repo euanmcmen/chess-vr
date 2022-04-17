@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Assets.Scripts.Parser
 {
-    public static class ChessParser
+    public static class ChessMoveParser
     {
         public static List<ChessMove> ResolveChessNotation(ChessPieceTeam team, string notation)
         {

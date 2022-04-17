@@ -139,7 +139,7 @@ public class BoardScript : MonoBehaviour
     {
         Debug.LogFormat("Turn {2} - Executing {0} team move: {1}", team, notation, turnIndex);
 
-        var moves = ChessParser.ResolveChessNotation(team, notation);
+        var moves = ChessMoveParser.ResolveChessNotation(team, notation);
 
         if (moves == null)
         {

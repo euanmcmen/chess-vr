@@ -23,19 +23,17 @@ namespace Assets.Scripts.Parser
             var result = new List<ChessMove>();
 
             // Evaluate notation using move notation.
-            var match = Regex.Match(notation, MoveRegex);
-
-            var matchKeys = match.Groups.Where(x => x.Success).ToDictionary(key => key.Name, value => value.Captures.SingleOrDefault());
+            var matchKeys = RegexHelper.GetMatchCollection(notation, MoveRegex);
 
             var matchedResult = new ChessMove();
 
-            var destinationNotation = matchKeys["destNotation"].Value;
+            var destinationNotation = matchKeys["destNotation"];
             matchedResult.DestinationBoardPosition = new ChessBoardPosition(destinationNotation);
 
             // Add Piece.  Pawn if piece is empty, otherwise use the table.
-            if (!string.IsNullOrEmpty(matchKeys["piece"].Value))
+            if (!string.IsNullOrEmpty(matchKeys["piece"]))
             {
-                matchedResult.PieceType = ChessPieceLetterMap[matchKeys["piece"].Value];
+                matchedResult.PieceType = ChessPieceLetterMap[matchKeys["piece"]];
             }
             else
             {
@@ -43,14 +41,14 @@ namespace Assets.Scripts.Parser
             }
 
             // Add Disambiguation.
-            if (!string.IsNullOrEmpty(matchKeys["originNotation"].Value))
+            if (!string.IsNullOrEmpty(matchKeys["originNotation"]))
             {
-                var value = matchKeys["originNotation"].Value;
+                var value = matchKeys["originNotation"];
                 matchedResult.DisambiguationOriginBoardPosition = new ChessBoardPosition(value);
             }
 
             // Add capture flag.
-            if (!string.IsNullOrEmpty(matchKeys["isCapture"].Value))
+            if (!string.IsNullOrEmpty(matchKeys["isCapture"]))
             {
                 matchedResult.CaptureOnDestinationTile = true;
             }
