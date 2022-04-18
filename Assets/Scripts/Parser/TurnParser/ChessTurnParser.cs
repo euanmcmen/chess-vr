@@ -1,6 +1,6 @@
 public static class ChessTurnParser
 {
-    private const string TurnRegex = @"^(?'turnNumber'\d*)\. (?'lightMoveNotation'\S*) (?'darkMoveNotation'\S*) $";
+    private const string TurnRegex = @"^(?'turnNumber'\d*)\.\s?(?'lightMoveNotation'\S*)\s(?'darkMoveNotation'\S*)\s?$";
     
     public static ChessTurn ResolveChessTurn(string notation)
     {

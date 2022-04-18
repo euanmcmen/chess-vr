@@ -26,18 +26,18 @@ public class PieceScript : MonoBehaviour
         SetCurrentPosition(InitialPositionNotation);
     }
 
-    public IEnumerator HandleMovement(string destinationNotation)
+    public IEnumerator HandleMovement(string destinationNotation, float movementTime)
     {
         var currentPosition = transform.position;
         var targetPosition = GetBoardTilePosition(destinationNotation);
         var currentPositionFloating = GetFloatPositionForPosition(currentPosition);
         var targetPositionFloating = GetFloatPositionForPosition(targetPosition);
 
-        yield return StartCoroutine(HandleLerp(currentPosition, currentPositionFloating, board.pieceMoveCompletesAfterSeconds));
+        yield return StartCoroutine(HandleLerp(currentPosition, currentPositionFloating, movementTime / 3));
 
-        yield return StartCoroutine(HandleLerp(currentPositionFloating, targetPositionFloating, board.pieceMoveCompletesAfterSeconds));
+        yield return StartCoroutine(HandleLerp(currentPositionFloating, targetPositionFloating, movementTime / 3));
 
-        yield return StartCoroutine(HandleLerp(targetPositionFloating, targetPosition, board.pieceMoveCompletesAfterSeconds));
+        yield return StartCoroutine(HandleLerp(targetPositionFloating, targetPosition, movementTime / 3));
 
         transform.position = targetPosition;
 
