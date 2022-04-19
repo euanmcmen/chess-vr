@@ -14,7 +14,7 @@ public class PieceScript : MonoBehaviour
 
     private BoardScript board;
 
-    public ChessBoardPosition CurrentBoardPosition { get; private set; }
+    public ChessBoardPosition CurrentBoardPosition;
 
     private void Awake()
     {

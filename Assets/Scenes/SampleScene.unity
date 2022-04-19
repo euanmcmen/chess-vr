@@ -1884,7 +1884,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   board: {fileID: 763189969}
   clockData: {fileID: 11400000, guid: 1db6ad4571452094eba5cdfabebdb4f5, type: 2}
-  gameData: {fileID: 11400000, guid: 616b8f05da19d0c488638600b51b18d8, type: 2}
+  gameData: {fileID: 11400000, guid: 47e0a0cf1798d1f4bbc7ee83494d6354, type: 2}
 --- !u!4 &1741873895
 Transform:
   m_ObjectHideFlags: 0
