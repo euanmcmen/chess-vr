@@ -14,7 +14,7 @@ public class PieceScript : MonoBehaviour
 
     private BoardScript board;
 
-    public ChessBoardPosition CurrentBoardPosition;
+    public ChessBoardPosition CurrentBoardPosition { get; private set; }
 
     private void Awake()
     {
@@ -26,6 +26,7 @@ public class PieceScript : MonoBehaviour
         SetCurrentPosition(InitialPositionNotation);
     }
 
+    // Handles: movement
     public IEnumerator HandleMovement(string destinationNotation, float movementTime)
     {
         var currentPosition = transform.position;
@@ -44,6 +45,7 @@ public class PieceScript : MonoBehaviour
         SetCurrentPosition(destinationNotation);
     }
 
+    // Handles: movement
     private IEnumerator HandleLerp(Vector3 current, Vector3 target, float timeToComplete)
     {
         var lerpTime = 0.0f;
@@ -57,17 +59,20 @@ public class PieceScript : MonoBehaviour
 
     }
 
+    // Handles: movement
     private Vector3 GetBoardTilePosition(string input)
     {
         var tilePos = board.GetTileByNotation(input).transform.position;
         return new Vector3(tilePos.x, transform.position.y, tilePos.z);
     }
 
+    // Handles: movement
     private Vector3 GetFloatPositionForPosition(Vector3 position)
     {
         return new Vector3(position.x, position.y +  5, position.z);
     }
 
+    // Handles: setting of piece board position property.
     private void SetCurrentPosition(string notation)
     {
         if (CurrentBoardPosition != null)

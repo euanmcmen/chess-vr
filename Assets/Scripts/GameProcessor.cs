@@ -19,7 +19,6 @@ public class GameProcessor : MonoBehaviour
     private int turnIndex;
     private List<string> turns;
     private PieceMovementValidator pieceMovementValidator;
-    private List<PieceScript> pieces;
 
     private void Awake()
     {
@@ -27,9 +26,6 @@ public class GameProcessor : MonoBehaviour
         
         turns = ChessGameParser.ResolveTurnsInGame(gameData.GamePGN);
         
-        pieces = board.transform.GetComponentsInChildren<PieceScript>()
-            .ToList();
-
         pieceMovementValidator = new PieceMovementValidator(board);
     }
 
@@ -76,31 +72,33 @@ public class GameProcessor : MonoBehaviour
         {
             if (move.CaptureOnDestinationTile)
             {
-                Destroy(
-                    board.GetPieceOnTileByNotation(move.DestinationBoardPosition.Notation).gameObject);
+                board.RemovePieceOnTileByNotation(move.DestinationBoardPosition.Notation);
             }
 
             yield return StartCoroutine(
-                    GetPieceToMove(team, move)
-                        .HandleMovement(move.DestinationBoardPosition.Notation, clockData.PieceMovementCompletesAfterSeconds));
+                GetPieceToMove(team, move)
+                .HandleMovement(move.DestinationBoardPosition.Notation, clockData.PieceMovementCompletesAfterSeconds));
         }
     }
 
     private PieceScript GetPieceToMove(ChessPieceTeam team, ChessMove move)
     {
-        var matchingPieces = pieces
-            .Where(x => x.Team == team && x.Type == move.PieceType)
-            .ToList();
+        var matchingPieces = board.GetMatchingPieces(team, move.PieceType).ToList();
 
         return move.DisambiguationOriginBoardPosition != null
             ? GetPieceToMoveFromDisambiguation(matchingPieces, move)
-            : matchingPieces.Single(x => pieceMovementValidator.IsMoveValid(team, x, move));
+            : GetPieceToMoveFromValidation(matchingPieces, team, move);
     }
 
     private PieceScript GetPieceToMoveFromDisambiguation(List<PieceScript> matchingPieces, ChessMove move)
     {
-        return !move.DisambiguationOriginBoardPosition.IsPartialNotation
-            ? matchingPieces.Single(x => x.CurrentBoardPosition.Notation == move.DisambiguationOriginBoardPosition.Notation)
-            : matchingPieces.Single(x => x.CurrentBoardPosition.ColumnLetter == move.DisambiguationOriginBoardPosition.ColumnLetter);
+        return move.DisambiguationOriginBoardPosition.IsPartialNotation
+            ? matchingPieces.Single(x => x.CurrentBoardPosition.ColumnLetter == move.DisambiguationOriginBoardPosition.ColumnLetter)
+            : matchingPieces.Single(x => x.CurrentBoardPosition.Notation == move.DisambiguationOriginBoardPosition.Notation);
+    }
+
+    private PieceScript GetPieceToMoveFromValidation(List<PieceScript> matchingPieces, ChessPieceTeam team, ChessMove move)
+    {
+        return matchingPieces.Single(x => pieceMovementValidator.IsMoveValid(team, x, move));
     }
 }

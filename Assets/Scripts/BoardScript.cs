@@ -8,25 +8,38 @@ using UnityEngine;
 
 public class BoardScript : MonoBehaviour
 {
+    // Pieces
+    public IEnumerable<PieceScript> GetMatchingPieces(ChessPieceTeam team, ChessPieceType type)
+    {
+        return transform.GetComponentsInChildren<PieceScript>().Where(x => x.Team == team && x.Type == type);
+    }
+
+    // Tile
     public GameObject GetTileByNotation(string notation)
     {
         return transform.Find(notation.ToLower()).gameObject;
     }
 
+    // Tile Piece
     public PieceScript GetPieceOnTileByNotation(string notation)
     {
         return transform.Find(notation.ToLower()).GetComponent<BoardTileScript>().Piece;
     }
 
+    // Tile Piece
     public void SetPieceOnTileByNotation(string notation, PieceScript piece)
     {
         transform.Find(notation.ToLower()).GetComponent<BoardTileScript>().Piece = piece;
     }
 
-    public Vector2Int GetAbsoluteBoardDistance(ChessBoardPosition currentPosition, ChessBoardPosition destinationPosition)
+    // Tile Piece
+    public void RemovePieceOnTileByNotation(string notation)
     {
-        var columnDifference = Math.Abs((int)destinationPosition.ColumnLetter - (int)currentPosition.ColumnLetter);
-        var rowDifference = Math.Abs(destinationPosition.RowNumber - currentPosition.RowNumber);
-        return new Vector2Int(columnDifference, rowDifference);
+        Destroy(GetBoardTileByNotation(notation).Piece.gameObject);
+    }
+
+    private BoardTileScript GetBoardTileByNotation(string notation)
+    {
+        return transform.Find(notation.ToLower()).GetComponent<BoardTileScript>();
     }
 }

@@ -1,4 +1,6 @@
 ﻿using Assets.Scripts.LineOfSight;
+using System;
+using UnityEngine;
 
 namespace Assets.Scripts.MovementValidator
 {
@@ -59,13 +61,13 @@ namespace Assets.Scripts.MovementValidator
 
         private bool IsKnightMoveValid(ChessPieceTeam team, PieceScript piece, ChessMove move)
         {
-            var distance = board.GetAbsoluteBoardDistance(piece.CurrentBoardPosition, move.DestinationBoardPosition);
+            var distance = GetAbsoluteDistanceBetweenBoardPositions(piece.CurrentBoardPosition, move.DestinationBoardPosition);
             return (distance.x == 2 && distance.y == 1) || (distance.x == 1 && distance.y == 2);
         }
 
         private bool IsBishopMoveValid(ChessPieceTeam team, PieceScript piece, ChessMove move)
         {
-            var distance = board.GetAbsoluteBoardDistance(piece.CurrentBoardPosition, move.DestinationBoardPosition);
+            var distance = GetAbsoluteDistanceBetweenBoardPositions(piece.CurrentBoardPosition, move.DestinationBoardPosition);
             if (!(distance.x == distance.y))
                 return false;
 
@@ -78,7 +80,7 @@ namespace Assets.Scripts.MovementValidator
 
         private bool IsRookMoveValid(ChessPieceTeam team, PieceScript piece, ChessMove move)
         {
-            var distance = board.GetAbsoluteBoardDistance(piece.CurrentBoardPosition, move.DestinationBoardPosition);
+            var distance = GetAbsoluteDistanceBetweenBoardPositions(piece.CurrentBoardPosition, move.DestinationBoardPosition);
             if (!((distance.x > 0 && distance.y == 0) || (distance.x == 0 && distance.y > 0)))
                 return false;
 
@@ -106,6 +108,13 @@ namespace Assets.Scripts.MovementValidator
             }
 
             return false;
+        }
+
+        public Vector2Int GetAbsoluteDistanceBetweenBoardPositions(ChessBoardPosition currentPosition, ChessBoardPosition destinationPosition)
+        {
+            var columnDifference = Math.Abs((int)destinationPosition.ColumnLetter - (int)currentPosition.ColumnLetter);
+            var rowDifference = Math.Abs(destinationPosition.RowNumber - currentPosition.RowNumber);
+            return new Vector2Int(columnDifference, rowDifference);
         }
     }
 }
