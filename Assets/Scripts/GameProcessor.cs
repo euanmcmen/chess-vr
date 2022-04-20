@@ -1,104 +1,53 @@
-using Assets.Scripts.MovementValidator;
-using Assets.Scripts.Parser;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class GameProcessor : MonoBehaviour
 {
-    [SerializeField]
-    private BoardScript board;
-
     [SerializeField]
     private ChessClockSO clockData;
 
     [SerializeField]
     private ChessGameSO gameData;
 
-    private int turnIndex;
+    private int currentTurnNumber;
     private List<string> turns;
-    private PieceMovementValidator pieceMovementValidator;
+
+    private GameProcessorEventScript gameProcessorEventScript;
 
     private void Awake()
     {
-        turnIndex = 0;
-        
+        currentTurnNumber = 0;
+
+        gameProcessorEventScript = GetComponent<GameProcessorEventScript>();
+
         turns = ChessGameParser.ResolveTurnsInGame(gameData.GamePGN);
-        
-        pieceMovementValidator = new PieceMovementValidator(board);
     }
 
     // Start is called before the first frame update
     IEnumerator Start()
     {
         yield return new WaitForSeconds(clockData.SecondsBetweenTurns);
-        StartCoroutine(TurnLoop());
+        StartCoroutine(HandleCurrentTurn());
     }
 
-    private IEnumerator TurnLoop()
+    public IEnumerator HandleCurrentTurn()
     {
-        var turn = ChessTurnParser.ResolveChessTurn(turns[turnIndex]);
+        var turn = ChessTurnParser.ResolveChessTurn(turns[currentTurnNumber]);
 
-        Debug.LogFormat("Turn {0} - Light Move: '{1}' Dark Move: '{2}'", turn.TurnNumber, turn.LightTeamMoveNotation, turn.DarkTeamMoveNotation);
+        currentTurnNumber = turn.TurnNumber;
 
-        yield return StartCoroutine(HandleTeamMove(ChessPieceTeam.Light, turn.LightTeamMoveNotation));
+        gameProcessorEventScript.DispatchEvent(turn);
 
-        yield return StartCoroutine(HandleTeamMove(ChessPieceTeam.Dark, turn.DarkTeamMoveNotation));
+        yield return new WaitUntil(() => gameProcessorEventScript.IsFinished);
 
-        turnIndex = turn.TurnNumber;
-
-        if (turnIndex == turns.Count)
+        if (currentTurnNumber == turns.Count)
         {
             yield break;
         }
 
         yield return new WaitForSeconds(clockData.SecondsBetweenTurns);
 
-        StartCoroutine(TurnLoop());
-    }
-
-    private IEnumerator HandleTeamMove(ChessPieceTeam team, string notation)
-    {
-        var moves = ChessMoveParser.ResolveChessNotation(team, notation);
-
-        if (moves == null)
-        {
-            Debug.LogWarningFormat("Unprocessable move: {0}", notation);
-            yield break;
-        }
-
-        foreach (var move in moves)
-        {
-            if (move.CaptureOnDestinationTile)
-            {
-                board.RemovePieceOnTileByNotation(move.DestinationBoardPosition.Notation);
-            }
-
-            yield return StartCoroutine(
-                GetPieceToMove(team, move)
-                .HandleMovement(move.DestinationBoardPosition.Notation));
-        }
-    }
-
-    private PieceScript GetPieceToMove(ChessPieceTeam team, ChessMove move)
-    {
-        var matchingPieces = board.GetMatchingPieces(team, move.PieceType).ToList();
-
-        return move.DisambiguationOriginBoardPosition != null
-            ? GetPieceToMoveFromDisambiguation(matchingPieces, move)
-            : GetPieceToMoveFromValidation(matchingPieces, team, move);
-    }
-
-    private PieceScript GetPieceToMoveFromDisambiguation(List<PieceScript> matchingPieces, ChessMove move)
-    {
-        return move.DisambiguationOriginBoardPosition.IsPartialNotation
-            ? matchingPieces.Single(x => x.CurrentBoardPosition.ColumnLetter == move.DisambiguationOriginBoardPosition.ColumnLetter)
-            : matchingPieces.Single(x => x.CurrentBoardPosition.Notation == move.DisambiguationOriginBoardPosition.Notation);
-    }
-
-    private PieceScript GetPieceToMoveFromValidation(List<PieceScript> matchingPieces, ChessPieceTeam team, ChessMove move)
-    {
-        return matchingPieces.Single(x => pieceMovementValidator.IsMoveValid(team, x, move));
+        StartCoroutine(HandleCurrentTurn());
     }
 }

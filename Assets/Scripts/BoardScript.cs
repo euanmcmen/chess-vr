@@ -1,18 +1,85 @@
-using Assets.Scripts.LineOfSight;
+using Assets.Scripts.MovementValidator;
 using Assets.Scripts.Parser;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class BoardScript : MonoBehaviour
 {
-    // Pieces
-    public IEnumerable<PieceScript> GetMatchingPieces(ChessPieceTeam team, ChessPieceType type)
+    public UnityEvent OnTurnFinished;
+
+    private PieceMovementValidator pieceMovementValidator;
+
+    private void Awake()
     {
-        return transform.GetComponentsInChildren<PieceScript>().Where(x => x.Team == team && x.Type == type);
+        pieceMovementValidator = new PieceMovementValidator(this);
     }
+
+    #region Turn Handling
+
+    public void HandleTurnParsedEvent(ChessTurn chessTurn)
+    {
+        Debug.LogFormat("Turn {0} - Light Move: '{1}' Dark Move: '{2}'", chessTurn.TurnNumber, chessTurn.LightTeamMoveNotation, chessTurn.DarkTeamMoveNotation);
+
+        StartCoroutine(HandleTurn(chessTurn));
+    }
+
+    private IEnumerator HandleTurn(ChessTurn chessTurn)
+    {
+        yield return StartCoroutine(HandleTeamMove(ChessPieceTeam.Light, chessTurn.LightTeamMoveNotation));
+
+        yield return StartCoroutine(HandleTeamMove(ChessPieceTeam.Dark, chessTurn.DarkTeamMoveNotation));
+
+        OnTurnFinished.Invoke();
+    }
+
+    private IEnumerator HandleTeamMove(ChessPieceTeam team, string notation)
+    {
+        var moves = ChessMoveParser.ResolveChessNotation(team, notation);
+
+        if (moves == null)
+        {
+            Debug.LogWarningFormat("Unprocessable move: {0}", notation);
+            yield break;
+        }
+
+        foreach (var move in moves)
+        {
+            if (move.CaptureOnDestinationTile)
+            {
+                Destroy(GetBoardTileScriptByNotation(move.DestinationBoardPosition.Notation).Piece.gameObject);
+            }
+
+            yield return StartCoroutine(
+                GetPieceToMove(team, move)
+                .HandleMovement(move.DestinationBoardPosition.Notation));
+        }
+    }
+
+    private PieceScript GetPieceToMove(ChessPieceTeam team, ChessMove move)
+    {
+        var matchingPieces = transform.GetComponentsInChildren<PieceScript>().Where(x => x.Team == team && x.Type == move.PieceType)
+            .ToList();
+
+        return move.DisambiguationOriginBoardPosition != null
+            ? GetPieceToMoveFromDisambiguation(matchingPieces, move)
+            : GetPieceToMoveFromValidation(matchingPieces, team, move);
+    }
+
+    private PieceScript GetPieceToMoveFromDisambiguation(List<PieceScript> matchingPieces, ChessMove move)
+    {
+        return move.DisambiguationOriginBoardPosition.IsPartialNotation
+            ? matchingPieces.Single(x => x.CurrentBoardPosition.ColumnLetter == move.DisambiguationOriginBoardPosition.ColumnLetter)
+            : matchingPieces.Single(x => x.CurrentBoardPosition.Notation == move.DisambiguationOriginBoardPosition.Notation);
+    }
+
+    private PieceScript GetPieceToMoveFromValidation(List<PieceScript> matchingPieces, ChessPieceTeam team, ChessMove move)
+    {
+        return matchingPieces.Single(x => pieceMovementValidator.IsMoveValid(team, x, move));
+    }
+    #endregion
 
     // Tile
     public GameObject GetTileByNotation(string notation)
@@ -30,12 +97,6 @@ public class BoardScript : MonoBehaviour
     public void SetPieceOnTileByNotation(string notation, PieceScript piece)
     {
         GetBoardTileScriptByNotation(notation).Piece = piece;
-    }
-
-    // Tile Piece
-    public void RemovePieceOnTileByNotation(string notation)
-    {
-        Destroy(GetBoardTileScriptByNotation(notation).Piece.gameObject);
     }
 
     private BoardTileScript GetBoardTileScriptByNotation(string notation)
