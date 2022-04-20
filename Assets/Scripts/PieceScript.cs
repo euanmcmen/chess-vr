@@ -10,13 +10,13 @@ public class PieceScript : MonoBehaviour
     public ChessPieceType Type;
     public string InitialPositionNotation;
 
-    private BoardScript board;
+    private BoardApiScript boardApi;
 
     public ChessBoardPosition CurrentBoardPosition { get; private set; }
 
     private void Awake()
     {
-        board = transform.GetComponentInParent<BoardScript>();
+        boardApi = transform.GetComponentInParent<BoardApiScript>();
     }
 
     private void Start()
@@ -62,7 +62,7 @@ public class PieceScript : MonoBehaviour
     // Handles: movement
     private Vector3 GetBoardTilePosition(string input)
     {
-        var tilePos = board.GetTileByNotation(input).transform.position;
+        var tilePos = boardApi.GetTileByNotation(input).transform.position;
         return new Vector3(tilePos.x, transform.position.y, tilePos.z);
     }
 
@@ -77,11 +77,11 @@ public class PieceScript : MonoBehaviour
     {
         if (CurrentBoardPosition != null)
         {
-            board.SetPieceOnTileByNotation(CurrentBoardPosition.Notation, null);
+            boardApi.SetPieceOnTileByNotation(CurrentBoardPosition.Notation, null);
         }
 
         CurrentBoardPosition = new ChessBoardPosition(notation);
 
-        board.SetPieceOnTileByNotation(CurrentBoardPosition.Notation, this);
+        boardApi.SetPieceOnTileByNotation(CurrentBoardPosition.Notation, this);
     }
 }

@@ -8,104 +8,109 @@ using UnityEngine.Events;
 
 public class BoardScript : MonoBehaviour
 {
-    public UnityEvent OnTurnFinished;
+    //public UnityEvent OnTurnFinished;
 
-    private PieceMovementValidator pieceMovementValidator;
+    //private PieceMovementValidator pieceMovementValidator;
 
-    private void Awake()
-    {
-        pieceMovementValidator = new PieceMovementValidator(this);
-    }
+    //private void Awake()
+    //{
+    //    pieceMovementValidator = new PieceMovementValidator(this);
+    //}
 
-    #region Turn Handling
+    //#region Turn Handling
 
-    public void HandleTurnParsedEvent(ChessTurn chessTurn)
-    {
-        Debug.LogFormat("Turn {0} - Light Move: '{1}' Dark Move: '{2}'", chessTurn.TurnNumber, chessTurn.LightTeamMoveNotation, chessTurn.DarkTeamMoveNotation);
+    //public void HandleTurnParsedEvent(ChessTurn chessTurn)
+    //{
+    //    Debug.LogFormat("Turn {0} - Light Move: '{1}' Dark Move: '{2}'", chessTurn.TurnNumber, chessTurn.LightTeamMoveNotation, chessTurn.DarkTeamMoveNotation);
 
-        StartCoroutine(HandleTurn(chessTurn));
-    }
+    //    StartCoroutine(HandleTurn(chessTurn));
+    //}
 
-    private IEnumerator HandleTurn(ChessTurn chessTurn)
-    {
-        yield return StartCoroutine(HandleTeamMove(ChessPieceTeam.Light, chessTurn.LightTeamMoveNotation));
+    //private IEnumerator HandleTurn(ChessTurn chessTurn)
+    //{
+    //    yield return StartCoroutine(HandleTeamMove(ChessPieceTeam.Light, chessTurn.LightTeamMoveNotation));
 
-        yield return StartCoroutine(HandleTeamMove(ChessPieceTeam.Dark, chessTurn.DarkTeamMoveNotation));
+    //    yield return StartCoroutine(HandleTeamMove(ChessPieceTeam.Dark, chessTurn.DarkTeamMoveNotation));
 
-        OnTurnFinished.Invoke();
-    }
+    //    OnTurnFinished.Invoke();
+    //}
 
-    private IEnumerator HandleTeamMove(ChessPieceTeam team, string notation)
-    {
-        var moves = ChessMoveParser.ResolveChessNotation(team, notation);
+    //private IEnumerator HandleTeamMove(ChessPieceTeam team, string notation)
+    //{
+    //    var moves = ChessMoveParser.ResolveChessNotation(team, notation);
 
-        if (moves == null)
-        {
-            Debug.LogWarningFormat("Unprocessable move: {0}", notation);
-            yield break;
-        }
+    //    if (moves == null)
+    //    {
+    //        Debug.LogWarningFormat("Unprocessable move: {0}", notation);
+    //        yield break;
+    //    }
 
-        foreach (var move in moves)
-        {
-            if (move.CaptureOnDestinationTile)
-            {
-                Destroy(GetBoardTileScriptByNotation(move.DestinationBoardPosition.Notation).Piece.gameObject);
-            }
+    //    foreach (var move in moves)
+    //    {
+    //        yield return StartCoroutine(HandleTeamPieceMove(team, move));
+    //    }
+    //}
 
-            yield return StartCoroutine(
-                GetPieceToMove(team, move)
-                .HandleMovement(move.DestinationBoardPosition.Notation));
-        }
-    }
+    //private IEnumerator HandleTeamPieceMove(ChessPieceTeam team, ChessMove move)
+    //{
+    //    if (move.CaptureOnDestinationTile)
+    //    {
+    //        Destroy(GetBoardTileScriptByNotation(move.DestinationBoardPosition.Notation).Piece.gameObject);
+    //    }
 
-    private PieceScript GetPieceToMove(ChessPieceTeam team, ChessMove move)
-    {
-        var matchingPieces = transform.GetComponentsInChildren<PieceScript>().Where(x => x.Team == team && x.Type == move.PieceType)
-            .ToList();
+    //    yield return StartCoroutine(
+    //        GetPieceToMove(team, move)
+    //        .HandleMovement(move.DestinationBoardPosition.Notation));
+    //}
 
-        return move.DisambiguationOriginBoardPosition != null
-            ? GetPieceToMoveFromDisambiguation(matchingPieces, move)
-            : GetPieceToMoveFromValidation(matchingPieces, team, move);
-    }
+    //private PieceScript GetPieceToMove(ChessPieceTeam team, ChessMove move)
+    //{
+    //    var matchingPieces = transform.GetComponentsInChildren<PieceScript>().Where(x => x.Team == team && x.Type == move.PieceType)
+    //        .ToList();
 
-    private PieceScript GetPieceToMoveFromDisambiguation(List<PieceScript> matchingPieces, ChessMove move)
-    {
-        return move.DisambiguationOriginBoardPosition.IsPartialNotation
-            ? matchingPieces.Single(x => x.CurrentBoardPosition.ColumnLetter == move.DisambiguationOriginBoardPosition.ColumnLetter)
-            : matchingPieces.Single(x => x.CurrentBoardPosition.Notation == move.DisambiguationOriginBoardPosition.Notation);
-    }
+    //    return move.DisambiguationOriginBoardPosition != null
+    //        ? GetPieceToMoveFromDisambiguation(matchingPieces, move)
+    //        : GetPieceToMoveFromValidation(matchingPieces, team, move);
+    //}
 
-    private PieceScript GetPieceToMoveFromValidation(List<PieceScript> matchingPieces, ChessPieceTeam team, ChessMove move)
-    {
-        return matchingPieces.Single(x => pieceMovementValidator.IsMoveValid(team, x, move));
-    }
-    #endregion
+    //private PieceScript GetPieceToMoveFromDisambiguation(List<PieceScript> matchingPieces, ChessMove move)
+    //{
+    //    return move.DisambiguationOriginBoardPosition.IsPartialNotation
+    //        ? matchingPieces.Single(x => x.CurrentBoardPosition.ColumnLetter == move.DisambiguationOriginBoardPosition.ColumnLetter)
+    //        : matchingPieces.Single(x => x.CurrentBoardPosition.Notation == move.DisambiguationOriginBoardPosition.Notation);
+    //}
 
-    // Tile
-    public GameObject GetTileByNotation(string notation)
-    {
-        return GetBoardTileTransformByNotation(notation).gameObject;
-    }
+    //private PieceScript GetPieceToMoveFromValidation(List<PieceScript> matchingPieces, ChessPieceTeam team, ChessMove move)
+    //{
+    //    return matchingPieces.Single(x => pieceMovementValidator.IsMoveValid(team, x, move));
+    //}
+    //#endregion
 
-    // Tile Piece
-    public PieceScript GetPieceOnTileByNotation(string notation)
-    {
-        return GetBoardTileScriptByNotation(notation).Piece;
-    }
+    //// Tile
+    //public GameObject GetTileByNotation(string notation)
+    //{
+    //    return GetBoardTileTransformByNotation(notation).gameObject;
+    //}
 
-    // Tile Piece
-    public void SetPieceOnTileByNotation(string notation, PieceScript piece)
-    {
-        GetBoardTileScriptByNotation(notation).Piece = piece;
-    }
+    //// Tile Piece
+    //public PieceScript GetPieceOnTileByNotation(string notation)
+    //{
+    //    return GetBoardTileScriptByNotation(notation).Piece;
+    //}
 
-    private BoardTileScript GetBoardTileScriptByNotation(string notation)
-    {
-        return GetBoardTileTransformByNotation(notation).GetComponent<BoardTileScript>();
-    }
+    //// Tile Piece
+    //public void SetPieceOnTileByNotation(string notation, PieceScript piece)
+    //{
+    //    GetBoardTileScriptByNotation(notation).Piece = piece;
+    //}
 
-    private Transform GetBoardTileTransformByNotation(string notation)
-    {
-        return transform.Find(notation.ToLower());
-    }
+    //private BoardTileScript GetBoardTileScriptByNotation(string notation)
+    //{
+    //    return GetBoardTileTransformByNotation(notation).GetComponent<BoardTileScript>();
+    //}
+
+    //private Transform GetBoardTileTransformByNotation(string notation)
+    //{
+    //    return transform.Find(notation.ToLower());
+    //}
 }

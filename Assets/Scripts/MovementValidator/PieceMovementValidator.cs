@@ -6,11 +6,11 @@ namespace Assets.Scripts.MovementValidator
 {
     public class PieceMovementValidator
     {
-        private readonly BoardScript board;
+        private readonly BoardApiScript boardApi;
 
-        public PieceMovementValidator(BoardScript board)
+        public PieceMovementValidator(BoardApiScript boardApi)
         {
-            this.board = board;
+            this.boardApi = boardApi;
         }
 
         public bool IsMoveValid(ChessPieceTeam team, PieceScript piece, ChessMove move)
@@ -102,7 +102,7 @@ namespace Assets.Scripts.MovementValidator
 
             foreach (var position in positions)
             {
-                var piece = board.GetPieceOnTileByNotation(position.Notation);
+                var piece = boardApi.GetPieceOnTileByNotation(position.Notation);
                 if (piece != null)
                     return true;
             }

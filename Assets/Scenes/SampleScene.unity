@@ -1110,16 +1110,16 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
---- !u!114 &763189969 stripped
+--- !u!114 &744685075 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2368745499011326574, guid: 6c77120ed3d22ad4d918e78e0cf1993a,
+  m_CorrespondingSourceObject: {fileID: 6298216945978596142, guid: 6c77120ed3d22ad4d918e78e0cf1993a,
     type: 3}
   m_PrefabInstance: {fileID: 8700195866661436844}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca4f94ebb19d9b04a9eafe7365e4ae33, type: 3}
+  m_Script: {fileID: 11500000, guid: 557011b02628f2f4f93b31c96e45d97c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &832575517
@@ -2052,8 +2052,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 763189969}
-        m_TargetAssemblyTypeName: BoardScript, Scripts
+      - m_Target: {fileID: 744685075}
+        m_TargetAssemblyTypeName: BoardEventScript, Scripts
         m_MethodName: HandleTurnParsedEvent
         m_Mode: 0
         m_Arguments:
@@ -2210,6 +2210,41 @@ PrefabInstance:
       value: GameProcessorEventScript, Scripts
       objectReference: {fileID: 0}
     - target: {fileID: 2368745499011326574, guid: 6c77120ed3d22ad4d918e78e0cf1993a,
+        type: 3}
+      propertyPath: OnTurnFinished.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6298216945978596142, guid: 6c77120ed3d22ad4d918e78e0cf1993a,
+        type: 3}
+      propertyPath: OnTurnFinished.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6298216945978596142, guid: 6c77120ed3d22ad4d918e78e0cf1993a,
+        type: 3}
+      propertyPath: OnTurnFinished.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6298216945978596142, guid: 6c77120ed3d22ad4d918e78e0cf1993a,
+        type: 3}
+      propertyPath: OnTurnFinished.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1741873896}
+    - target: {fileID: 6298216945978596142, guid: 6c77120ed3d22ad4d918e78e0cf1993a,
+        type: 3}
+      propertyPath: OnTurnFinished.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6298216945978596142, guid: 6c77120ed3d22ad4d918e78e0cf1993a,
+        type: 3}
+      propertyPath: OnTurnFinished.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: HandleEventFinished
+      objectReference: {fileID: 0}
+    - target: {fileID: 6298216945978596142, guid: 6c77120ed3d22ad4d918e78e0cf1993a,
+        type: 3}
+      propertyPath: OnTurnFinished.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GameProcessorEventScript, Scripts
+      objectReference: {fileID: 0}
+    - target: {fileID: 6298216945978596142, guid: 6c77120ed3d22ad4d918e78e0cf1993a,
         type: 3}
       propertyPath: OnTurnFinished.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine

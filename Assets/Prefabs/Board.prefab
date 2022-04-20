@@ -9,7 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8700195867068451217}
-  - component: {fileID: 2368745499011326574}
+  - component: {fileID: 6298216945978596142}
+  - component: {fileID: 718375116893162150}
   m_Layer: 0
   m_Name: Board
   m_TagString: Untagged
@@ -128,7 +129,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2368745499011326574
+--- !u!114 &6298216945978596142
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -137,11 +138,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 8700195867068451216}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca4f94ebb19d9b04a9eafe7365e4ae33, type: 3}
+  m_Script: {fileID: 11500000, guid: 557011b02628f2f4f93b31c96e45d97c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pieceMoveCompletesAfterSeconds: 1
-  nextMoveAfterSeconds: 1
+  OnTurnFinished:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &718375116893162150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8700195867068451216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfe119ef64590a04f8a57857e26f3073, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &784295016395724
 PrefabInstance:
   m_ObjectHideFlags: 0
