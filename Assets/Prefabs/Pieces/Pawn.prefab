@@ -110,6 +110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a04f711840c53174db9b9ec1eba8fe8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pieceConfig: {fileID: 11400000, guid: e409b84d5266a544fa6ebc956e20e8cf, type: 2}
   Team: 0
   Type: 0
   InitialPositionNotation: 

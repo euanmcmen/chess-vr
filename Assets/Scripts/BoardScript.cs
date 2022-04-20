@@ -17,29 +17,34 @@ public class BoardScript : MonoBehaviour
     // Tile
     public GameObject GetTileByNotation(string notation)
     {
-        return transform.Find(notation.ToLower()).gameObject;
+        return GetBoardTileTransformByNotation(notation).gameObject;
     }
 
     // Tile Piece
     public PieceScript GetPieceOnTileByNotation(string notation)
     {
-        return transform.Find(notation.ToLower()).GetComponent<BoardTileScript>().Piece;
+        return GetBoardTileScriptByNotation(notation).Piece;
     }
 
     // Tile Piece
     public void SetPieceOnTileByNotation(string notation, PieceScript piece)
     {
-        transform.Find(notation.ToLower()).GetComponent<BoardTileScript>().Piece = piece;
+        GetBoardTileScriptByNotation(notation).Piece = piece;
     }
 
     // Tile Piece
     public void RemovePieceOnTileByNotation(string notation)
     {
-        Destroy(GetBoardTileByNotation(notation).Piece.gameObject);
+        Destroy(GetBoardTileScriptByNotation(notation).Piece.gameObject);
     }
 
-    private BoardTileScript GetBoardTileByNotation(string notation)
+    private BoardTileScript GetBoardTileScriptByNotation(string notation)
     {
-        return transform.Find(notation.ToLower()).GetComponent<BoardTileScript>();
+        return GetBoardTileTransformByNotation(notation).GetComponent<BoardTileScript>();
+    }
+
+    private Transform GetBoardTileTransformByNotation(string notation)
+    {
+        return transform.Find(notation.ToLower());
     }
 }

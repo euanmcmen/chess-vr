@@ -77,7 +77,7 @@ public class GameProcessor : MonoBehaviour
 
             yield return StartCoroutine(
                 GetPieceToMove(team, move)
-                .HandleMovement(move.DestinationBoardPosition.Notation, clockData.PieceMovementCompletesAfterSeconds));
+                .HandleMovement(move.DestinationBoardPosition.Notation));
         }
     }
 

@@ -4,12 +4,10 @@ using UnityEngine;
 public class PieceScript : MonoBehaviour
 {
     [SerializeField]
+    private PieceConfigSO pieceConfig;
+
     public ChessPieceTeam Team;
-
-    [SerializeField]
     public ChessPieceType Type;
-
-    [SerializeField]
     public string InitialPositionNotation;
 
     private BoardScript board;
@@ -27,18 +25,20 @@ public class PieceScript : MonoBehaviour
     }
 
     // Handles: movement
-    public IEnumerator HandleMovement(string destinationNotation, float movementTime)
+    public IEnumerator HandleMovement(string destinationNotation)
     {
         var currentPosition = transform.position;
         var targetPosition = GetBoardTilePosition(destinationNotation);
         var currentPositionFloating = GetFloatPositionForPosition(currentPosition);
         var targetPositionFloating = GetFloatPositionForPosition(targetPosition);
 
-        yield return StartCoroutine(HandleLerp(currentPosition, currentPositionFloating, movementTime / 3));
+        var movementPartCompletedAfterSeconds = pieceConfig.PieceMovementCompletesAfterSeconds / 3;
 
-        yield return StartCoroutine(HandleLerp(currentPositionFloating, targetPositionFloating, movementTime / 3));
+        yield return StartCoroutine(HandleLerp(currentPosition, currentPositionFloating, movementPartCompletedAfterSeconds));
 
-        yield return StartCoroutine(HandleLerp(targetPositionFloating, targetPosition, movementTime / 3));
+        yield return StartCoroutine(HandleLerp(currentPositionFloating, targetPositionFloating, movementPartCompletedAfterSeconds));
+
+        yield return StartCoroutine(HandleLerp(targetPositionFloating, targetPosition, movementPartCompletedAfterSeconds));
 
         transform.position = targetPosition;
 
@@ -69,7 +69,7 @@ public class PieceScript : MonoBehaviour
     // Handles: movement
     private Vector3 GetFloatPositionForPosition(Vector3 position)
     {
-        return new Vector3(position.x, position.y +  5, position.z);
+        return new Vector3(position.x, position.y + pieceConfig.PieceMovementFloatHeight, position.z);
     }
 
     // Handles: setting of piece board position property.

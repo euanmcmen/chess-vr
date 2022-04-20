@@ -110,7 +110,7 @@ namespace Assets.Scripts.MovementValidator
             return false;
         }
 
-        public Vector2Int GetAbsoluteDistanceBetweenBoardPositions(ChessBoardPosition currentPosition, ChessBoardPosition destinationPosition)
+        private Vector2Int GetAbsoluteDistanceBetweenBoardPositions(ChessBoardPosition currentPosition, ChessBoardPosition destinationPosition)
         {
             var columnDifference = Math.Abs((int)destinationPosition.ColumnLetter - (int)currentPosition.ColumnLetter);
             var rowDifference = Math.Abs(destinationPosition.RowNumber - currentPosition.RowNumber);
