@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BoardApiScript : MonoBehaviour
 {
@@ -23,6 +18,18 @@ public class BoardApiScript : MonoBehaviour
     public void SetPieceOnTileByNotation(string notation, PieceScript piece)
     {
         GetBoardTileScriptByNotation(notation).Piece = piece;
+    }
+
+    // Tile Highlight
+    public void ShowTileHighlightByNotation(string notation)
+    {
+        GetBoardTileScriptByNotation(notation).ShowHighlight();
+    }
+
+    // Tile Highlight
+    public void HideTileHighlightByNotation(string notation)
+    {
+        GetBoardTileScriptByNotation(notation).HideHighlight();
     }
 
     private BoardTileScript GetBoardTileScriptByNotation(string notation)

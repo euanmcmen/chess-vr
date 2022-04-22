@@ -51,12 +51,17 @@ public class BoardEventScript : MonoBehaviour
 
     private IEnumerator HandleTeamPieceMove(ChessPieceTeam team, ChessMove move)
     {
+        boardApi.ShowTileHighlightByNotation(move.DestinationBoardPosition.Notation);
+
         if (move.CaptureOnDestinationTile)
         {
             Destroy(boardApi.GetPieceOnTileByNotation(move.DestinationBoardPosition.Notation).gameObject);
         }
 
-        yield return StartCoroutine(GetPieceToMove(team, move).HandleMovement(move.DestinationBoardPosition.Notation));
+        yield return StartCoroutine(
+            GetPieceToMove(team, move).HandleMovement(move.DestinationBoardPosition.Notation));
+
+        boardApi.HideTileHighlightByNotation(move.DestinationBoardPosition.Notation);
     }
 
     private PieceScript GetPieceToMove(ChessPieceTeam team, ChessMove move)
