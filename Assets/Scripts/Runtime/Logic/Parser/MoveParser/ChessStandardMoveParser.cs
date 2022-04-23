@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Assets.Scripts.Runtime.Logic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Assets.Scripts.Parser
+namespace Assets.Scripts.Runtime.Logic.Parser.MoveParser
 {
     public static class ChessStandardMoveParser
     {

@@ -1,5 +1,6 @@
-using Assets.Scripts.MovementValidator;
-using Assets.Scripts.Parser;
+using Assets.Scripts.Runtime.Logic;
+using Assets.Scripts.Runtime.Logic.Parser.MoveParser;
+using Assets.Scripts.Runtime.Logic.Resolvers;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +12,12 @@ public class BoardEventScript : MonoBehaviour
     public UnityEvent OnTurnFinished;
 
     private BoardApiScript boardApi;
-    private PieceMovementValidator pieceMovementValidator;
+    private PieceMovementResolver pieceMovementValidator;
 
     private void Awake()
     {
         boardApi = GetComponent<BoardApiScript>();
-        pieceMovementValidator = new PieceMovementValidator(boardApi);
+        pieceMovementValidator = new PieceMovementResolver(boardApi);
     }
 
     public void HandleTurnParsedEvent(ChessTurn chessTurn)
@@ -71,7 +72,7 @@ public class BoardEventScript : MonoBehaviour
 
         return move.DisambiguationOriginBoardPosition != null
             ? GetPieceToMoveFromDisambiguation(matchingPieces, move)
-            : GetPieceToMoveFromValidation(matchingPieces, team, move);
+            : GetPieceToMoveFromResolver(matchingPieces, team, move);
     }
 
     private PieceScript GetPieceToMoveFromDisambiguation(List<PieceScript> matchingPieces, ChessMove move)
@@ -81,8 +82,8 @@ public class BoardEventScript : MonoBehaviour
             : matchingPieces.Single(x => x.CurrentBoardPosition.Notation == move.DisambiguationOriginBoardPosition.Notation);
     }
 
-    private PieceScript GetPieceToMoveFromValidation(List<PieceScript> matchingPieces, ChessPieceTeam team, ChessMove move)
+    private PieceScript GetPieceToMoveFromResolver(List<PieceScript> matchingPieces, ChessPieceTeam team, ChessMove move)
     {
-        return matchingPieces.Single(x => pieceMovementValidator.IsMoveValid(team, x, move));
+        return matchingPieces.Single(x => pieceMovementValidator.ResolveMovingPiece(team, x, move));
     }
 }

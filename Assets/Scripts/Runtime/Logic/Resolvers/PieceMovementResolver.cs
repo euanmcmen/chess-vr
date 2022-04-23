@@ -1,19 +1,18 @@
-﻿using Assets.Scripts.LineOfSight;
-using System;
+﻿using System;
 using UnityEngine;
 
-namespace Assets.Scripts.MovementValidator
+namespace Assets.Scripts.Runtime.Logic.Resolvers
 {
-    public class PieceMovementValidator
+    public class PieceMovementResolver
     {
         private readonly BoardApiScript boardApi;
 
-        public PieceMovementValidator(BoardApiScript boardApi)
+        public PieceMovementResolver(BoardApiScript boardApi)
         {
             this.boardApi = boardApi;
         }
 
-        public bool IsMoveValid(ChessPieceTeam team, PieceScript piece, ChessMove move)
+        public bool ResolveMovingPiece(ChessPieceTeam team, PieceScript piece, ChessMove move)
         {
             if (move.PieceType == ChessPieceType.Pawn)
             {
@@ -53,8 +52,8 @@ namespace Assets.Scripts.MovementValidator
 
             return team switch
             {
-                ChessPieceTeam.Light => piece.CurrentBoardPosition.RowNumber == (move.DestinationBoardPosition.RowNumber - 1) || piece.CurrentBoardPosition.RowNumber == (move.DestinationBoardPosition.RowNumber - 2),// A pawn on e2 can move to e3 or e4.
-                ChessPieceTeam.Dark => piece.CurrentBoardPosition.RowNumber == (move.DestinationBoardPosition.RowNumber + 1) || piece.CurrentBoardPosition.RowNumber == (move.DestinationBoardPosition.RowNumber + 2),// A pawn on e7 can move to e6 or e5.
+                ChessPieceTeam.Light => piece.CurrentBoardPosition.RowNumber == move.DestinationBoardPosition.RowNumber - 1 || piece.CurrentBoardPosition.RowNumber == move.DestinationBoardPosition.RowNumber - 2,// A pawn on e2 can move to e3 or e4.
+                ChessPieceTeam.Dark => piece.CurrentBoardPosition.RowNumber == move.DestinationBoardPosition.RowNumber + 1 || piece.CurrentBoardPosition.RowNumber == move.DestinationBoardPosition.RowNumber + 2,// A pawn on e7 can move to e6 or e5.
                 _ => false,
             };
         }
@@ -62,7 +61,7 @@ namespace Assets.Scripts.MovementValidator
         private bool IsKnightMoveValid(ChessPieceTeam team, PieceScript piece, ChessMove move)
         {
             var distance = GetAbsoluteDistanceBetweenBoardPositions(piece.CurrentBoardPosition, move.DestinationBoardPosition);
-            return (distance.x == 2 && distance.y == 1) || (distance.x == 1 && distance.y == 2);
+            return distance.x == 2 && distance.y == 1 || distance.x == 1 && distance.y == 2;
         }
 
         private bool IsBishopMoveValid(ChessPieceTeam team, PieceScript piece, ChessMove move)
@@ -81,7 +80,7 @@ namespace Assets.Scripts.MovementValidator
         private bool IsRookMoveValid(ChessPieceTeam team, PieceScript piece, ChessMove move)
         {
             var distance = GetAbsoluteDistanceBetweenBoardPositions(piece.CurrentBoardPosition, move.DestinationBoardPosition);
-            if (!((distance.x > 0 && distance.y == 0) || (distance.x == 0 && distance.y > 0)))
+            if (!(distance.x > 0 && distance.y == 0 || distance.x == 0 && distance.y > 0))
                 return false;
 
             var moveBlocked = AnyPiecesOnPositionsBetween(piece.CurrentBoardPosition, move.DestinationBoardPosition);
@@ -98,7 +97,7 @@ namespace Assets.Scripts.MovementValidator
 
         private bool AnyPiecesOnPositionsBetween(ChessBoardPosition currentPosition, ChessBoardPosition destinationPosition)
         {
-            var positions = LineOfSightResolver.GetBoardTileNotationInRange(currentPosition, destinationPosition);
+            var positions = LineOfSightResolver.ResolveBoardTilesInRange(currentPosition, destinationPosition);
 
             foreach (var position in positions)
             {

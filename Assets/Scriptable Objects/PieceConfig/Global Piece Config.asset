@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72510256659f41547bf01aaea8cd2dbd, type: 3}
   m_Name: Global Piece Config
   m_EditorClassIdentifier: 
-  pieceMovementCompletesAfterSeconds: 1
+  pieceMovementCompletesAfterSeconds: 6
   pieceMovementFloatHeight: 6

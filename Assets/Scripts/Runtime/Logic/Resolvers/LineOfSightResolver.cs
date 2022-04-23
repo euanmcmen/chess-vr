@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Assets.Scripts.Runtime.Logic;
+using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Scripts.LineOfSight
+namespace Assets.Scripts.Runtime.Logic.Resolvers
 {
     public static class LineOfSightResolver
     {
-        public static List<ChessBoardPosition> GetBoardTileNotationInRange(ChessBoardPosition startPosition, ChessBoardPosition endPosition)
+        public static List<ChessBoardPosition> ResolveBoardTilesInRange(ChessBoardPosition startPosition, ChessBoardPosition endPosition)
         {
             var result = new List<ChessBoardPosition>();
 

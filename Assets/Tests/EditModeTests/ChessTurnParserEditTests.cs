@@ -1,3 +1,4 @@
+using Assets.Scripts.Runtime.Logic.Parser.TurnParser;
 using NUnit.Framework;
 
 public class ChessTurnParserEditTests

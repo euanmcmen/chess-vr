@@ -1,3 +1,4 @@
+using Assets.Scripts.Runtime.Logic;
 using NUnit.Framework;
 
 public class ChessBoardPositionEditTests

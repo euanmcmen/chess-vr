@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Assets.Scripts.Runtime.Logic.Parser.GameParser;
+using NUnit.Framework;
 
 public class ChessGameParserEditTests
 {

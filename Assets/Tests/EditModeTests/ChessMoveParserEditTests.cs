@@ -1,4 +1,4 @@
-using Assets.Scripts.Parser;
+using Assets.Scripts.Runtime.Logic.Parser.MoveParser;
 using NUnit.Framework;
 using System.Linq;
 

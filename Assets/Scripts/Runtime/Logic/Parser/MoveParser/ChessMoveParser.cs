@@ -1,7 +1,8 @@
+using Assets.Scripts.Runtime.Logic;
 using System;
 using System.Collections.Generic;
 
-namespace Assets.Scripts.Parser
+namespace Assets.Scripts.Runtime.Logic.Parser.MoveParser
 {
     public static class ChessMoveParser
     {
