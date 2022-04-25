@@ -13,6 +13,9 @@ GameObject:
   - component: {fileID: 7815364130101610247}
   - component: {fileID: 567958330021498145}
   - component: {fileID: 4044004759749777223}
+  - component: {fileID: 3565224341601582541}
+  - component: {fileID: 2710337431406143982}
+  - component: {fileID: 6069132205970942765}
   m_Layer: 0
   m_Name: Knight
   m_TagString: Untagged
@@ -110,7 +113,60 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a04f711840c53174db9b9ec1eba8fe8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pieceConfig: {fileID: 11400000, guid: e409b84d5266a544fa6ebc956e20e8cf, type: 2}
   Team: 0
   Type: 0
   InitialPositionNotation: 
+--- !u!114 &3565224341601582541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3378743695242832855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91991d6e34d21e04c9ee261d8fb15a43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pieceConfig: {fileID: 11400000, guid: e409b84d5266a544fa6ebc956e20e8cf, type: 2}
+--- !u!114 &2710337431406143982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3378743695242832855}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -363599832, guid: c424820a8880b8845bda10ec0b41507e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _realtime: {fileID: 0}
+  _sceneViewUUID: 
+  _viewUUID: 
+  _sceneViewPreventOwnershipTakeover: 0
+  _sceneViewDestroyWhenOwnerOrLastClientLeaves: 1
+  _sceneViewDestroyWhenOwnerOrLastClientLeavesMigrated: 0
+  _sceneViewDestroyWhenLastClientLeaves: 1
+  _components:
+  - componentID: 1
+    component: {fileID: 6069132205970942765}
+  _childViews: []
+--- !u!114 &6069132205970942765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3378743695242832855}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1029778088, guid: c424820a8880b8845bda10ec0b41507e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolate: 1
+  _syncPosition: 1
+  _syncRotation: 1
+  _syncScale: 1
+  _syncVelocity: 1
+  _maintainOwnershipWhileSleeping: 0

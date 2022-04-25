@@ -13,6 +13,9 @@ GameObject:
   - component: {fileID: 468292507070113804}
   - component: {fileID: 3450041147765596334}
   - component: {fileID: 4447322458959186028}
+  - component: {fileID: 984541869166382653}
+  - component: {fileID: -3543858950226297824}
+  - component: {fileID: -5807344046851811847}
   m_Layer: 0
   m_Name: Rook
   m_TagString: Untagged
@@ -110,7 +113,60 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a04f711840c53174db9b9ec1eba8fe8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pieceConfig: {fileID: 11400000, guid: e409b84d5266a544fa6ebc956e20e8cf, type: 2}
   Team: 0
   Type: 0
   InitialPositionNotation: 
+--- !u!114 &984541869166382653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7268594922597333041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91991d6e34d21e04c9ee261d8fb15a43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pieceConfig: {fileID: 11400000, guid: e409b84d5266a544fa6ebc956e20e8cf, type: 2}
+--- !u!114 &-3543858950226297824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7268594922597333041}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -363599832, guid: c424820a8880b8845bda10ec0b41507e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _realtime: {fileID: 0}
+  _sceneViewUUID: 
+  _viewUUID: 
+  _sceneViewPreventOwnershipTakeover: 0
+  _sceneViewDestroyWhenOwnerOrLastClientLeaves: 1
+  _sceneViewDestroyWhenOwnerOrLastClientLeavesMigrated: 0
+  _sceneViewDestroyWhenLastClientLeaves: 1
+  _components:
+  - componentID: 1
+    component: {fileID: -5807344046851811847}
+  _childViews: []
+--- !u!114 &-5807344046851811847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7268594922597333041}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1029778088, guid: c424820a8880b8845bda10ec0b41507e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolate: 1
+  _syncPosition: 1
+  _syncRotation: 1
+  _syncScale: 1
+  _syncVelocity: 1
+  _maintainOwnershipWhileSleeping: 0

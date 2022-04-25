@@ -1,7 +1,15 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 public class BoardApiScript : MonoBehaviour
 {
+    // Pieces
+    public List<PieceScript> GetAllPieces()
+    {
+        return transform.GetComponentsInChildren<PieceScript>().ToList();
+    }
+
     // Tile
     public GameObject GetTileByNotation(string notation)
     {

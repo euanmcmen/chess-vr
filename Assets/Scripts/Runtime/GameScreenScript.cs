@@ -1,7 +1,6 @@
 using Assets.Scripts.Runtime.Logic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class GameScreenScript : MonoBehaviour
 {
@@ -14,8 +13,6 @@ public class GameScreenScript : MonoBehaviour
     [SerializeField]
     private TMP_Text turnText;
 
-    public UnityEvent OnTurnFinished;
-
     public void HandleTurnParsedEvent(ChessTurn chessTurn)
     {
         turnText.text = chessTurn.TurnNumber.ToString();
@@ -23,7 +20,5 @@ public class GameScreenScript : MonoBehaviour
         lightText.text = chessTurn.LightTeamMoveNotation;
 
         darkText.text = chessTurn.DarkTeamMoveNotation;
-
-        OnTurnFinished.Invoke();
     }
 }

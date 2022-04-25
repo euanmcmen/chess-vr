@@ -1,40 +1,24 @@
-using Assets.Scripts.Runtime.Logic;
+﻿using Assets.Scripts.Runtime.Logic;
 using Assets.Scripts.Runtime.Logic.Parser.MoveParser;
 using Assets.Scripts.Runtime.Logic.Resolvers;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 
-public class BoardEventScript : MonoBehaviour
+public class MoveControlScript : MonoBehaviour
 {
-    public UnityEvent OnTurnFinished;
-
+    [SerializeField]
     private BoardApiScript boardApi;
+
     private PieceMovementResolver pieceMovementValidator;
 
     private void Awake()
     {
-        boardApi = GetComponent<BoardApiScript>();
         pieceMovementValidator = new PieceMovementResolver(boardApi);
     }
 
-    public void HandleTurnParsedEvent(ChessTurn chessTurn)
-    {
-        StartCoroutine(HandleTurn(chessTurn));
-    }
-
-    private IEnumerator HandleTurn(ChessTurn chessTurn)
-    {
-        yield return StartCoroutine(HandleTeamMove(ChessPieceTeam.Light, chessTurn.LightTeamMoveNotation));
-
-        yield return StartCoroutine(HandleTeamMove(ChessPieceTeam.Dark, chessTurn.DarkTeamMoveNotation));
-
-        OnTurnFinished.Invoke();
-    }
-
-    private IEnumerator HandleTeamMove(ChessPieceTeam team, string notation)
+    public IEnumerator HandleTeamMove(ChessPieceTeam team, string notation)
     {
         var moves = ChessMoveParser.ResolveChessNotation(team, notation);
 
@@ -67,8 +51,7 @@ public class BoardEventScript : MonoBehaviour
 
     private PieceScript GetPieceToMove(ChessPieceTeam team, ChessMove move)
     {
-        var matchingPieces = transform.GetComponentsInChildren<PieceScript>().Where(x => x.Team == team && x.Type == move.PieceType)
-            .ToList();
+        var matchingPieces = boardApi.GetAllPieces().Where(x => x.Team == team && x.Type == move.PieceType).ToList();
 
         return move.DisambiguationOriginBoardPosition != null
             ? GetPieceToMoveFromDisambiguation(matchingPieces, move)
