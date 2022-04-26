@@ -10,10 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 2416121555058124360}
   - component: {fileID: -4172768940440193418}
+  - component: {fileID: -2919964515897686091}
   - component: {fileID: -5621592019671754344}
   - component: {fileID: 7769194504293410282}
   - component: {fileID: -6172421155722163512}
   - component: {fileID: -7877898952722467052}
+  - component: {fileID: 8445152971935585557}
   m_Layer: 0
   m_Name: Simulation Manager
   m_TagString: Untagged
@@ -50,6 +52,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameData: {fileID: 11400000, guid: 47e0a0cf1798d1f4bbc7ee83494d6354, type: 2}
   clockData: {fileID: 11400000, guid: fdb2a21a48db9e144be5deade8d219d0, type: 2}
+--- !u!114 &-2919964515897686091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2416121555058124362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75dac347908a3b244979e8f4e22d2810, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boardApiScript: {fileID: 0}
 --- !u!114 &-5621592019671754344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,3 +117,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boardApi: {fileID: 0}
+--- !u!114 &8445152971935585557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2416121555058124362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -363599832, guid: c424820a8880b8845bda10ec0b41507e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _realtime: {fileID: 0}
+  _sceneViewUUID: 
+  _viewUUID: 
+  _sceneViewPreventOwnershipTakeover: 0
+  _sceneViewDestroyWhenOwnerOrLastClientLeaves: 1
+  _sceneViewDestroyWhenOwnerOrLastClientLeavesMigrated: 0
+  _sceneViewDestroyWhenLastClientLeaves: 1
+  _components:
+  - componentID: 1
+    component: {fileID: -5621592019671754344}
+  _childViews: []

@@ -8,14 +8,14 @@ using UnityEngine;
 
 public class MoveControlScript : MonoBehaviour
 {
-    [SerializeField]
-    private BoardApiScript boardApi;
+    private SimulationBoardLinkScript simulationBoardLinkScript;
 
     private PieceMovementResolver pieceMovementValidator;
 
     private void Awake()
     {
-        pieceMovementValidator = new PieceMovementResolver(boardApi);
+        simulationBoardLinkScript = GetComponent<SimulationBoardLinkScript>();
+        pieceMovementValidator = new PieceMovementResolver(simulationBoardLinkScript.BoardApi);
     }
 
     public IEnumerator HandleTeamMove(ChessPieceTeam team, string notation)
@@ -36,22 +36,24 @@ public class MoveControlScript : MonoBehaviour
 
     private IEnumerator HandleTeamPieceMove(ChessPieceTeam team, ChessMove move)
     {
-        boardApi.ShowTileHighlightByNotation(move.DestinationBoardPosition.Notation);
+        simulationBoardLinkScript.BoardApi.ShowTileHighlightByNotation(move.DestinationBoardPosition.Notation);
 
         if (move.CaptureOnDestinationTile)
         {
-            Destroy(boardApi.GetPieceOnTileByNotation(move.DestinationBoardPosition.Notation).gameObject);
+            Destroy(simulationBoardLinkScript.BoardApi.GetPieceOnTileByNotation(move.DestinationBoardPosition.Notation).gameObject);
         }
 
         yield return StartCoroutine(
             GetPieceToMove(team, move).HandleMovement(move.DestinationBoardPosition.Notation));
 
-        boardApi.HideTileHighlightByNotation(move.DestinationBoardPosition.Notation);
+        simulationBoardLinkScript.BoardApi.HideTileHighlightByNotation(move.DestinationBoardPosition.Notation);
     }
 
     private PieceScript GetPieceToMove(ChessPieceTeam team, ChessMove move)
     {
-        var matchingPieces = boardApi.GetAllPieces().Where(x => x.Team == team && x.Type == move.PieceType).ToList();
+        var matchingPieces = simulationBoardLinkScript.BoardApi.GetAllPieces()
+            .Where(x => x.Team == team && x.Type == move.PieceType)
+            .ToList();
 
         return move.DisambiguationOriginBoardPosition != null
             ? GetPieceToMoveFromDisambiguation(matchingPieces, move)

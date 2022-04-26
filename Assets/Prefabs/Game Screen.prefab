@@ -709,6 +709,7 @@ GameObject:
   - component: {fileID: 6812155573319058004}
   - component: {fileID: 6812155573319058005}
   - component: {fileID: 6812155573319058002}
+  - component: {fileID: 9072658769993457741}
   m_Layer: 0
   m_Name: Game Screen
   m_TagString: Untagged
@@ -810,21 +811,29 @@ MonoBehaviour:
   lightText: {fileID: 6812155572568173999}
   darkText: {fileID: 6812155572165177150}
   turnText: {fileID: 6812155573116625925}
-  OnTurnFinished:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: GameProcessorEventScript, Scripts
-        m_MethodName: HandleEventFinished
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+--- !u!114 &9072658769993457741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6812155573319058003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -363599832, guid: c424820a8880b8845bda10ec0b41507e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _realtime: {fileID: 0}
+  _sceneViewUUID: 
+  _viewUUID: 
+  _sceneViewPreventOwnershipTakeover: 0
+  _sceneViewDestroyWhenOwnerOrLastClientLeaves: 1
+  _sceneViewDestroyWhenOwnerOrLastClientLeavesMigrated: 0
+  _sceneViewDestroyWhenLastClientLeaves: 1
+  _components:
+  - componentID: 1
+    component: {fileID: 6812155573319058002}
+  _childViews: []
 --- !u!1 &6812155573321007300
 GameObject:
   m_ObjectHideFlags: 0
