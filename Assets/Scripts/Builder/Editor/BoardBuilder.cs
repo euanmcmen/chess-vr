@@ -21,16 +21,13 @@ public class BoardBuilder : EditorWindow
     private GameObject tilePrefab;
 
     [SerializeField]
-    private GameObject graveTilePrefab;
-
-    [SerializeField]
     private GameObject boardOrigin;
 
-    [SerializeField]
-    private GameObject lightGraveBoardOrigin;
+    //[SerializeField]
+    //private GameObject lightGraveBoardOrigin;
 
-    [SerializeField]
-    private GameObject darkGraveBoardOrigin;
+    //[SerializeField]
+    //private GameObject darkGraveBoardOrigin;
 
     [SerializeField]
     private GameObject pawnPrefab;
@@ -49,6 +46,12 @@ public class BoardBuilder : EditorWindow
 
     [SerializeField]
     private GameObject kingPrefab;
+
+    [SerializeField]
+    private GameObject graveTilePrefab;
+
+    [SerializeField]
+    private GameObject graveTileContainerPrefab;
 
     private static readonly Dictionary<int, int> indexArrayTilePositionMultiplierMap = new()
     {
@@ -99,8 +102,8 @@ public class BoardBuilder : EditorWindow
     {
         EditorHelper.DrawEditorControlsInGroup("Origins", false, () => {
             boardOrigin = EditorHelper.DrawTypedObjectField("Board Origin", boardOrigin, allowSceneObjects: true);
-            lightGraveBoardOrigin = EditorHelper.DrawTypedObjectField("Light Grave Origin", lightGraveBoardOrigin, allowSceneObjects: true);
-            darkGraveBoardOrigin = EditorHelper.DrawTypedObjectField("Dark Grave Origin", darkGraveBoardOrigin, allowSceneObjects: true);
+            //lightGraveBoardOrigin = EditorHelper.DrawTypedObjectField("Light Grave Origin", lightGraveBoardOrigin, allowSceneObjects: true);
+            //darkGraveBoardOrigin = EditorHelper.DrawTypedObjectField("Dark Grave Origin", darkGraveBoardOrigin, allowSceneObjects: true);
         });
 
         EditorHelper.DrawEditorControlsInGroup("Board Materials", false, () => {
@@ -113,9 +116,10 @@ public class BoardBuilder : EditorWindow
             pieceDarkMaterial = EditorHelper.DrawTypedObjectField("Dark Material", pieceDarkMaterial);
         });
 
-        EditorHelper.DrawEditorControlsInGroup("Tile Prefabs", false, () => {
+        EditorHelper.DrawEditorControlsInGroup("Board Prefabs", false, () => {
             tilePrefab = EditorHelper.DrawTypedObjectField("Tile Prefab", tilePrefab);
             graveTilePrefab = EditorHelper.DrawTypedObjectField("Grave Tile Prefab", graveTilePrefab);
+            graveTileContainerPrefab = EditorHelper.DrawTypedObjectField("Grave Tile Container Prefab", graveTileContainerPrefab);
         });
 
         EditorHelper.DrawEditorControlsInGroup("Piece Prefabs", false, () => {
@@ -186,6 +190,9 @@ public class BoardBuilder : EditorWindow
 
         float tileLength = graveTilePrefab.transform.localScale.x;
 
+        var lightGraveContainer = PrefabUtility.InstantiatePrefab(graveTileContainerPrefab, boardOrigin.transform) as GameObject;
+        lightGraveContainer.GetComponent<GraveBoardApiScript>().Team = ChessPieceTeam.Light;
+
         foreach (var i in lightRowArray)
         {
             float tilePositionZ = GetTilePositionFromRowColumnIndex(i, tileLength);
@@ -193,10 +200,13 @@ public class BoardBuilder : EditorWindow
             foreach (var j in lightColumnArray)
             {
                 float tilePositionX = GetTilePositionFromRowColumnIndex(j, tileLength);
-                var tile = PrefabUtility.InstantiatePrefab(graveTilePrefab, lightGraveBoardOrigin.transform) as GameObject;
-                tile.transform.position = new Vector3(tilePositionX, lightGraveBoardOrigin.transform.position.y, tilePositionZ);
+                var tile = PrefabUtility.InstantiatePrefab(graveTilePrefab, lightGraveContainer.transform) as GameObject;
+                tile.transform.position = new Vector3(tilePositionX, lightGraveContainer.transform.position.y, tilePositionZ);
             }
         }
+
+        var darkGraveContainer = PrefabUtility.InstantiatePrefab(graveTileContainerPrefab, boardOrigin.transform) as GameObject;
+        darkGraveContainer.GetComponent<GraveBoardApiScript>().Team = ChessPieceTeam.Dark;
 
         foreach (var i in darkRowArray)
         {
@@ -205,8 +215,8 @@ public class BoardBuilder : EditorWindow
             foreach (var j in darkColumnArray)
             {
                 float tilePositionX = GetTilePositionFromRowColumnIndex(j, tileLength);
-                var tile = PrefabUtility.InstantiatePrefab(graveTilePrefab, darkGraveBoardOrigin.transform) as GameObject;
-                tile.transform.position = new Vector3(tilePositionX, darkGraveBoardOrigin.transform.position.y, tilePositionZ);
+                var tile = PrefabUtility.InstantiatePrefab(graveTilePrefab, darkGraveContainer.transform) as GameObject;
+                tile.transform.position = new Vector3(tilePositionX, darkGraveContainer.transform.position.y, tilePositionZ);
             }
         }
     }

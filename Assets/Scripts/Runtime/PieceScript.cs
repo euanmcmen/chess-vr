@@ -26,17 +26,24 @@ public class PieceScript : MonoBehaviour
 
     public IEnumerator HandleMovement(string destinationNotation)
     {
-        var destinationPosition = GetPiecePositionOnTileAtNotation(destinationNotation);
+        var destinationPosition = GetPiecePositionOnBoardTileAtNotation(destinationNotation);
         yield return StartCoroutine(pieceMovementScript.HandleFloatToDestinationPosition(destinationPosition));
 
         SetCurrentPosition(destinationNotation);
     }
 
-    private Vector3 GetPiecePositionOnTileAtNotation(string notation)
+    private Vector3 GetPiecePositionOnBoardTileAtNotation(string notation)
     {
         var tilePos = boardApi.GetTileByNotation(notation).transform.position;
         return new Vector3(tilePos.x, transform.position.y, tilePos.z);
     }
+
+    //private Vector3 GetPiecePositionOnNextGraveTile()
+    //{
+    //    //graveBoardApi.
+    //    //var tilePos = boardApi.GetTileByNotation(notation).transform.position;
+    //    return new Vector3(tilePos.x, transform.position.y, tilePos.z);
+    //}
 
     private void SetCurrentPosition(string notation)
     {

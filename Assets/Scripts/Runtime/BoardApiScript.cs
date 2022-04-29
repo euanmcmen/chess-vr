@@ -40,6 +40,12 @@ public class BoardApiScript : MonoBehaviour
         GetBoardTileHighlightScriptByNotation(notation).HideHighlight();
     }
 
+    // Grave Board
+    public GraveBoardApiScript GetGraveBoardApiForTeam(ChessPieceTeam team)
+    {
+        return GetComponentsInChildren<GraveBoardApiScript>().Single(x => x.Team == team);
+    }
+
     private BoardTileScript GetBoardTileScriptByNotation(string notation)
     {
         return GetBoardTileTransformByNotation(notation).GetComponent<BoardTileScript>();
