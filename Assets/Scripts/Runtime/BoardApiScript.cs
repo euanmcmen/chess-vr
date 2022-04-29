@@ -31,18 +31,23 @@ public class BoardApiScript : MonoBehaviour
     // Tile Highlight
     public void ShowTileHighlightByNotation(string notation)
     {
-        GetBoardTileScriptByNotation(notation).ShowHighlight();
+        GetBoardTileHighlightScriptByNotation(notation).ShowHighlight();
     }
 
     // Tile Highlight
     public void HideTileHighlightByNotation(string notation)
     {
-        GetBoardTileScriptByNotation(notation).HideHighlight();
+        GetBoardTileHighlightScriptByNotation(notation).HideHighlight();
     }
 
     private BoardTileScript GetBoardTileScriptByNotation(string notation)
     {
         return GetBoardTileTransformByNotation(notation).GetComponent<BoardTileScript>();
+    }
+
+    private BoardTileHighlightScript GetBoardTileHighlightScriptByNotation(string notation)
+    {
+        return GetBoardTileTransformByNotation(notation).GetComponent<BoardTileHighlightScript>();
     }
 
     private Transform GetBoardTileTransformByNotation(string notation)

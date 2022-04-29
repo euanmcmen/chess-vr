@@ -3,16 +3,6 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[Serializable]
-public class ChessPiecePrefabPair
-{
-    [SerializeField]
-    public ChessPieceType ChessPiece;
-
-    [SerializeField]
-    public GameObject Prefab;
-}
-
 public class BoardBuilder : EditorWindow
 {
     [SerializeField]
@@ -31,7 +21,16 @@ public class BoardBuilder : EditorWindow
     private GameObject tilePrefab;
 
     [SerializeField]
+    private GameObject graveTilePrefab;
+
+    [SerializeField]
     private GameObject boardOrigin;
+
+    [SerializeField]
+    private GameObject lightGraveBoardOrigin;
+
+    [SerializeField]
+    private GameObject darkGraveBoardOrigin;
 
     [SerializeField]
     private GameObject pawnPrefab;
@@ -53,6 +52,9 @@ public class BoardBuilder : EditorWindow
 
     private static readonly Dictionary<int, int> indexArrayTilePositionMultiplierMap = new()
     {
+        { -2, -7},
+        { -1, -6},
+
         { 1, -4 },
         { 2, -3 },
         { 3, -2 },
@@ -60,7 +62,10 @@ public class BoardBuilder : EditorWindow
         { 5, 1 },
         { 6, 2 },
         { 7, 3 },
-        { 8, 4 }
+        { 8, 4 },
+
+        { 10, 6 },
+        { 11, 7 },
     };
 
     private static readonly Dictionary<int, char> indexArrayRowNameMap = new()
@@ -75,13 +80,13 @@ public class BoardBuilder : EditorWindow
         { 8, 'h' }
     };
 
-    [MenuItem("Chess/Build Board")]
+    [MenuItem("Chess/Board Builder")]
     public static void ShowWindow()
     {
         var window = EditorWindow.GetWindow<BoardBuilder>(false, "Board Builder");
 
         var width = 400;
-        var height = 300;
+        var height = 600;
         var x = (Screen.currentResolution.width - width) / 2;
         var y = (Screen.currentResolution.height - height) / 2;
 
@@ -92,8 +97,10 @@ public class BoardBuilder : EditorWindow
 
     private void OnGUI()
     {
-        EditorHelper.DrawEditorControlsInGroup("Origin", false, () => {
-            boardOrigin = EditorHelper.DrawTypedObjectField("Origin", boardOrigin, allowSceneObjects: true);
+        EditorHelper.DrawEditorControlsInGroup("Origins", false, () => {
+            boardOrigin = EditorHelper.DrawTypedObjectField("Board Origin", boardOrigin, allowSceneObjects: true);
+            lightGraveBoardOrigin = EditorHelper.DrawTypedObjectField("Light Grave Origin", lightGraveBoardOrigin, allowSceneObjects: true);
+            darkGraveBoardOrigin = EditorHelper.DrawTypedObjectField("Dark Grave Origin", darkGraveBoardOrigin, allowSceneObjects: true);
         });
 
         EditorHelper.DrawEditorControlsInGroup("Board Materials", false, () => {
@@ -106,8 +113,9 @@ public class BoardBuilder : EditorWindow
             pieceDarkMaterial = EditorHelper.DrawTypedObjectField("Dark Material", pieceDarkMaterial);
         });
 
-        EditorHelper.DrawEditorControlsInGroup("Board Prefabs", false, () => {
+        EditorHelper.DrawEditorControlsInGroup("Tile Prefabs", false, () => {
             tilePrefab = EditorHelper.DrawTypedObjectField("Tile Prefab", tilePrefab);
+            graveTilePrefab = EditorHelper.DrawTypedObjectField("Grave Tile Prefab", graveTilePrefab);
         });
 
         EditorHelper.DrawEditorControlsInGroup("Piece Prefabs", false, () => {
@@ -124,6 +132,11 @@ public class BoardBuilder : EditorWindow
             if (GUILayout.Button("Generate Board"))
             {
                 GenerateBoard();
+            }
+
+            if (GUILayout.Button("Generate Grave Boards"))
+            {
+                GenerateGraveBoards();
             }
 
             if (GUILayout.Button("Place Pieces"))
@@ -161,6 +174,40 @@ public class BoardBuilder : EditorWindow
             }
 
             useDarkMaterial = !useDarkMaterial;
+        }
+    }
+
+    private void GenerateGraveBoards()
+    {
+        int[] lightColumnArray = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+        int[] lightRowArray = new int[] { -1 , - 2 };
+        int[] darkColumnArray = new int[] { 8, 7, 6, 5, 4, 3, 2, 1 };
+        int[] darkRowArray = new int[] { 10, 11 };
+
+        float tileLength = graveTilePrefab.transform.localScale.x;
+
+        foreach (var i in lightRowArray)
+        {
+            float tilePositionZ = GetTilePositionFromRowColumnIndex(i, tileLength);
+
+            foreach (var j in lightColumnArray)
+            {
+                float tilePositionX = GetTilePositionFromRowColumnIndex(j, tileLength);
+                var tile = PrefabUtility.InstantiatePrefab(graveTilePrefab, lightGraveBoardOrigin.transform) as GameObject;
+                tile.transform.position = new Vector3(tilePositionX, lightGraveBoardOrigin.transform.position.y, tilePositionZ);
+            }
+        }
+
+        foreach (var i in darkRowArray)
+        {
+            float tilePositionZ = GetTilePositionFromRowColumnIndex(i, tileLength);
+
+            foreach (var j in darkColumnArray)
+            {
+                float tilePositionX = GetTilePositionFromRowColumnIndex(j, tileLength);
+                var tile = PrefabUtility.InstantiatePrefab(graveTilePrefab, darkGraveBoardOrigin.transform) as GameObject;
+                tile.transform.position = new Vector3(tilePositionX, darkGraveBoardOrigin.transform.position.y, tilePositionZ);
+            }
         }
     }
 
