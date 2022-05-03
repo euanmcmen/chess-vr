@@ -1,12 +1,11 @@
 ﻿using Assets.Scripts.Runtime.Logic;
-using Assets.Scripts.Runtime.Logic.Parser.MoveParser;
 using Assets.Scripts.Runtime.Logic.Resolvers;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class MoveControlScript : MonoBehaviour
+public class PieceMoveControlScript : MonoBehaviour
 {
     private SimulationBoardLinkScript simulationBoardLinkScript;
 
@@ -18,41 +17,32 @@ public class MoveControlScript : MonoBehaviour
         pieceMovementValidator = new PieceMovementResolver(simulationBoardLinkScript.BoardApi);
     }
 
-    public IEnumerator HandleTeamMove(ChessPieceTeam team, string notation)
+    public IEnumerator HandleTeamPieceMove(ChessPieceTeam team, ChessMove move)
     {
-        var moves = ChessMoveParser.ResolveChessNotation(team, notation);
+        var destinationHighlighter = simulationBoardLinkScript.BoardApi
+            .GetTileByNotation(move.DestinationBoardPosition.Notation)
+            .GetComponent<BoardTileHighlightScript>();
 
-        if (moves == null)
-        {
-            Debug.LogWarningFormat("Unprocessable move: {0}", notation);
-            yield break;
-        }
-
-        foreach (var move in moves)
-        {
-            yield return StartCoroutine(HandleTeamPieceMove(team, move));
-        }
-    }
-
-    private IEnumerator HandleTeamPieceMove(ChessPieceTeam team, ChessMove move)
-    {
-        simulationBoardLinkScript.BoardApi.ShowTileHighlightByNotation(move.DestinationBoardPosition.Notation);
+        destinationHighlighter.ShowHighlight();
 
         if (move.CaptureOnDestinationTile)
         {
-            Destroy(simulationBoardLinkScript.BoardApi.GetPieceOnTileByNotation(move.DestinationBoardPosition.Notation).gameObject);
+            var pieceToCapture = simulationBoardLinkScript.BoardApi
+                .GetTileByNotation(move.DestinationBoardPosition.Notation)
+                .GetComponent<BoardTileScript>().Piece;
+
+            yield return StartCoroutine(pieceToCapture.HandleMovementToGrave());
         }
 
-        yield return StartCoroutine(
-            GetPieceToMove(team, move).HandleMovement(move.DestinationBoardPosition.Notation));
+        yield return StartCoroutine(GetPieceToMove(team, move).HandleMovement(move.DestinationBoardPosition.Notation));
 
-        simulationBoardLinkScript.BoardApi.HideTileHighlightByNotation(move.DestinationBoardPosition.Notation);
+        destinationHighlighter.HideHighlight();
     }
 
     private PieceScript GetPieceToMove(ChessPieceTeam team, ChessMove move)
     {
         var matchingPieces = simulationBoardLinkScript.BoardApi.GetAllPieces()
-            .Where(x => x.Team == team && x.Type == move.PieceType)
+            .Where(x => x.Team == team && x.Type == move.PieceType && !x.IsCaptured)
             .ToList();
 
         return move.DisambiguationOriginBoardPosition != null

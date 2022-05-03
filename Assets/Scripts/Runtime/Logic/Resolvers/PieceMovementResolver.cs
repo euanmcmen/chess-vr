@@ -101,7 +101,8 @@ namespace Assets.Scripts.Runtime.Logic.Resolvers
 
             foreach (var position in positions)
             {
-                var piece = boardApi.GetPieceOnTileByNotation(position.Notation);
+                var piece = boardApi.GetTileByNotation(position.Notation).GetComponent<BoardTileScript>().Piece;
+
                 if (piece != null)
                     return true;
             }

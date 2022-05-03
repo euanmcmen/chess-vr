@@ -760,6 +760,12 @@ PrefabInstance:
       propertyPath: boardApi
       value: 
       objectReference: {fileID: 2003995186}
+    - target: {fileID: -4172768940440193418, guid: d73f149db019c9d43a7b168e7bdc68ad,
+        type: 3}
+      propertyPath: clockData
+      value: 
+      objectReference: {fileID: 11400000, guid: 1db6ad4571452094eba5cdfabebdb4f5,
+        type: 2}
     - target: {fileID: -2919964515897686091, guid: d73f149db019c9d43a7b168e7bdc68ad,
         type: 3}
       propertyPath: boardApiScript

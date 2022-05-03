@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Runtime.Logic;
 using Assets.Scripts.Runtime.Logic.Parser.GameParser;
+using Assets.Scripts.Runtime.Logic.Parser.MoveParser;
 using Assets.Scripts.Runtime.Logic.Parser.TurnParser;
 using System.Collections;
 using UnityEngine;
@@ -11,57 +12,52 @@ public class GameControlScript : MonoBehaviour
     private UnityEvent<ChessTurn> onChessTurnParsed;
 
     private SimulationDataScript simulationDataScript;
-    private TurnControlScript turnControlScript;
+    private PieceMoveControlScript pieceMoveControlScript;
+    private WaitForSeconds turnWaitForSeconds;
 
     private void Awake()
     {
         simulationDataScript = GetComponent<SimulationDataScript>();
-        turnControlScript = GetComponent<TurnControlScript>();
+        pieceMoveControlScript = GetComponent<PieceMoveControlScript>();
+        turnWaitForSeconds = new WaitForSeconds(simulationDataScript.ClockData.SecondsBetweenTurns);
     }
 
     public IEnumerator HandleGame()
     {
-        var turnWaitForSeconds = new WaitForSeconds(simulationDataScript.ClockData.SecondsBetweenTurns);
         var turns = ChessGameParser.ResolveTurnsInGame(simulationDataScript.GameData.GamePGN);
-
-        //var currentTurnIndex = 0;
-        //while (currentTurnIndex < turns.Count)
-        //{
-
-        //}
-
-        //for (int i = 0; i < turns.Count; i++)
-        //{
-
-        //}
 
         foreach (string turnNotation in turns)
         {
-            var turn = ChessTurnParser.ResolveChessTurn(turnNotation);
+            yield return StartCoroutine(HandleTurn(turnNotation));
+        }
+    }
 
-            onChessTurnParsed.Invoke(turn);
+    private IEnumerator HandleTurn(string turnNotation)
+    {
+        var turn = ChessTurnParser.ResolveChessTurn(turnNotation);
 
-            yield return StartCoroutine(turnControlScript.HandleTurn(turn));
+        onChessTurnParsed.Invoke(turn);
 
-            yield return turnWaitForSeconds;
+        yield return StartCoroutine(HandleTeamMove(ChessPieceTeam.Light, turn.LightTeamMoveNotation));
+
+        yield return StartCoroutine(HandleTeamMove(ChessPieceTeam.Dark, turn.DarkTeamMoveNotation));
+
+        yield return turnWaitForSeconds;
+    }
+
+    public IEnumerator HandleTeamMove(ChessPieceTeam team, string notation)
+    {
+        var moves = ChessMoveParser.ResolveChessNotation(team, notation);
+
+        if (moves == null)
+        {
+            Debug.LogWarningFormat("Unprocessable move: {0}", notation);
+            yield break;
         }
 
-        //var turn = ChessTurnParser.ResolveCh
-        //        essTurn(turns[currentTurnNumber]);
-
-        //currentTurnNumber = turn.TurnNumber;
-
-        //gameProcessorEventScript.DispatchEvent(turn);
-
-        //yield return new WaitUntil(() => gameProcessorEventScript.IsFinished);
-
-        //if (currentTurnNumber == turns.Count)
-        //{
-        //    yield break;
-        //}
-
-        //yield return new WaitForSeconds(clockData.SecondsBetweenTurns);
-
-        //StartCoroutine(HandleCurrentTurn());
+        foreach (var move in moves)
+        {
+            yield return StartCoroutine(pieceMoveControlScript.HandleTeamPieceMove(team, move));
+        }
     }
 }

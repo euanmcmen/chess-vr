@@ -191,7 +191,7 @@ public class BoardBuilder : EditorWindow
         float tileLength = graveTilePrefab.transform.localScale.x;
 
         var lightGraveContainer = PrefabUtility.InstantiatePrefab(graveTileContainerPrefab, boardOrigin.transform) as GameObject;
-        lightGraveContainer.GetComponent<GraveBoardApiScript>().Team = ChessPieceTeam.Light;
+        lightGraveContainer.GetComponent<GraveBoardScript>().Team = ChessPieceTeam.Light;
 
         foreach (var i in lightRowArray)
         {
@@ -206,7 +206,7 @@ public class BoardBuilder : EditorWindow
         }
 
         var darkGraveContainer = PrefabUtility.InstantiatePrefab(graveTileContainerPrefab, boardOrigin.transform) as GameObject;
-        darkGraveContainer.GetComponent<GraveBoardApiScript>().Team = ChessPieceTeam.Dark;
+        darkGraveContainer.GetComponent<GraveBoardScript>().Team = ChessPieceTeam.Dark;
 
         foreach (var i in darkRowArray)
         {

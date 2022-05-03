@@ -8,52 +8,65 @@ public class PieceScript : MonoBehaviour
     public ChessPieceType Type;
     public string InitialPositionNotation;
 
+    public ChessBoardPosition CurrentBoardPosition { get; private set; }
+
+    public bool IsCaptured { get; private set; }
+
     private BoardApiScript boardApi;
     private PieceMovementScript pieceMovementScript;
-
-    public ChessBoardPosition CurrentBoardPosition { get; private set; }
+    private Transform currentTile;
 
     private void Awake()
     {
         boardApi = transform.GetComponentInParent<BoardApiScript>();
         pieceMovementScript = transform.GetComponent<PieceMovementScript>();
+        IsCaptured = false;
     }
 
     private void Start()
     {
-        SetCurrentPosition(InitialPositionNotation);
+        var startingTile = boardApi.GetTileByNotation(InitialPositionNotation);
+
+        SetCurrentPosition(startingTile);
     }
 
     public IEnumerator HandleMovement(string destinationNotation)
     {
-        var destinationPosition = GetPiecePositionOnBoardTileAtNotation(destinationNotation);
+        var targetTile = boardApi.GetTileByNotation(destinationNotation);
+        var destinationPosition = GetPiecePositionOnTile(targetTile);
+
         yield return StartCoroutine(pieceMovementScript.HandleFloatToDestinationPosition(destinationPosition));
 
-        SetCurrentPosition(destinationNotation);
+        SetCurrentPosition(targetTile);
     }
 
-    private Vector3 GetPiecePositionOnBoardTileAtNotation(string notation)
+    public IEnumerator HandleMovementToGrave()
     {
-        var tilePos = boardApi.GetTileByNotation(notation).transform.position;
-        return new Vector3(tilePos.x, transform.position.y, tilePos.z);
+        IsCaptured = true;
+
+        var targetTile = boardApi.GetGraveBoardApiForTeam(Team).GetNextTile();
+        var destinationPosition = GetPiecePositionOnTile(targetTile);
+
+        yield return StartCoroutine(pieceMovementScript.HandleFloatToDestinationPosition(destinationPosition));
+
+        SetCurrentPosition(targetTile);
     }
 
-    //private Vector3 GetPiecePositionOnNextGraveTile()
-    //{
-    //    //graveBoardApi.
-    //    //var tilePos = boardApi.GetTileByNotation(notation).transform.position;
-    //    return new Vector3(tilePos.x, transform.position.y, tilePos.z);
-    //}
-
-    private void SetCurrentPosition(string notation)
+    private Vector3 GetPiecePositionOnTile(Transform targetTile)
     {
-        if (CurrentBoardPosition != null)
+        return new Vector3(targetTile.position.x, transform.position.y, targetTile.position.z);
+    }
+
+    private void SetCurrentPosition(Transform targetTile)
+    {
+        if (currentTile != null)
         {
-            boardApi.SetPieceOnTileByNotation(CurrentBoardPosition.Notation, null);
+            currentTile.GetComponent<BoardTileScript>().Piece = null;
         }
 
-        CurrentBoardPosition = new ChessBoardPosition(notation);
+        currentTile = targetTile;
+        targetTile.GetComponent<BoardTileScript>().Piece = this;
 
-        boardApi.SetPieceOnTileByNotation(CurrentBoardPosition.Notation, this);
+        CurrentBoardPosition = IsCaptured ? null : new ChessBoardPosition(currentTile.name);
     }
 }
