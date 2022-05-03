@@ -22,6 +22,11 @@ public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
         StartSimulation();
     }
 
+    public void ToggleSimulationRunningState()
+    {
+
+    }
+
     protected override void OnRealtimeModelReplaced(SimulationControlModel previousModel, SimulationControlModel currentModel)
     {
         if (currentModel != null)
@@ -39,14 +44,34 @@ public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
 
         model.started = true;
 
+        TakeOwnership();
+
+        Debug.Log("Starting simulation as host.");
+
+        StartCoroutine(gameControlScipt.HandleGame());
+    }
+
+    private void StopSimulation()
+    {
+        if (!model.started)
+            return;
+
+        model.started = false;
+
+        TakeOwnership();
+
+        //Dispatch an event to tell anything interested, "stop the simulation".
+        //  The game parser should stop processing turns.
+        //  The piece move script should stop processing moves.
+        //  The piece's movement scripts should stop moving.
+    }
+
+    private void TakeOwnership()
+    {
         foreach (var piece in simulationBoardLink.BoardApi.GetAllPieces())
         {
             piece.GetComponent<RealtimeTransform>()
                 .RequestOwnership();
         }
-
-        Debug.Log("Starting simulation as host.");
-
-        StartCoroutine(gameControlScipt.HandleGame());
     }
 }

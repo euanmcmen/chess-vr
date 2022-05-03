@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Runtime.Logic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -45,7 +46,13 @@ namespace Assets.Scripts.Runtime.Logic.Parser.MoveParser
             if (!string.IsNullOrEmpty(matchKeys["originNotation"]))
             {
                 var value = matchKeys["originNotation"];
-                matchedResult.DisambiguationOriginBoardPosition = new ChessBoardPosition(value);
+
+                matchedResult.DisambiguationOriginBoardPosition = value.Length switch
+                {
+                    1 => new DisambiguationChessBoardPosition(value),
+                    2 => new ChessBoardPosition(value),
+                    _ => throw new InvalidOperationException($"Invalid notation: {value}"),
+                };
             }
 
             // Add capture flag.
@@ -59,7 +66,7 @@ namespace Assets.Scripts.Runtime.Logic.Parser.MoveParser
                 matchedResult.DisambiguationOriginBoardPosition == null)
             {
                 matchedResult.DisambiguationOriginBoardPosition =
-                    new ChessBoardPosition(matchedResult.DestinationBoardPosition.ColumnLetter);
+                    new DisambiguationChessBoardPosition(matchedResult.DestinationBoardPosition.ColumnLetter);
             }
 
             result.Add(matchedResult);

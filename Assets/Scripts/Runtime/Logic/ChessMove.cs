@@ -2,7 +2,7 @@
 {
     public class ChessMove
     {
-        public ChessBoardPosition DisambiguationOriginBoardPosition { get; set; }
+        public IChessBoardPosition DisambiguationOriginBoardPosition { get; set; }
 
         public ChessBoardPosition DestinationBoardPosition { get; set; }
 

@@ -11,28 +11,23 @@ public class ChessBoardPositionEditTests
         Assert.AreEqual("b2", position.Notation);
         Assert.AreEqual(ChessBoardColumnLetter.b, position.ColumnLetter);
         Assert.AreEqual(2, position.RowNumber);
-        Assert.AreEqual(false, position.IsPartialNotation);
     }
 
     [Test]
     public void CreatedWithPartialNotationShouldResolveCorrectly()
     {
-        var position = new ChessBoardPosition("b");
+        var position = new DisambiguationChessBoardPosition("b");
 
-        Assert.AreEqual(null, position.Notation);
+        Assert.AreEqual("b", position.Notation);
         Assert.AreEqual(ChessBoardColumnLetter.b, position.ColumnLetter);
-        Assert.AreEqual(0, position.RowNumber);
-        Assert.AreEqual(true, position.IsPartialNotation);
     }
 
     [Test]
     public void CreatedWithLetterOnlyShouldResolveCorrectly()
     {
-        var position = new ChessBoardPosition(ChessBoardColumnLetter.b);
+        var position = new DisambiguationChessBoardPosition(ChessBoardColumnLetter.b);
 
-        Assert.AreEqual(null, position.Notation);
+        Assert.AreEqual("b", position.Notation);
         Assert.AreEqual(ChessBoardColumnLetter.b, position.ColumnLetter);
-        Assert.AreEqual(0, position.RowNumber);
-        Assert.AreEqual(true, position.IsPartialNotation);
     }
 }

@@ -52,7 +52,7 @@ public class PieceMoveControlScript : MonoBehaviour
 
     private PieceScript GetPieceToMoveFromDisambiguation(List<PieceScript> matchingPieces, ChessMove move)
     {
-        return move.DisambiguationOriginBoardPosition.IsPartialNotation
+        return DisambiguationHasPartialNotationOnly(move)
             ? matchingPieces.Single(x => x.CurrentBoardPosition.ColumnLetter == move.DisambiguationOriginBoardPosition.ColumnLetter)
             : matchingPieces.Single(x => x.CurrentBoardPosition.Notation == move.DisambiguationOriginBoardPosition.Notation);
     }
@@ -60,5 +60,10 @@ public class PieceMoveControlScript : MonoBehaviour
     private PieceScript GetPieceToMoveFromResolver(List<PieceScript> matchingPieces, ChessPieceTeam team, ChessMove move)
     {
         return matchingPieces.Single(x => pieceMovementValidator.ResolveMovingPiece(team, x, move));
+    }
+
+    private bool DisambiguationHasPartialNotationOnly(ChessMove move)
+    {
+        return move.DisambiguationOriginBoardPosition is DisambiguationChessBoardPosition;
     }
 }
