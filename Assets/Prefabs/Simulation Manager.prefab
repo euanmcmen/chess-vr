@@ -88,7 +88,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c2ee808de671864daf986cae598df48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onChessTurnParsed:
+  onChessTurnSetParsed:
     m_PersistentCalls:
       m_Calls: []
 --- !u!114 &669877498558252578

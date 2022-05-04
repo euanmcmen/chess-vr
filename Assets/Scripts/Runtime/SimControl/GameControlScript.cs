@@ -9,7 +9,7 @@ using UnityEngine.Events;
 public class GameControlScript : MonoBehaviour
 {
     [SerializeField]
-    private UnityEvent<ChessTurn> onChessTurnParsed;
+    private UnityEvent<ChessTurnSet> onChessTurnSetParsed;
 
     private SimulationDataScript simulationDataScript;
     private PieceMoveControlScript pieceMoveControlScript;
@@ -26,18 +26,39 @@ public class GameControlScript : MonoBehaviour
     {
         var turns = ChessGameParser.ResolveTurnsInGame(simulationDataScript.GameData.GamePGN);
 
-        foreach (string turnNotation in turns)
+        for (int i = 0; i < turns.Count; i++)
         {
-            yield return StartCoroutine(HandleTurn(turnNotation));
+            int prev = i - 1;
+            int next = i + 1;
+
+            var chessTurnSet = new ChessTurnSet
+            {
+                Current = ChessTurnParser.ResolveChessTurn(turns[i])
+            };
+
+            if (prev >= 0)
+            {
+                chessTurnSet.Previous = ChessTurnParser.ResolveChessTurn(turns[prev]);
+            }
+
+            if (next < turns.Count)
+            {
+                chessTurnSet.Next = ChessTurnParser.ResolveChessTurn(turns[next]);
+            }
+
+            HandleChessTurnEvents(chessTurnSet);
+
+            yield return StartCoroutine(HandleCurrentTurn(chessTurnSet.Current));
         }
     }
 
-    private IEnumerator HandleTurn(string turnNotation)
+    private void HandleChessTurnEvents(ChessTurnSet chessTurnSet)
     {
-        var turn = ChessTurnParser.ResolveChessTurn(turnNotation);
+        onChessTurnSetParsed.Invoke(chessTurnSet);
+    }
 
-        onChessTurnParsed.Invoke(turn);
-
+    private IEnumerator HandleCurrentTurn(ChessTurn turn)
+    {
         yield return StartCoroutine(HandleTeamMove(ChessPieceTeam.Light, turn.LightTeamMoveNotation));
 
         yield return StartCoroutine(HandleTeamMove(ChessPieceTeam.Dark, turn.DarkTeamMoveNotation));

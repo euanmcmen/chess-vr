@@ -37,12 +37,14 @@ public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
         }
     }
 
+    //TODO - Add change handlers for model.isRunning -- see GameScreenScript for flow.  change model property -> handle onchange event
+
     private void StartSimulation()
     {
-        if (model.started)
+        if (model.isRunning)
             return;
 
-        model.started = true;
+        model.isRunning = true;
 
         TakeOwnership();
 
@@ -53,10 +55,10 @@ public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
 
     private void StopSimulation()
     {
-        if (!model.started)
+        if (!model.isRunning)
             return;
 
-        model.started = false;
+        model.isRunning = false;
 
         TakeOwnership();
 

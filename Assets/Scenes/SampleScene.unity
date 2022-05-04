@@ -135,7 +135,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 6812155573180169601}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 6812155573180169602}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5309f3be92fbb104f911b8d87d09cee2, type: 3}
@@ -592,6 +592,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Game Screen (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6812155573319058003, guid: 8b2d93baeda6ac748a7efc93d9f3f1b0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6812155573319058006, guid: 8b2d93baeda6ac748a7efc93d9f3f1b0,
         type: 3}
       propertyPath: m_RootOrder
@@ -760,12 +765,6 @@ PrefabInstance:
       propertyPath: boardApi
       value: 
       objectReference: {fileID: 2003995186}
-    - target: {fileID: -4172768940440193418, guid: d73f149db019c9d43a7b168e7bdc68ad,
-        type: 3}
-      propertyPath: clockData
-      value: 
-      objectReference: {fileID: 11400000, guid: 1db6ad4571452094eba5cdfabebdb4f5,
-        type: 2}
     - target: {fileID: -2919964515897686091, guid: d73f149db019c9d43a7b168e7bdc68ad,
         type: 3}
       propertyPath: boardApiScript
@@ -833,13 +832,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7769194504293410282, guid: d73f149db019c9d43a7b168e7bdc68ad,
         type: 3}
-      propertyPath: onChessTurnParsed.m_PersistentCalls.m_Calls.Array.size
+      propertyPath: onChessTurnSetParsed.m_PersistentCalls.m_Calls.Array.size
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7769194504293410282, guid: d73f149db019c9d43a7b168e7bdc68ad,
         type: 3}
       propertyPath: onChessTurnParsed.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7769194504293410282, guid: d73f149db019c9d43a7b168e7bdc68ad,
         type: 3}
@@ -850,12 +849,22 @@ PrefabInstance:
         type: 3}
       propertyPath: onChessTurnParsed.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 142131155}
+      objectReference: {fileID: 6812155573180169602}
     - target: {fileID: 7769194504293410282, guid: d73f149db019c9d43a7b168e7bdc68ad,
         type: 3}
       propertyPath: onChessTurnParsed.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 1215164474}
+    - target: {fileID: 7769194504293410282, guid: d73f149db019c9d43a7b168e7bdc68ad,
+        type: 3}
+      propertyPath: onChessTurnSetParsed.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7769194504293410282, guid: d73f149db019c9d43a7b168e7bdc68ad,
+        type: 3}
+      propertyPath: onChessTurnSetParsed.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7769194504293410282, guid: d73f149db019c9d43a7b168e7bdc68ad,
         type: 3}
       propertyPath: onChessTurnParsed.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
@@ -868,8 +877,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7769194504293410282, guid: d73f149db019c9d43a7b168e7bdc68ad,
         type: 3}
+      propertyPath: onChessTurnSetParsed.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 142131155}
+    - target: {fileID: 7769194504293410282, guid: d73f149db019c9d43a7b168e7bdc68ad,
+        type: 3}
+      propertyPath: onChessTurnSetParsed.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1215164474}
+    - target: {fileID: 7769194504293410282, guid: d73f149db019c9d43a7b168e7bdc68ad,
+        type: 3}
       propertyPath: onChessTurnParsed.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: HandleTurnParsedEvent
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7769194504293410282, guid: d73f149db019c9d43a7b168e7bdc68ad,
         type: 3}
@@ -878,8 +897,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7769194504293410282, guid: d73f149db019c9d43a7b168e7bdc68ad,
         type: 3}
+      propertyPath: onChessTurnSetParsed.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7769194504293410282, guid: d73f149db019c9d43a7b168e7bdc68ad,
+        type: 3}
+      propertyPath: onChessTurnSetParsed.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7769194504293410282, guid: d73f149db019c9d43a7b168e7bdc68ad,
+        type: 3}
+      propertyPath: onChessTurnSetParsed.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: HandleTurnSetParsedEvent
+      objectReference: {fileID: 0}
+    - target: {fileID: 7769194504293410282, guid: d73f149db019c9d43a7b168e7bdc68ad,
+        type: 3}
+      propertyPath: onChessTurnSetParsed.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: HandleTurnSetParsedEvent
+      objectReference: {fileID: 0}
+    - target: {fileID: 7769194504293410282, guid: d73f149db019c9d43a7b168e7bdc68ad,
+        type: 3}
       propertyPath: onChessTurnParsed.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: GameScreenScript, RuntimeScripts
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7769194504293410282, guid: d73f149db019c9d43a7b168e7bdc68ad,
         type: 3}
@@ -888,12 +927,32 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7769194504293410282, guid: d73f149db019c9d43a7b168e7bdc68ad,
         type: 3}
+      propertyPath: onChessTurnSetParsed.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GameScreenScript, RuntimeScripts
+      objectReference: {fileID: 0}
+    - target: {fileID: 7769194504293410282, guid: d73f149db019c9d43a7b168e7bdc68ad,
+        type: 3}
+      propertyPath: onChessTurnSetParsed.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: GameScreenScript, RuntimeScripts
+      objectReference: {fileID: 0}
+    - target: {fileID: 7769194504293410282, guid: d73f149db019c9d43a7b168e7bdc68ad,
+        type: 3}
       propertyPath: onChessTurnParsed.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7769194504293410282, guid: d73f149db019c9d43a7b168e7bdc68ad,
         type: 3}
       propertyPath: onChessTurnParsed.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 7769194504293410282, guid: d73f149db019c9d43a7b168e7bdc68ad,
+        type: 3}
+      propertyPath: onChessTurnSetParsed.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 7769194504293410282, guid: d73f149db019c9d43a7b168e7bdc68ad,
+        type: 3}
+      propertyPath: onChessTurnSetParsed.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8445152971935585557, guid: d73f149db019c9d43a7b168e7bdc68ad,
@@ -998,6 +1057,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b2d93baeda6ac748a7efc93d9f3f1b0, type: 3}
+--- !u!1 &6812155573180169602 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6812155573319058003, guid: 8b2d93baeda6ac748a7efc93d9f3f1b0,
+    type: 3}
+  m_PrefabInstance: {fileID: 6812155573180169601}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7330823669464359216
 PrefabInstance:
   m_ObjectHideFlags: 0

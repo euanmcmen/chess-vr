@@ -3,22 +3,31 @@ using Normal.Realtime;
 using TMPro;
 using UnityEngine;
 
-public class GameScreenScript  : RealtimeComponent<GameScreenModel>
+public class GameScreenScript : RealtimeComponent<GameScreenModel>
 {
     [SerializeField]
-    private TMP_Text lightText;
+    private GameScreenTextSetScript lightTextSet;
 
     [SerializeField]
-    private TMP_Text darkText;
+    private GameScreenTextSetScript darkTextSet;
 
     [SerializeField]
     private TMP_Text turnText;
 
-    public void HandleTurnParsedEvent(ChessTurn chessTurn)
+    //public void HandleTurnParsedEvent(ChessTurn chessTurn)
+    //{
+    //    model.currentTurnNumber = chessTurn.TurnNumber.ToString();
+    //    model.currentLightMove = chessTurn.LightTeamMoveNotation;
+    //    model.currentDarkMove = chessTurn.DarkTeamMoveNotation;
+    //}
+
+    public void HandleTurnSetParsedEvent(ChessTurnSet chessTurnSet)
     {
-        model.currentTurnNumber = chessTurn.TurnNumber.ToString();
-        model.currentLightMove = chessTurn.LightTeamMoveNotation;
-        model.currentDarkMove = chessTurn.DarkTeamMoveNotation;
+        model.currentTurnNumber = chessTurnSet.Current.TurnNumber.ToString();
+
+        lightTextSet.UpdateTextFields(chessTurnSet);
+
+        darkTextSet.UpdateTextFields(chessTurnSet);
     }
 
     protected override void OnRealtimeModelReplaced(GameScreenModel previousModel, GameScreenModel currentModel)
@@ -26,8 +35,6 @@ public class GameScreenScript  : RealtimeComponent<GameScreenModel>
         if (previousModel != null)
         {
             previousModel.currentTurnNumberDidChange -= HandleCurrentTurnNumberDidChange;
-            previousModel.currentLightMoveDidChange -= HandleScreenCurrentLightMoveDidChange;
-            previousModel.currentDarkMoveDidChange -= HandleScreenCurrentDarkMoveDidChange;
         }
 
         if (currentModel != null)
@@ -38,42 +45,16 @@ public class GameScreenScript  : RealtimeComponent<GameScreenModel>
             }
 
             currentModel.currentTurnNumberDidChange += HandleCurrentTurnNumberDidChange;
-            currentModel.currentLightMoveDidChange += HandleScreenCurrentLightMoveDidChange;
-            currentModel.currentDarkMoveDidChange += HandleScreenCurrentDarkMoveDidChange;
         }
     }
 
-    #region Change handlers
     private void HandleCurrentTurnNumberDidChange(GameScreenModel model, string value)
     {
         UpdateScreenCurrentTurnNumber();
     }
 
-    private void HandleScreenCurrentLightMoveDidChange(GameScreenModel model, string value)
-    {
-        UpdateScreenCurrentLightMove();
-    }
-
-    private void HandleScreenCurrentDarkMoveDidChange(GameScreenModel model, string value)
-    {
-        UpdateScreenCurrentDarkMove();
-    }
-    #endregion
-
-    #region UI Update
     private void UpdateScreenCurrentTurnNumber()
     {
         turnText.text = model.currentTurnNumber.ToString();
     }
-
-    private void UpdateScreenCurrentLightMove()
-    {
-        lightText.text = model.currentLightMove;
-    }
-
-    private void UpdateScreenCurrentDarkMove()
-    {
-        darkText.text = model.currentDarkMove;
-    }
-    #endregion
 }
