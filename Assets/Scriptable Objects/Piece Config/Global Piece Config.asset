@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Global Piece Config
   m_EditorClassIdentifier: 
   pieceMovementCompletesAfterSeconds: 3
-  pieceMovementFloatHeight: 6
+  pieceMovementFloatHeight: 10

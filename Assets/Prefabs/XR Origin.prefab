@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7330823667684197431}
   - component: {fileID: 7330823667684197434}
   - component: {fileID: 7330823667684197433}
+  - component: {fileID: 5274366678632523008}
   m_Layer: 0
   m_Name: XR Origin
   m_TagString: Untagged
@@ -86,6 +87,18 @@ MonoBehaviour:
   m_LocomotionProvider: {fileID: 7330823667933107469}
   m_MinHeight: 1
   m_MaxHeight: 2
+--- !u!114 &5274366678632523008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7330823667684197430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8a63df6967f66c4d9deac0a5a5e8116, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7330823667933107466
 GameObject:
   m_ObjectHideFlags: 0
@@ -98,6 +111,7 @@ GameObject:
   - component: {fileID: 7330823667933107470}
   - component: {fileID: 7330823667933107468}
   - component: {fileID: 7330823667933107469}
+  - component: {fileID: 1382647044}
   m_Layer: 0
   m_Name: Locomotion System
   m_TagString: Untagged
@@ -216,6 +230,19 @@ MonoBehaviour:
       m_Flags: 0
     m_Reference: {fileID: -6493913391331992944, guid: c348712bda248c246b8c49b3db54643f,
       type: 3}
+--- !u!114 &1382647044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7330823667933107466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01f69dc1cb084aa42b2f2f8cd87bc770, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_System: {fileID: 7330823667933107470}
 --- !u!1 &7330823668368214521
 GameObject:
   m_ObjectHideFlags: 0
