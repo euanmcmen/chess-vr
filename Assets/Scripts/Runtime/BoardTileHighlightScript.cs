@@ -1,6 +1,7 @@
+using Normal.Realtime;
 using UnityEngine;
 
-public class BoardTileHighlightScript : MonoBehaviour
+public class BoardTileHighlightScript : RealtimeComponent<BoardTileHighlightModel>
 {
     private GameObject highlight;
 
@@ -11,10 +12,39 @@ public class BoardTileHighlightScript : MonoBehaviour
 
     public void ShowHighlight()
     {
-        highlight.SetActive(true);
+        model.isTileHighlightActive = true;
+        //highlight.SetActive(true);
     }
     public void HideHighlight()
     {
-        highlight.SetActive(false);
+        model.isTileHighlightActive = false;
+        //highlight.SetActive(false);
+    }
+
+    protected override void OnRealtimeModelReplaced(BoardTileHighlightModel previousModel, BoardTileHighlightModel currentModel)
+    {
+        if (previousModel != null)
+        {
+            previousModel.isTileHighlightActiveDidChange -= HandleIsTileHighlightActiveDidChange;
+        }
+
+        if (currentModel != null)
+        {
+            if (currentModel.isFreshModel)
+            {
+            }
+
+            currentModel.isTileHighlightActiveDidChange += HandleIsTileHighlightActiveDidChange;
+        }
+    }
+
+    private void HandleIsTileHighlightActiveDidChange(BoardTileHighlightModel model, bool value)
+    {
+        SyncHighlightWithModel();
+    }
+
+    private void SyncHighlightWithModel()
+    {
+        highlight.SetActive(model.isTileHighlightActive);
     }
 }
