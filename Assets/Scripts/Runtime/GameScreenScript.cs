@@ -3,7 +3,7 @@ using Normal.Realtime;
 using TMPro;
 using UnityEngine;
 
-public class GameScreenScript : RealtimeComponent<GameScreenModel>
+public class GameScreenScript : RealtimeComponent<GameScreenModel>, ITurnSetParsedSubscriber
 {
     [SerializeField]
     private GameScreenTextSetScript lightTextSet;

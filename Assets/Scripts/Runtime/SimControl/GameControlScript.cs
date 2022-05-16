@@ -2,24 +2,33 @@
 using Assets.Scripts.Runtime.Logic.Parser.GameParser;
 using Assets.Scripts.Runtime.Logic.Parser.MoveParser;
 using Assets.Scripts.Runtime.Logic.Parser.TurnParser;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class GameControlScript : MonoBehaviour
+public class GameControlScript : MonoBehaviour, IRunningStateChangedSubscriber
 {
-    [SerializeField]
-    private UnityEvent<ChessTurnSet> onChessTurnSetParsed;
+    private event Action<ChessTurnSet> onChessTurnSetParsed;
 
     private SimulationDataScript simulationDataScript;
     private PieceMoveControlScript pieceMoveControlScript;
     private WaitForSeconds turnWaitForSeconds;
+
+    private bool isRunning;
 
     private void Awake()
     {
         simulationDataScript = GetComponent<SimulationDataScript>();
         pieceMoveControlScript = GetComponent<PieceMoveControlScript>();
         turnWaitForSeconds = new WaitForSeconds(simulationDataScript.ClockData.SecondsBetweenTurns);
+
+        EventActionBinder.BindSubscribersToAction<ITurnSetParsedSubscriber>((implementation) => onChessTurnSetParsed += implementation.HandleTurnSetParsedEvent);
+    }
+
+    public void HandleRunningStateChanged(bool isRunning)
+    {
+        this.isRunning = isRunning;
     }
 
     public IEnumerator HandleGame()
@@ -28,6 +37,8 @@ public class GameControlScript : MonoBehaviour
 
         for (int i = 0; i < turns.Count; i++)
         {
+            yield return new WaitUntil(() => isRunning);
+
             int prev = i - 1;
             int next = i + 1;
 
@@ -66,7 +77,7 @@ public class GameControlScript : MonoBehaviour
         yield return turnWaitForSeconds;
     }
 
-    public IEnumerator HandleTeamMove(ChessPieceTeam team, string notation)
+    private IEnumerator HandleTeamMove(ChessPieceTeam team, string notation)
     {
         var moves = ChessMoveParser.ResolveChessNotation(team, notation);
 
