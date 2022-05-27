@@ -1,8 +1,9 @@
 using Assets.Scripts.Runtime.Logic;
+using Normal.Realtime;
 using System.Collections;
 using UnityEngine;
 
-public class PieceScript : MonoBehaviour
+public class PieceScript : RealtimeComponent<PieceModel>, IRunningStateChangedSubscriber
 {
     public ChessPieceTeam Team;
     public ChessPieceType Type;
@@ -10,63 +11,126 @@ public class PieceScript : MonoBehaviour
 
     public ChessBoardPosition CurrentBoardPosition { get; private set; }
 
-    public bool IsCaptured { get; private set; }
+    public bool IsCaptured => model.isCaptured;
 
     private BoardApiScript boardApi;
     private PieceMovementScript pieceMovementScript;
-    private Transform currentTile;
+    private PieceTurnScript pieceTurnScript;
+    //private Transform currentTile;
+
+    //private bool modelIsMoving;
+    //private Transform modelIsMovingTo;
+    //private bool isRunning;
 
     private void Awake()
     {
         boardApi = transform.GetComponentInParent<BoardApiScript>();
         pieceMovementScript = transform.GetComponent<PieceMovementScript>();
-        IsCaptured = false;
+        pieceTurnScript = GetComponent<PieceTurnScript>();
     }
 
     private void Start()
     {
-        var startingTile = boardApi.GetTileByNotation(InitialPositionNotation);
+        var startingTile = boardApi.GetTileByName(InitialPositionNotation);
 
-        SetCurrentPosition(startingTile);
+        SetPositionOnTile(startingTile);
+
+        //SetCurrentPosition(startingTile);
     }
 
-    public IEnumerator HandleMovement(string destinationNotation)
+    public void HandleRunningStateChangedClient(bool value)
     {
-        var targetTile = boardApi.GetTileByNotation(destinationNotation);
-        var destinationPosition = GetPiecePositionOnTile(targetTile);
-
-        yield return StartCoroutine(pieceMovementScript.HandleFloatToDestinationPosition(destinationPosition));
-
-        SetCurrentPosition(targetTile);
+        //StopAllCoroutines();
     }
 
-    public IEnumerator HandleMovementToGrave()
+    public void HandleRunningStateChanged(bool value)
     {
-        IsCaptured = true;
-
-        var targetTile = boardApi.GetGraveBoardApiForTeam(Team).GetNextTile();
-        var destinationPosition = GetPiecePositionOnTile(targetTile);
-
-        yield return StartCoroutine(pieceMovementScript.HandleFloatToDestinationPosition(destinationPosition));
-
-        SetCurrentPosition(targetTile);
+        //if (value)
+        //{
+        //    if (modelIsMoving)
+        //    {
+        //        SetCurrentPosition(modelIsMovingTo);
+        //    }
+        //}
     }
 
-    private Vector3 GetPiecePositionOnTile(Transform targetTile)
+    public void SetPositionOnTile(string tileName)
     {
-        return new Vector3(targetTile.position.x, transform.position.y, targetTile.position.z);
+        var targetTile = boardApi.GetTileByName(tileName);
+        SetPositionOnTile(targetTile);
     }
 
-    private void SetCurrentPosition(Transform targetTile)
+    public void SetCaptured()
     {
-        if (currentTile != null)
+        model.isCaptured = true;
+    }
+
+    //public void SetPositionOnTile(string tileName)
+    //{
+    //    var targetTile = boardApi.GetTileByName(tileName);
+    //    SetPositionOnTile(targetTile);
+    //}
+
+    //public void SetPositionOnGraveTile()
+    //{
+    //    model.isCaptured = true;
+    //    var targetTile = boardApi.GetGraveBoardApiForTeam(Team).GetNextTile();
+    //    SetPositionOnTile(targetTile);
+    //}
+
+    public IEnumerator PlayMovement()
+    {
+        Debug.Log("Movement starting", gameObject);
+
+        pieceTurnScript.SetMovementStarted();
+
+        // After updating the piece's position in data, this function will move the piece to the position on the board.
+
+        // Read the current tile notation from the mode, get the tile with that name, and move to that position.
+        var currentTile = boardApi.GetTileByName(model.currentTileName);
+        Debug.LogFormat(gameObject, "Current Tile: {0}", currentTile.name);
+        yield return StartCoroutine(pieceMovementScript.HandleFloatToDestinationPosition(currentTile.position));
+
+        pieceTurnScript.SetMovementFinished();
+        Debug.Log("Movement finished", gameObject);
+    }
+
+    //public IEnumerator HandleMovement(string destinationNotation)
+    //{
+    //    var targetTile = boardApi.GetTileByNotation(destinationNotation);
+
+    //    yield return StartCoroutine(pieceMovementScript.HandleFloatToDestinationPosition(targetTile.position));
+
+    //    SetCurrentPosition(targetTile);
+    //}
+
+
+
+    //public IEnumerator HandleMovementToGrave()
+    //{
+    //    IsCaptured = true;
+
+    //    var targetTile = boardApi.GetGraveBoardApiForTeam(Team).GetNextTile();
+
+    //    yield return StartCoroutine(pieceMovementScript.HandleFloatToDestinationPosition(targetTile.position));
+
+    //    SetCurrentPosition(targetTile);
+    //}
+
+
+    private void SetPositionOnTile(Transform tile)
+    {
+        //currentTile = targetTile;
+        //CurrentBoardPosition = IsCaptured ? null : new ChessBoardPosition(currentTile.name);
+
+        model.currentTileName = tile.name;
+
+        if (IsCaptured)
         {
-            currentTile.GetComponent<BoardTileScript>().Piece = null;
+            CurrentBoardPosition = null;
+            return;
         }
 
-        currentTile = targetTile;
-        targetTile.GetComponent<BoardTileScript>().Piece = this;
-
-        CurrentBoardPosition = IsCaptured ? null : new ChessBoardPosition(currentTile.name);
+        CurrentBoardPosition = new ChessBoardPosition(model.currentTileName);
     }
 }

@@ -203,6 +203,7 @@ public class BoardBuilder : EditorWindow
                 float tilePositionX = GetTilePositionFromRowColumnIndex(j, tileLength);
                 var tile = PrefabUtility.InstantiatePrefab(graveTilePrefab, lightGraveContainer.transform) as GameObject;
                 tile.transform.position = new Vector3(tilePositionX, lightGraveContainer.transform.position.y, tilePositionZ);
+                tile.name = $"{ChessPieceTeam.Light}Grave{i}{j}";
             }
         }
 
@@ -221,6 +222,7 @@ public class BoardBuilder : EditorWindow
                 float tilePositionX = GetTilePositionFromRowColumnIndex(j, tileLength);
                 var tile = PrefabUtility.InstantiatePrefab(graveTilePrefab, darkGraveContainer.transform) as GameObject;
                 tile.transform.position = new Vector3(tilePositionX, darkGraveContainer.transform.position.y, tilePositionZ);
+                tile.name = $"{ChessPieceTeam.Dark}Grave{i}{j}";
             }
         }
     }
@@ -319,6 +321,8 @@ public class BoardBuilder : EditorWindow
         pieceScript.Team = team;
         pieceScript.Type = type;
         pieceScript.InitialPositionNotation = tileTransform.gameObject.name;
+
+        piece.name = $"{piece.name} {tileTransform.gameObject.name[..1].ToUpper()}";
 
         return piece;
     }

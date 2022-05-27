@@ -7,5 +7,7 @@ using System.Threading.Tasks;
 public interface IRunningStateChangedSubscriber
 {
     void HandleRunningStateChanged(bool value);
+
+    void HandleRunningStateChangedClient(bool value);
 }
 

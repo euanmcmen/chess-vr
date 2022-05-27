@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts.Runtime.Logic.Resolvers
@@ -101,10 +102,17 @@ namespace Assets.Scripts.Runtime.Logic.Resolvers
 
             foreach (var position in positions)
             {
-                var piece = boardApi.GetTileByNotation(position.Notation).GetComponent<BoardTileScript>().Piece;
+                //var piece = boardApi.GetTileByNotation(position.Notation).GetComponent<BoardTileScript>().Piece;
+                var isBlocked = boardApi.GetAllActivePieces().Any(x => x.CurrentBoardPosition.Notation == position.Notation);
 
-                if (piece != null)
+                if (isBlocked)
+                {
                     return true;
+                }
+                else
+                {
+                    continue;
+                }
             }
 
             return false;

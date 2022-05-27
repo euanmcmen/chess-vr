@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: -2919964515897686091}
   - component: {fileID: -5621592019671754344}
   - component: {fileID: 7769194504293410282}
-  - component: {fileID: 669877498558252578}
   - component: {fileID: 8445152971935585557}
   m_Layer: 0
   m_Name: Simulation Manager
@@ -76,83 +75,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d82c265b3215345408e0ebcfce1a5e02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onRunningStateChanged:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7769194504293410282}
-        m_TargetAssemblyTypeName: GameControlScript, RuntimeScripts
-        m_MethodName: HandleOnRunningStateChanged
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 4978107010042564010, guid: 0c199872f1bf78e478f4e4b7e511619f,
-          type: 3}
-        m_TargetAssemblyTypeName: GameControlScript, RuntimeScripts
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 4346499328560289580, guid: 59b33237928568b4cb28b4df7ab19f82,
-          type: 3}
-        m_TargetAssemblyTypeName: GameControlScript, RuntimeScripts
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: GameControlScript, RuntimeScripts
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: GameControlScript, RuntimeScripts
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: GameControlScript, RuntimeScripts
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &7769194504293410282
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,21 +85,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c2ee808de671864daf986cae598df48, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onChessTurnSetParsed:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &669877498558252578
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2416121555058124362}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de7fd4cf2df87ef47adcdc5c2f466f4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &8445152971935585557
@@ -202,4 +109,6 @@ MonoBehaviour:
   _components:
   - componentID: 1
     component: {fileID: -5621592019671754344}
+  - componentID: 2
+    component: {fileID: 7769194504293410282}
   _childViews: []

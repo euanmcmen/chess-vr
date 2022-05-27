@@ -5,8 +5,16 @@ public class GraveBoardScript : MonoBehaviour
 {
     public ChessPieceTeam Team;
 
+    private BoardApiScript boardApiScript;
+
+    private void Awake()
+    {
+        boardApiScript = GetComponentInParent<BoardApiScript>();
+    }
+
     public Transform GetNextTile()
     {
-        return transform.GetComponentsInChildren<BoardTileScript>().Where(x => x.Piece == null).First().transform;
+        //return transform.GetComponentsInChildren<BoardTileScript>().Where(x => x.Piece == null).First().transform;
+        return transform.GetChild(boardApiScript.GetAllCapturedPieces().Count(x => x.Team == Team));
     }
 }
