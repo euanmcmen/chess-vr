@@ -22,6 +22,9 @@ public class GameControlScript : RealtimeComponent<GameControlModel>, IRunningSt
 
     private bool isRunning;
 
+    [SerializeField]
+    private GameObject pieceMovementDataPrefab;
+
     private void Awake()
     {
         simulationDataScript = GetComponent<SimulationDataScript>();
@@ -59,27 +62,35 @@ public class GameControlScript : RealtimeComponent<GameControlModel>, IRunningSt
             var resolvedTurn = ChessTurnParser.ResolveChessTurn(turn);
             var resolvedTurnMoveData = ResolveMoveDataForTurn(resolvedTurn);
 
-            // TODO - 27/05/2022
-            // Create DGO object and populate serialized movement instruction.
-            // To keep it simple, I should use a flat object with piece names & tile names.
-            // Moving Piece Name 1
-            // Moving Piece Destination Tile Name 1
-            // (Castle Only) Moving Piece Name 2
-            // (Castle Only) Moving Piece Destination Tile Name 2
-            // (Capture Only) Captured Piece Name
-            // (Capture Only) Captured Piece Destination Tile Name
+            var moveList = new List<TurnMovePieceData>();
 
-            // And process the move as:
-            // (Capture Only) Captured Movement -> Piece Movement 1 -> (Castle Only) Piece Movement 2 -->
-            // Where -> represents a delay of piece movement.
-            // where --> represents a delay of turn.
+            if (resolvedTurnMoveData.LightTeamMove != null)
+            {
+                moveList.Add(resolvedTurnMoveData.LightTeamMove.CapturedPieceMoveData);
+                moveList.AddRange(resolvedTurnMoveData.LightTeamMove.MovingPiecesData);
+            }
+
+            if (resolvedTurnMoveData.DarkTeamMove != null)
+            {
+                moveList.Add(resolvedTurnMoveData.DarkTeamMove.CapturedPieceMoveData);
+                moveList.AddRange(resolvedTurnMoveData.DarkTeamMove.MovingPiecesData);
+            }
+
+            for (int i = 0; i < moveList.Count; i++)
+            {
+                if (moveList[i] == null)
+                    continue;
+
+                Realtime.Instantiate(pieceMovementDataPrefab.name, new Realtime.InstantiateOptions())
+                    .GetComponent<PieceMoveDataScript>().SetupModel(resolvedTurn.TurnNumber, i, moveList[i]);
+            }
         }
-
     }
 
     public void PlayFromCurrentTurn()
     {
-        //TODO - Iterate through all turns, fetching DGOs and executing movement instructions for each.
+        //TODO 29/05 - Find all piece move data objects, and order them by sequence id.
+        // Find the next object to play, play the move, and update the last played sequence id.
     }
 
     private void HandleChessTurnEvents(ChessTurnSet chessTurnSet)
@@ -98,13 +109,6 @@ public class GameControlScript : RealtimeComponent<GameControlModel>, IRunningSt
         turnData.DarkTeamMove = darkTeamMoveData;
 
         return turnData;
-
-        //24/05/2022 TODO:
-        // At this point, turndata will contain all of the moves for each team for this turn.
-        // I need to create a DGO entity (referencing a prefab) and store this information in a serialized form.
-        // Take the turndata model and populate the turndata script attached to the DGO.
-        // It will then update the model.
-        // The DGO will be part of a collection of turn DGOs.
     }
 
     private TurnMoveData ResolveMoveDataForTurnTeam(ChessPieceTeam team, string teamMoveNotation)

@@ -87,6 +87,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c2ee808de671864daf986cae598df48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pieceMovementDataPrefab: {fileID: 4803974277465992233, guid: 18e281f1ca293b64ca613f4b4da360c8,
+    type: 3}
 --- !u!114 &8445152971935585557
 MonoBehaviour:
   m_ObjectHideFlags: 0

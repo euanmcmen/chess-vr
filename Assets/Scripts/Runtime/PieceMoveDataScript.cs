@@ -1,0 +1,23 @@
+﻿using Assets.Scripts.Runtime.Models;
+using Normal.Realtime;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using UnityEngine;
+
+public class PieceMoveDataScript :  RealtimeComponent<PieceMoveDataModel>
+{
+    public int SequenceId { get; private set; }
+
+    public void SetupModel(int turnIndex, int inTurnMoveIndex, TurnMovePieceData turnMovePieceData)
+    {
+        SequenceId = int.Parse($"{turnIndex}{inTurnMoveIndex}");
+
+        model.turnIndex = turnIndex;
+        model.inTurnMoveIndex = inTurnMoveIndex;
+        model.pieceName = turnMovePieceData.PieceName;
+        model.destinationTileName = turnMovePieceData.DestinationTileName;
+    }
+}

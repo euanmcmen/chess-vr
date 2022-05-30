@@ -27,44 +27,35 @@ public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
     //Start is called before the first frame update
     private IEnumerator Start()
     {
-        yield return new WaitForSeconds(10);
+        yield return new WaitForSeconds(5);
 
-        if (model.simulationStarted)
-        {
-            Debug.LogFormat("I have joined a game in progress.  My ID is {0}", realtime.clientID);
-            yield return new WaitForSeconds(7);
+        Debug.LogFormat("Going into test mode -- creating turn data.");
 
-            Debug.Log("I am now taking ownership and pausing the simulation.");
+        gameControlScipt.CreateTurnData();
 
-            ToggleSimulationRunningState(false);
+        //if (model.simulationStarted)
+        //{
+        //    Debug.LogFormat("I have joined a game in progress.  My ID is {0}", realtime.clientID);
+        //    yield return new WaitForSeconds(7);
 
-            yield return new WaitForSeconds(7);
+        //    Debug.Log("I am now taking ownership and pausing the simulation.");
 
-            Debug.Log("... and continuing again.");
+        //    ToggleSimulationRunningState(false);
 
-            ToggleSimulationRunningState(true);
+        //    yield return new WaitForSeconds(7);
 
-            yield break;
-        }
+        //    Debug.Log("... and continuing again.");
 
-        Debug.LogFormat("I am the only one here and will start the simulation. My ID is {0}", realtime.clientID);
+        //    ToggleSimulationRunningState(true);
 
-        model.simulationStarted = true;
+        //    yield break;
+        //}
 
-        ToggleSimulationRunningState(true);
+        //Debug.LogFormat("I am the only one here and will start the simulation. My ID is {0}", realtime.clientID);
 
-        //yield return new WaitForSeconds(4);
-
-        //ToggleSimulationRunningState(false);
-
-        //yield return new WaitForSeconds(5);
+        //model.simulationStarted = true;
 
         //ToggleSimulationRunningState(true);
-
-        //Replace with model.simulationStarted = true.
-        //SimulationStarted will reflect whether the simulation has begun.
-        //Then, model.isRunning will reflect whether the simulation is currently running or if it is not -- paused.
-        //SimulationStarted may be used in future for a "reset" operation.
     }
 
     public void TestMessage(bool isRunning)
