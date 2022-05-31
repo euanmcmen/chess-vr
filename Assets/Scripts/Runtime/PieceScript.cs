@@ -65,6 +65,15 @@ public class PieceScript : RealtimeComponent<PieceModel>, IRunningStateChangedSu
         model.isCaptured = true;
     }
 
+    public IEnumerator PlayMovementToPosition(Vector3 tilePosition)
+    {
+        pieceTurnScript.SetMovementStarted();
+
+        yield return StartCoroutine(pieceMovementScript.HandleFloatToDestinationPosition(tilePosition));
+        
+        pieceTurnScript.SetMovementFinished();
+    }
+
     //public void SetPositionOnTile(string tileName)
     //{
     //    var targetTile = boardApi.GetTileByName(tileName);
@@ -78,22 +87,22 @@ public class PieceScript : RealtimeComponent<PieceModel>, IRunningStateChangedSu
     //    SetPositionOnTile(targetTile);
     //}
 
-    public IEnumerator PlayMovement()
-    {
-        Debug.Log("Movement starting", gameObject);
+    //public IEnumerator PlayMovement()
+    //{
+    //    Debug.Log("Movement starting", gameObject);
 
-        pieceTurnScript.SetMovementStarted();
+    //    pieceTurnScript.SetMovementStarted();
 
-        // After updating the piece's position in data, this function will move the piece to the position on the board.
+    //    // After updating the piece's position in data, this function will move the piece to the position on the board.
 
-        // Read the current tile notation from the mode, get the tile with that name, and move to that position.
-        var currentTile = boardApi.GetTileByName(model.currentTileName);
-        Debug.LogFormat(gameObject, "Current Tile: {0}", currentTile.name);
-        yield return StartCoroutine(pieceMovementScript.HandleFloatToDestinationPosition(currentTile.position));
+    //    // Read the current tile notation from the mode, get the tile with that name, and move to that position.
+    //    var currentTile = boardApi.GetTileByName(model.currentTileName);
+    //    Debug.LogFormat(gameObject, "Current Tile: {0}", currentTile.name);
+    //    yield return StartCoroutine(pieceMovementScript.HandleFloatToDestinationPosition(currentTile.position));
 
-        pieceTurnScript.SetMovementFinished();
-        Debug.Log("Movement finished", gameObject);
-    }
+    //    pieceTurnScript.SetMovementFinished();
+    //    Debug.Log("Movement finished", gameObject);
+    //}
 
     //public IEnumerator HandleMovement(string destinationNotation)
     //{

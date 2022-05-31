@@ -11,6 +11,12 @@ public class PieceMoveDataScript :  RealtimeComponent<PieceMoveDataModel>
 {
     public int SequenceId { get; private set; }
 
+    public string PieceName => model.pieceName;
+
+    public string DestinationTileName => model.destinationTileName;
+
+    public int TurnIndex => model.turnIndex;
+
     public void SetupModel(int turnIndex, int inTurnMoveIndex, TurnMovePieceData turnMovePieceData)
     {
         SequenceId = int.Parse($"{turnIndex}{inTurnMoveIndex}");

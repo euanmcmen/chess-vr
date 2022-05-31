@@ -46,10 +46,10 @@ public class GameControlScript : RealtimeComponent<GameControlModel>, IRunningSt
     {
         isRunning = value;
 
-        //if (value)
-        //{
-        //    StartCoroutine(StartGameFromCurrentTurn());
-        //}
+        if (value)
+        {
+            StartCoroutine(PlayFromCurrentMove());
+        }
     }
 
     public void CreateTurnData()
@@ -87,16 +87,63 @@ public class GameControlScript : RealtimeComponent<GameControlModel>, IRunningSt
         }
     }
 
-    public void PlayFromCurrentTurn()
+    public IEnumerator PlayFromCurrentMove()
     {
         //TODO 29/05 - Find all piece move data objects, and order them by sequence id.
         // Find the next object to play, play the move, and update the last played sequence id.
+
+        var moves = FindObjectsOfType<PieceMoveDataScript>().Cast<PieceMoveDataScript>()
+            .Where(x => x.SequenceId > 0)
+            .OrderBy(x => x.SequenceId)
+            .ToList();
+
+        Debug.LogFormat("{0} moves found.", moves.Count);
+
+        foreach (var move in moves)
+        {
+            DispatchChessTurnSetEvents(move.TurnIndex);
+
+            Debug.LogFormat("Sequence {0} - moving Piece {1} to tile {2}.",move.SequenceId, move.PieceName, move.DestinationTileName);
+
+            var piece = simulationBoardLinkScript.BoardApi.GetPieceByName(move.PieceName);
+            var destinationTile = simulationBoardLinkScript.BoardApi.GetTileByName(move.DestinationTileName);
+            
+            yield return StartCoroutine(piece.PlayMovementToPosition(destinationTile.position));
+        }
     }
 
-    private void HandleChessTurnEvents(ChessTurnSet chessTurnSet)
+    private void DispatchChessTurnSetEvents(int turnNumber)
     {
+        // Turn Number is 1-based, and index is 0-based.
+
+        var turns = ChessGameParser.ResolveTurnsInGame(simulationDataScript.GameData.GamePGN);
+
+        int current = turnNumber - 1;
+        int prev = current - 1;
+        int next = current + 1;
+
+        var chessTurnSet = new ChessTurnSet
+        {
+            Current = ChessTurnParser.ResolveChessTurn(turns[current])
+        };
+
+        if (prev >= 0)
+        {
+            chessTurnSet.Previous = ChessTurnParser.ResolveChessTurn(turns[prev]);
+        }
+
+        if (next < turns.Count)
+        {
+            chessTurnSet.Next = ChessTurnParser.ResolveChessTurn(turns[next]);
+        }
+
         onChessTurnSetParsed.Invoke(chessTurnSet);
     }
+
+    //private void HandleChessTurnEvents(ChessTurnSet chessTurnSet)
+    //{
+    //    onChessTurnSetParsed.Invoke(chessTurnSet);
+    //}
 
     private TurnData ResolveMoveDataForTurn(ChessTurn turn)
     {

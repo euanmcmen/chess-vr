@@ -15,6 +15,6 @@ public class GraveBoardScript : MonoBehaviour
     public Transform GetNextTile()
     {
         //return transform.GetComponentsInChildren<BoardTileScript>().Where(x => x.Piece == null).First().transform;
-        return transform.GetChild(boardApiScript.GetAllCapturedPieces().Count(x => x.Team == Team));
+        return transform.GetChild(boardApiScript.GetAllPieces().Count(x => x.IsCaptured && x.Team == Team));
     }
 }

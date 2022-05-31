@@ -4,19 +4,14 @@ using UnityEngine;
 
 public class BoardApiScript : MonoBehaviour
 {
-    public GameObject GetByNetworkIdentityId(string networkIId)
-    {
-        return transform.GetComponentsInChildren<NetworkIdentityScript>().Where(x => x.Id == networkIId).Single().gameObject;
-    }
+    //public GameObject GetByNetworkIdentityId(string networkIId)
+    //{
+    //    return transform.GetComponentsInChildren<NetworkIdentityScript>().Where(x => x.Id == networkIId).Single().gameObject;
+    //}
 
     public List<PieceScript> GetAllPieces()
     {
         return transform.GetComponentsInChildren<PieceScript>().ToList();
-    }
-
-    public List<PieceScript> GetAllPiecesForTeam(ChessPieceTeam team)
-    {
-        return transform.GetComponentsInChildren<PieceScript>().Where(x => x.Team == team).ToList();
     }
 
     public List<PieceScript> GetAllActivePieces()
@@ -24,9 +19,21 @@ public class BoardApiScript : MonoBehaviour
         return transform.GetComponentsInChildren<PieceScript>().Where(x => !x.IsCaptured).ToList();
     }
 
-    public List<PieceScript> GetAllCapturedPieces()
+
+    //public List<PieceScript> GetAllPiecesForTeam(ChessPieceTeam team)
+    //{
+    //    return transform.GetComponentsInChildren<PieceScript>().Where(x => x.Team == team).ToList();
+    //}
+
+
+    //public List<PieceScript> GetAllCapturedPieces()
+    //{
+    //    return transform.GetComponentsInChildren<PieceScript>().Where(x => x.IsCaptured).ToList();
+    //}
+
+    public PieceScript GetPieceByName(string name)
     {
-        return transform.GetComponentsInChildren<PieceScript>().Where(x => x.IsCaptured).ToList();
+        return transform.GetComponentsInChildren<PieceScript>().Single(x => x.name == name);
     }
 
     //public Transform GetTileByNotation(string notation)

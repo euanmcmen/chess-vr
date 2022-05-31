@@ -27,11 +27,18 @@ public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
     //Start is called before the first frame update
     private IEnumerator Start()
     {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(3);
 
-        Debug.LogFormat("Going into test mode -- creating turn data.");
+        Debug.LogFormat("Creating turn data...");
 
         gameControlScipt.CreateTurnData();
+
+        yield return new WaitForSeconds(3);
+
+        Debug.LogFormat("Here we go.");
+
+        ToggleSimulationRunningState(true);
+
 
         //if (model.simulationStarted)
         //{
@@ -116,7 +123,7 @@ public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
 
     private void TakeOwnershipOfAllPieces()
     {
-        foreach (var piece in simulationBoardLink.BoardApi.GetAllActivePieces())
+        foreach (var piece in simulationBoardLink.BoardApi.GetAllPieces())
         {
             piece.GetComponent<RealtimeView>()
                 .RequestOwnership();
