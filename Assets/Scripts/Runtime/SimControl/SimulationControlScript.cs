@@ -27,42 +27,55 @@ public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
     //Start is called before the first frame update
     private IEnumerator Start()
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitUntil(() => realtime.connected);
 
-        Debug.LogFormat("Creating turn data...");
+        if (!model.simulationStarted)
+        {
+            Debug.LogFormat("Creating turn data...");
+            gameControlScipt.CreateTurnData();
+        }
 
-        gameControlScipt.CreateTurnData();
+        if (model.simulationStarted)
+        {
+            Debug.LogFormat("I have joined a game in progress.  My ID is {0}", realtime.clientID);
+            yield return new WaitForSeconds(5);
 
-        yield return new WaitForSeconds(3);
+            Debug.Log("I am now taking ownership and pausing the simulation.");
 
-        Debug.LogFormat("Here we go.");
+            ToggleSimulationRunningState(false);
 
-        ToggleSimulationRunningState(true);
+            yield return new WaitForSeconds(3);
 
+            Debug.Log("... and continuing again.");
 
-        //if (model.simulationStarted)
-        //{
-        //    Debug.LogFormat("I have joined a game in progress.  My ID is {0}", realtime.clientID);
-        //    yield return new WaitForSeconds(7);
+            ToggleSimulationRunningState(true);
 
-        //    Debug.Log("I am now taking ownership and pausing the simulation.");
+            yield return new WaitForSeconds(3);
 
-        //    ToggleSimulationRunningState(false);
+            Debug.Log("... and pausing again.");
 
-        //    yield return new WaitForSeconds(7);
+            ToggleSimulationRunningState(false);
+        }
+        else
+        {
+            Debug.LogFormat("I am the only one here and will start the simulation. My ID is {0}", realtime.clientID);
+            model.simulationStarted = true;
+            ToggleSimulationRunningState(true);
 
-        //    Debug.Log("... and continuing again.");
+            yield return new WaitForSeconds(30);
 
-        //    ToggleSimulationRunningState(true);
+            Debug.LogFormat("If the simulation was paused, I'm resuming it. My ID is {0}", realtime.clientID);
 
-        //    yield break;
-        //}
+            ToggleSimulationRunningState(true);
 
-        //Debug.LogFormat("I am the only one here and will start the simulation. My ID is {0}", realtime.clientID);
+            //yield return new WaitForSeconds(10);
 
-        //model.simulationStarted = true;
+            //ToggleSimulationRunningState(false);
 
-        //ToggleSimulationRunningState(true);
+            //yield return new WaitForSeconds(10);
+
+            //ToggleSimulationRunningState(true);
+        }
     }
 
     public void TestMessage(bool isRunning)
@@ -131,5 +144,11 @@ public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
             piece.GetComponent<RealtimeTransform>()
                 .RequestOwnership();
         }
+
+        //foreach (var obj in FindObjectsOfType<PieceMoveDataScript>())
+        //{
+        //    obj.GetComponent<RealtimeView>()
+        //        .RequestOwnership();
+        //}
     }
 }

@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class PieceMoveDataScript :  RealtimeComponent<PieceMoveDataModel>
 {
-    public int SequenceId { get; private set; }
+    public int SequenceId => model.sequenceId;
 
     public string PieceName => model.pieceName;
 
@@ -19,7 +19,7 @@ public class PieceMoveDataScript :  RealtimeComponent<PieceMoveDataModel>
 
     public void SetupModel(int turnIndex, int inTurnMoveIndex, TurnMovePieceData turnMovePieceData)
     {
-        SequenceId = int.Parse($"{turnIndex}{inTurnMoveIndex}");
+        model.sequenceId = int.Parse($"{turnIndex}{inTurnMoveIndex}");
 
         model.turnIndex = turnIndex;
         model.inTurnMoveIndex = inTurnMoveIndex;

@@ -34,8 +34,6 @@ public class PieceScript : RealtimeComponent<PieceModel>, IRunningStateChangedSu
         var startingTile = boardApi.GetTileByName(InitialPositionNotation);
 
         SetPositionOnTile(startingTile);
-
-        //SetCurrentPosition(startingTile);
     }
 
     public void HandleRunningStateChangedClient(bool value)

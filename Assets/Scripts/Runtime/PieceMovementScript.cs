@@ -104,6 +104,8 @@ public class PieceMovementScript : RealtimeComponent<PieceMovementModel>, IRunni
             yield return new WaitUntil(() => isRunning);
         }
 
+        transform.position = target;
+
         sequenceLerpTimes[model.moveSequenceIndex] = 0;
     }
 

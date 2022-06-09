@@ -18,7 +18,6 @@ public class GameControlScript : RealtimeComponent<GameControlModel>, IRunningSt
     private SimulationDataScript simulationDataScript;
     private SimulationBoardLinkScript simulationBoardLinkScript;
     private PieceMovementResolver pieceMovementValidator;
-    private WaitForSeconds turnWaitForSeconds;
 
     private bool isRunning;
 
@@ -29,8 +28,6 @@ public class GameControlScript : RealtimeComponent<GameControlModel>, IRunningSt
     {
         simulationDataScript = GetComponent<SimulationDataScript>();
         simulationBoardLinkScript = GetComponent<SimulationBoardLinkScript>();
-        //pieceMoveControlScript = GetComponent<PieceMoveControlScript>();
-        turnWaitForSeconds = new WaitForSeconds(simulationDataScript.ClockData.SecondsBetweenTurns);
 
         pieceMovementValidator = new PieceMovementResolver(simulationBoardLinkScript.BoardApi);
 
@@ -54,7 +51,6 @@ public class GameControlScript : RealtimeComponent<GameControlModel>, IRunningSt
 
     public void CreateTurnData()
     {
-        //TODO - Create a DGO for each turn resolved using the chess game parser.
         var turnNotations = ChessGameParser.ResolveTurnsInGame(simulationDataScript.GameData.GamePGN);
 
         foreach (var turn in turnNotations)
@@ -81,7 +77,14 @@ public class GameControlScript : RealtimeComponent<GameControlModel>, IRunningSt
                 if (moveList[i] == null)
                     continue;
 
-                Realtime.Instantiate(pieceMovementDataPrefab.name, new Realtime.InstantiateOptions())
+                var instantiationOptions = new Realtime.InstantiateOptions()
+                {
+                    destroyWhenOwnerLeaves = false,
+                    destroyWhenLastClientLeaves = true,
+                    ownedByClient = false
+                };
+
+                Realtime.Instantiate(pieceMovementDataPrefab.name, instantiationOptions)
                     .GetComponent<PieceMoveDataScript>().SetupModel(resolvedTurn.TurnNumber, i, moveList[i]);
             }
         }
@@ -89,26 +92,28 @@ public class GameControlScript : RealtimeComponent<GameControlModel>, IRunningSt
 
     public IEnumerator PlayFromCurrentMove()
     {
-        //TODO 29/05 - Find all piece move data objects, and order them by sequence id.
-        // Find the next object to play, play the move, and update the last played sequence id.
-
         var moves = FindObjectsOfType<PieceMoveDataScript>().Cast<PieceMoveDataScript>()
-            .Where(x => x.SequenceId > 0)
+            .Where(x => x.SequenceId > model.lastPlayedSequenceId)
             .OrderBy(x => x.SequenceId)
             .ToList();
 
-        Debug.LogFormat("{0} moves found.", moves.Count);
+        Debug.LogFormat("{0} moves found.  Last move was {1}", moves.Count, model.lastPlayedSequenceId);
 
         foreach (var move in moves)
         {
-            DispatchChessTurnSetEvents(move.TurnIndex);
+            if (!isRunning)
+                yield break;
 
-            Debug.LogFormat("Sequence {0} - moving Piece {1} to tile {2}.",move.SequenceId, move.PieceName, move.DestinationTileName);
+            Debug.LogFormat("Sequence {0} - moving Piece {1} to tile {2}.", move.SequenceId, move.PieceName, move.DestinationTileName);
+
+            DispatchChessTurnSetEvents(move.TurnIndex);
 
             var piece = simulationBoardLinkScript.BoardApi.GetPieceByName(move.PieceName);
             var destinationTile = simulationBoardLinkScript.BoardApi.GetTileByName(move.DestinationTileName);
             
             yield return StartCoroutine(piece.PlayMovementToPosition(destinationTile.position));
+
+            model.lastPlayedSequenceId = move.SequenceId;
         }
     }
 
@@ -139,11 +144,6 @@ public class GameControlScript : RealtimeComponent<GameControlModel>, IRunningSt
 
         onChessTurnSetParsed.Invoke(chessTurnSet);
     }
-
-    //private void HandleChessTurnEvents(ChessTurnSet chessTurnSet)
-    //{
-    //    onChessTurnSetParsed.Invoke(chessTurnSet);
-    //}
 
     private TurnData ResolveMoveDataForTurn(ChessTurn turn)
     {
@@ -260,7 +260,6 @@ public class GameControlScript : RealtimeComponent<GameControlModel>, IRunningSt
     {
         pieceToMove.SetPositionOnTile(tileNameToMoveTo);
     }
-
 
     private PieceScript GetPieceToMoveFromDisambiguation(IEnumerable<PieceScript> matchingPieces, ChessMove move)
     {
