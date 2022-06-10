@@ -3062,6 +3062,7 @@ GameObject:
   - component: {fileID: 519089951}
   - component: {fileID: 519089950}
   - component: {fileID: 519089949}
+  - component: {fileID: 519089952}
   m_Layer: 0
   m_Name: SimStopButton
   m_TagString: Untagged
@@ -3136,7 +3137,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 464266546}
         m_TargetAssemblyTypeName: SimulationControlScript, RuntimeScripts
-        m_MethodName: TestMessage
+        m_MethodName: ToggleSimulationRunningState
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3184,6 +3185,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519089947}
   m_CullTransparentMesh: 1
+--- !u!114 &519089952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519089947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b89425bf6de2a842900cf1224a1a998, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &522826794 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 439312, guid: cd05c23b470229c44a8d53d6e86225f6,
@@ -4844,6 +4857,7 @@ GameObject:
   - component: {fileID: 770050328}
   - component: {fileID: 770050327}
   - component: {fileID: 770050326}
+  - component: {fileID: 770050330}
   m_Layer: 0
   m_Name: Sim Control Terminal
   m_TagString: Untagged
@@ -4930,6 +4944,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &770050330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 770050325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36fd0e880bd29ae498bfb97d24196807, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playButton: {fileID: 1831272802}
+  pauseButton: {fileID: 519089949}
 --- !u!1001 &778791208
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11102,6 +11130,7 @@ GameObject:
   - component: {fileID: 1831272804}
   - component: {fileID: 1831272803}
   - component: {fileID: 1831272802}
+  - component: {fileID: 1831272805}
   m_Layer: 0
   m_Name: SimStartButton
   m_TagString: Untagged
@@ -11176,7 +11205,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 464266546}
         m_TargetAssemblyTypeName: SimulationControlScript, RuntimeScripts
-        m_MethodName: TestMessage
+        m_MethodName: ToggleSimulationRunningState
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -11224,6 +11253,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1831272800}
   m_CullTransparentMesh: 1
+--- !u!114 &1831272805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1831272800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b89425bf6de2a842900cf1224a1a998, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1832901157 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 411790, guid: 9d3e9c36668dcfe44b524760a4c3a3b5,

@@ -1,9 +1,7 @@
 ﻿using Normal.Realtime;
 using System;
 using System.Collections;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
 {
@@ -31,69 +29,14 @@ public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
 
         if (!model.simulationStarted)
         {
-            Debug.LogFormat("Creating turn data...");
+            Debug.LogFormat("I am the first one here and will create the DGOs. My ID is {0}", realtime.clientID);
             gameControlScipt.CreateTurnData();
-        }
-
-        if (model.simulationStarted)
-        {
-            Debug.LogFormat("I have joined a game in progress.  My ID is {0}", realtime.clientID);
-            yield return new WaitForSeconds(5);
-
-            Debug.Log("I am now taking ownership and pausing the simulation.");
-
-            ToggleSimulationRunningState(false);
-
-            yield return new WaitForSeconds(3);
-
-            Debug.Log("... and continuing again.");
-
-            ToggleSimulationRunningState(true);
-
-            yield return new WaitForSeconds(3);
-
-            Debug.Log("... and pausing again.");
-
-            ToggleSimulationRunningState(false);
-        }
-        else
-        {
-            Debug.LogFormat("I am the only one here and will start the simulation. My ID is {0}", realtime.clientID);
             model.simulationStarted = true;
-            ToggleSimulationRunningState(true);
-
-            yield return new WaitForSeconds(30);
-
-            Debug.LogFormat("If the simulation was paused, I'm resuming it. My ID is {0}", realtime.clientID);
-
-            ToggleSimulationRunningState(true);
-
-            //yield return new WaitForSeconds(10);
-
-            //ToggleSimulationRunningState(false);
-
-            //yield return new WaitForSeconds(10);
-
-            //ToggleSimulationRunningState(true);
+            ToggleSimulationRunningState(false);
         }
     }
 
-    public void TestMessage(bool isRunning)
-    {
-        Debug.LogFormat("Setting running state to {0}", isRunning);
-    }
-
-    //private void StartSimulation()
-    //{
-    //    model.isRunning = true;
-    //}
-
-    //private void StopSimulation()
-    //{
-    //    model.isRunning = false;
-    //}
-
-    private void ToggleSimulationRunningState(bool value)
+    public void ToggleSimulationRunningState(bool value)
     {
         TakeOwnershipOfAllPieces();
 
@@ -144,11 +87,5 @@ public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
             piece.GetComponent<RealtimeTransform>()
                 .RequestOwnership();
         }
-
-        //foreach (var obj in FindObjectsOfType<PieceMoveDataScript>())
-        //{
-        //    obj.GetComponent<RealtimeView>()
-        //        .RequestOwnership();
-        //}
     }
 }
