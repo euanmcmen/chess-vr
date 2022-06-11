@@ -92,13 +92,6 @@ public class PieceMovementScript : RealtimeComponent<PieceMovementModel>, IRunni
             lerpTime += Time.deltaTime / timeToComplete;
             transform.position = Vector3.Lerp(current, target, lerpTime);
 
-            //var lerpTime1 = Time.deltaTime / timeToComplete;
-            //var position1 = Vector3.Lerp(current, target, lerpTime1);
-            //var lerpTime2 = InverseLerp(current, target, position1);
-            //Debug.LogFormat("Lerp 1: {0}, Lerp 2: {1}.", lerpTime1, lerpTime2);
-
-            //yield return null;
-
             model.currentLerpTime = lerpTime;
 
             yield return new WaitUntil(() => isRunning);
@@ -108,14 +101,6 @@ public class PieceMovementScript : RealtimeComponent<PieceMovementModel>, IRunni
 
         sequenceLerpTimes[model.moveSequenceIndex] = 0;
     }
-
-    //https://answers.unity.com/questions/1271974/inverselerp-for-vector3.html
-    //public static float InverseLerp(Vector3 a, Vector3 b, Vector3 value)
-    //{
-    //    Vector3 AB = b - a;
-    //    Vector3 AV = value - a;
-    //    return Vector3.Dot(AV, AB) / Vector3.Dot(AB, AB);
-    //}
 
     private Vector3 GetPiecePositionOnTilePosition(Vector3 position)
     {
