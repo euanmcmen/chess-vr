@@ -13,12 +13,10 @@ public class BoardTileHighlightScript : RealtimeComponent<BoardTileHighlightMode
     public void ShowHighlight()
     {
         model.isTileHighlightActive = true;
-        //highlight.SetActive(true);
     }
     public void HideHighlight()
     {
         model.isTileHighlightActive = false;
-        //highlight.SetActive(false);
     }
 
     protected override void OnRealtimeModelReplaced(BoardTileHighlightModel previousModel, BoardTileHighlightModel currentModel)
