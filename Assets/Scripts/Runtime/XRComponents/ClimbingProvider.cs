@@ -35,22 +35,12 @@ public class ClimbingProvider : LocomotionProvider
 
     private void Update()
     {
-        TryBeginClimb();
+        if (CanClimb() && BeginLocomotion())
+            isClimbing = true;
 
         if (isClimbing)
             ApplyVelocity();
 
-        TryEndClimb();
-    }
-
-    private void TryBeginClimb()
-    {
-        if (CanClimb() && BeginLocomotion())
-            isClimbing = true;
-    }
-
-    private void TryEndClimb()
-    {
         if (!CanClimb() && EndLocomotion())
             isClimbing = false;
     }
@@ -68,14 +58,7 @@ public class ClimbingProvider : LocomotionProvider
         var localOrientationVelocity = origin.TransformDirection(controllerVelocity);
         localOrientationVelocity *= Time.deltaTime;
 
-        if (characterController != null)
-        {
-            characterController.Move(-localOrientationVelocity);
-        }
-        else
-        {
-            origin.position -= localOrientationVelocity;
-        }
+        characterController.Move(-localOrientationVelocity);
     }
 
     private Vector3 CalculateVelocityOfAllActiveControllers()

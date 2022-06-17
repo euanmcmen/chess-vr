@@ -103,6 +103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36fd6c1024de8ff4c85c83cf36214048, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  locomotionSystem: {fileID: 7330823667933107470}
 --- !u!1 &7330823667684197430
 GameObject:
   m_ObjectHideFlags: 0
@@ -214,6 +215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd09f169febac364f9c188beb8e38771, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  climbingProvider: {fileID: 8467467677562552625}
 --- !u!1 &7330823667933107466
 GameObject:
   m_ObjectHideFlags: 0

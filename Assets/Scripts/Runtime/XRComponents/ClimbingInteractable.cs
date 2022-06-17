@@ -8,11 +8,11 @@ public class ClimbingInteractable : XRBaseInteractable
     //[SerializeField] 
     //private ClimbingProvider climbingProvider;
 
-    protected override void Awake()
-    {
-        base.Awake();
-        //FindClimbingProvider();
-    }
+    //protected override void Awake()
+    //{
+    //    base.Awake();
+    //    //FindClimbingProvider();
+    //}
 
     //private void FindClimbingProvider()
     //{
