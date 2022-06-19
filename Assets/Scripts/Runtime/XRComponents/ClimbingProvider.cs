@@ -12,60 +12,93 @@ public class ClimbingProvider : LocomotionProvider
     private CharacterController characterController;
 
     private bool isClimbing;
-    private List<ControllerVelocity> activeControllers;
+    private List<ControllerVelocity> activeClimbingControllers;
+    private PieceVelocityScript activeClimbingTarget;
 
     protected override void Awake()
     {
         base.Awake();
         isClimbing = false;
-        activeControllers = new List<ControllerVelocity>();
+        activeClimbingTarget = null;
+        activeClimbingControllers = new List<ControllerVelocity>();
+    }
+
+    public void AddTarget(GameObject target)
+    {
+        if (activeClimbingTarget != null)
+        {
+            return;
+        }
+
+        activeClimbingTarget = target.GetComponent<PieceVelocityScript>();
     }
 
     public void AddProvider(ControllerVelocity controllerVelocity)
     {
-        if (!activeControllers.Contains(controllerVelocity))
-            activeControllers.Add(controllerVelocity);
+        if (!activeClimbingControllers.Contains(controllerVelocity))
+        {
+            activeClimbingControllers.Add(controllerVelocity);
+        }
     }
 
     public void RemoveProvider(ControllerVelocity controllerVelocity)
     {
-        if (activeControllers.Contains(controllerVelocity))
-            activeControllers.Remove(controllerVelocity);
+        if (activeClimbingControllers.Contains(controllerVelocity))
+        {
+            activeClimbingControllers.Remove(controllerVelocity);
+        }            
     }
 
     private void Update()
     {
-        if (CanClimb() && BeginLocomotion())
-            isClimbing = true;
+        BeginClimb();
 
         if (isClimbing)
+        {
             ApplyVelocity();
+        }
 
+        EndClimb();
+    }
+
+    private void BeginClimb()
+    {
+        if (CanClimb() && BeginLocomotion())
+        {
+            isClimbing = true;
+        }
+    }
+
+    private void EndClimb()
+    {
         if (!CanClimb() && EndLocomotion())
+        {
             isClimbing = false;
+            activeClimbingTarget = null;
+        }
     }
 
     private bool CanClimb()
     {
-        return activeControllers.Count != 0;
+        return activeClimbingControllers.Count != 0;
     }
 
     private void ApplyVelocity()
     {
         var controllerVelocity = CalculateVelocityOfAllActiveControllers();
-        var origin = system.xrOrigin.transform;
+        var worldControllerVelocity = system.xrOrigin.transform.TransformDirection(controllerVelocity);
+        var inverseWorldControllerVelocity = (-worldControllerVelocity);
 
-        var localOrientationVelocity = origin.TransformDirection(controllerVelocity);
-        localOrientationVelocity *= Time.deltaTime;
+        var pieceMovementVelocity = activeClimbingTarget.GetVelocity();
 
-        characterController.Move(-localOrientationVelocity);
+        characterController.Move((pieceMovementVelocity + inverseWorldControllerVelocity) * Time.deltaTime);
     }
 
     private Vector3 CalculateVelocityOfAllActiveControllers()
     {
         Vector3 totalVelocity = Vector3.zero;
 
-        foreach (ControllerVelocity controllerVelocity in activeControllers)
+        foreach (ControllerVelocity controllerVelocity in activeClimbingControllers)
         {
             totalVelocity += controllerVelocity.Velocity;
         }

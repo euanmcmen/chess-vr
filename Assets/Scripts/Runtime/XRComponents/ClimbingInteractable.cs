@@ -29,11 +29,14 @@ public class ClimbingInteractable : XRBaseInteractable
 
     private void TryAddInteractor(IXRSelectInteractor interactor)
     {
-        if (interactor.transform.TryGetComponent(out ControllerVelocity controllerVelocity))
+        var hasControllerVelocity = interactor.transform.TryGetComponent(out ControllerVelocity controllerVelocity);
+        if (hasControllerVelocity)
         {
-            interactor.transform.GetComponentInParent<ClimbingProviderResolver>()
-                .GetClimbingProvider()
-                .AddProvider(controllerVelocity);
+            var climbingProvider = interactor.transform.GetComponentInParent<ClimbingProviderResolver>()
+                .GetClimbingProvider();
+
+            climbingProvider.AddTarget(gameObject);
+            climbingProvider.AddProvider(controllerVelocity);
         }
     }
 
