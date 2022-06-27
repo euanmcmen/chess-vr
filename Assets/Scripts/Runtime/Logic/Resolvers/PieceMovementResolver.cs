@@ -103,7 +103,7 @@ namespace Assets.Scripts.Runtime.Logic.Resolvers
             foreach (var position in positions)
             {
                 //var piece = boardApi.GetTileByNotation(position.Notation).GetComponent<BoardTileScript>().Piece;
-                var isBlocked = boardApi.GetAllActivePieces().Any(x => x.CurrentBoardPosition.Notation == position.Notation);
+                var isBlocked = boardApi.GetAllPieces(activeOnly: true).Any(x => x.CurrentBoardPosition.Notation == position.Notation);
 
                 if (isBlocked)
                 {

@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.Runtime.Logic;
+using Assets.Scripts.Runtime.Logic;
 using Assets.Scripts.Runtime.Logic.Parser.GameParser;
 using Assets.Scripts.Runtime.Logic.Parser.MoveParser;
 using Assets.Scripts.Runtime.Logic.Parser.TurnParser;
@@ -6,23 +6,18 @@ using Assets.Scripts.Runtime.Logic.Resolvers;
 using Assets.Scripts.Runtime.Models;
 using Normal.Realtime;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class GameControlScript : RealtimeComponent<GameControlModel>, IRunningStateChangedSubscriber
+public class GameSetupControlScript : MonoBehaviour
 {
-    private event Action<ChessTurnSet> onChessTurnSetParsed;
+    [SerializeField]
+    private GameObject pieceMovementDataPrefab;
 
     private SimulationDataScript simulationDataScript;
     private SimulationBoardLinkScript simulationBoardLinkScript;
     private PieceMovementResolver pieceMovementValidator;
-
-    private bool isRunning;
-
-    [SerializeField]
-    private GameObject pieceMovementDataPrefab;
 
     private void Awake()
     {
@@ -30,23 +25,6 @@ public class GameControlScript : RealtimeComponent<GameControlModel>, IRunningSt
         simulationBoardLinkScript = GetComponent<SimulationBoardLinkScript>();
 
         pieceMovementValidator = new PieceMovementResolver(simulationBoardLinkScript.BoardApi);
-
-        EventActionBinder.BindSubscribersToAction<ITurnSetParsedSubscriber>((implementation) => onChessTurnSetParsed += implementation.HandleTurnSetParsedEvent);
-    }
-
-    public void HandleRunningStateChangedClient(bool value)
-    {
-        StopAllCoroutines();
-    }
-
-    public void HandleRunningStateChanged(bool value)
-    {
-        isRunning = value;
-
-        if (value)
-        {
-            StartCoroutine(PlayFromCurrentMove());
-        }
     }
 
     public void CreateTurnData()
@@ -56,112 +34,16 @@ public class GameControlScript : RealtimeComponent<GameControlModel>, IRunningSt
         foreach (var turn in turnNotations)
         {
             var resolvedTurn = ChessTurnParser.ResolveChessTurn(turn);
-            var resolvedTurnMoveData = ResolveMoveDataForTurn(resolvedTurn);
 
-            var moveList = new List<TurnMovePieceData>();
-
-            if (resolvedTurnMoveData.LightTeamMove != null)
+            var resolvedTurnMoveData = new TurnData()
             {
-                moveList.Add(resolvedTurnMoveData.LightTeamMove.CapturedPieceMoveData);
-                moveList.AddRange(resolvedTurnMoveData.LightTeamMove.MovingPiecesData);
-            }
+                TurnNumber = resolvedTurn.TurnNumber,
+                LightTeamMove = ResolveMoveDataForTurnTeam(ChessPieceTeam.Light, resolvedTurn.LightTeamMoveNotation),
+                DarkTeamMove = ResolveMoveDataForTurnTeam(ChessPieceTeam.Dark, resolvedTurn.DarkTeamMoveNotation)
+            };
 
-            if (resolvedTurnMoveData.DarkTeamMove != null)
-            {
-                moveList.Add(resolvedTurnMoveData.DarkTeamMove.CapturedPieceMoveData);
-                moveList.AddRange(resolvedTurnMoveData.DarkTeamMove.MovingPiecesData);
-            }
-
-            for (int i = 0; i < moveList.Count; i++)
-            {
-                if (moveList[i] == null)
-                    continue;
-
-                var instantiationOptions = new Realtime.InstantiateOptions()
-                {
-                    destroyWhenOwnerLeaves = false,
-                    destroyWhenLastClientLeaves = true,
-                    ownedByClient = false
-                };
-
-                Realtime.Instantiate(pieceMovementDataPrefab.name, instantiationOptions)
-                    .GetComponent<PieceMoveDataScript>().SetupModel(resolvedTurn.TurnNumber, i, moveList[i]);
-            }
+            CreateTurnDataGameObjects(resolvedTurnMoveData);
         }
-    }
-
-    public IEnumerator PlayFromCurrentMove()
-    {
-        var moves = FindObjectsOfType<PieceMoveDataScript>().Cast<PieceMoveDataScript>()
-            .Where(x => x.SequenceId > model.lastPlayedSequenceId)
-            .OrderBy(x => x.SequenceId)
-            .ToList();
-
-        Debug.LogFormat("{0} moves found.  Last move was {1}", moves.Count, model.lastPlayedSequenceId);
-
-        foreach (var move in moves)
-        {
-            if (!isRunning)
-                yield break;
-
-            Debug.LogFormat("Sequence {0} - moving Piece {1} to tile {2}.", move.SequenceId, move.PieceName, move.DestinationTileName);
-
-            DispatchChessTurnSetEvents(move.TurnIndex);
-
-            var piece = simulationBoardLinkScript.BoardApi.GetPieceByName(move.PieceName);
-            var destinationTile = simulationBoardLinkScript.BoardApi.GetTileByName(move.DestinationTileName);
-
-            var destinationTileHighlightScript = destinationTile.GetComponent<BoardTileHighlightScript>();
-
-            destinationTileHighlightScript.ShowHighlight();
-
-            yield return StartCoroutine(piece.PlayMovementToPosition(destinationTile.position));
-
-            destinationTileHighlightScript.HideHighlight();
-
-            model.lastPlayedSequenceId = move.SequenceId;
-        }
-    }
-
-    private void DispatchChessTurnSetEvents(int turnNumber)
-    {
-        // Turn Number is 1-based, and index is 0-based.
-
-        var turns = ChessGameParser.ResolveTurnsInGame(simulationDataScript.GameData.GamePGN);
-
-        int current = turnNumber - 1;
-        int prev = current - 1;
-        int next = current + 1;
-
-        var chessTurnSet = new ChessTurnSet
-        {
-            Current = ChessTurnParser.ResolveChessTurn(turns[current])
-        };
-
-        if (prev >= 0)
-        {
-            chessTurnSet.Previous = ChessTurnParser.ResolveChessTurn(turns[prev]);
-        }
-
-        if (next < turns.Count)
-        {
-            chessTurnSet.Next = ChessTurnParser.ResolveChessTurn(turns[next]);
-        }
-
-        onChessTurnSetParsed.Invoke(chessTurnSet);
-    }
-
-    private TurnData ResolveMoveDataForTurn(ChessTurn turn)
-    {
-        var turnData = new TurnData();
-
-        var lightTeamMoveData = ResolveMoveDataForTurnTeam(ChessPieceTeam.Light, turn.LightTeamMoveNotation);
-        turnData.LightTeamMove = lightTeamMoveData;
-
-        var darkTeamMoveData = ResolveMoveDataForTurnTeam(ChessPieceTeam.Dark, turn.DarkTeamMoveNotation);
-        turnData.DarkTeamMove = darkTeamMoveData;
-
-        return turnData;
     }
 
     private TurnMoveData ResolveMoveDataForTurnTeam(ChessPieceTeam team, string teamMoveNotation)
@@ -180,7 +62,7 @@ public class GameControlScript : RealtimeComponent<GameControlModel>, IRunningSt
     {
         TurnMoveData result = new() { Team = team, MovingPiecesData = new List<TurnMovePieceData>() };
 
-        var allActivePieces = simulationBoardLinkScript.BoardApi.GetAllActivePieces();
+        var allActivePieces = simulationBoardLinkScript.BoardApi.GetAllPieces(activeOnly: true);
 
         if (moves.Count == 1)
         {
@@ -210,7 +92,7 @@ public class GameControlScript : RealtimeComponent<GameControlModel>, IRunningSt
         return result;
     }
 
-    private TurnMovePieceData ResolveCaptureMoveDataForPiece(ChessPieceTeam currentTeam, ChessMove move, ref List<PieceScript> allActivePieces)
+    private TurnMovePieceData ResolveCaptureMoveDataForPiece(ChessPieceTeam currentTeam, ChessMove move, ref IEnumerable<PieceScript> allActivePieces)
     {
         var otherTeam = EnumHelper.GetOtherTeam(currentTeam);
 
@@ -235,7 +117,7 @@ public class GameControlScript : RealtimeComponent<GameControlModel>, IRunningSt
         return result;
     }
 
-    private TurnMovePieceData ResolveMoveDataForPiece(ChessPieceTeam currentTeam, ChessMove move, ref List<PieceScript> allActivePieces)
+    private TurnMovePieceData ResolveMoveDataForPiece(ChessPieceTeam currentTeam, ChessMove move, ref IEnumerable<PieceScript> allActivePieces)
     {
         var matchingPieces = allActivePieces.Where(x => x.Team == currentTeam && x.Type == move.PieceType);
 
@@ -290,5 +172,39 @@ public class GameControlScript : RealtimeComponent<GameControlModel>, IRunningSt
     private bool DisambiguationHasPartialNotationOnly(ChessMove move)
     {
         return move.DisambiguationOriginBoardPosition is DisambiguationChessBoardPosition;
+    }
+
+    private void CreateTurnDataGameObjects(TurnData resolvedTurnMoveData)
+    {
+        var moveList = new List<TurnMovePieceData>();
+        moveList.AddRange(GetTurnMovePieceDataForMove(resolvedTurnMoveData.LightTeamMove));
+        moveList.AddRange(GetTurnMovePieceDataForMove(resolvedTurnMoveData.DarkTeamMove));
+
+        for (int i = 0; i < moveList.Count; i++)
+        {
+            if (moveList[i] == null)
+                continue;
+
+            var instantiationOptions = new Realtime.InstantiateOptions()
+            {
+                destroyWhenOwnerLeaves = false,
+                destroyWhenLastClientLeaves = true,
+                ownedByClient = false
+            };
+
+            Realtime.Instantiate(pieceMovementDataPrefab.name, instantiationOptions)
+                .GetComponent<PieceMoveDataScript>().SetupModel(resolvedTurnMoveData.TurnNumber, i, moveList[i]);
+        }
+    }
+
+    private List<TurnMovePieceData> GetTurnMovePieceDataForMove(TurnMoveData turnMoveData)
+    {
+        var moveList = new List<TurnMovePieceData>();
+        if (turnMoveData != null)
+        {
+            moveList.Add(turnMoveData.CapturedPieceMoveData);
+            moveList.AddRange(turnMoveData.MovingPiecesData);
+        }
+        return moveList;
     }
 }

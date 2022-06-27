@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6441710}
   - component: {fileID: -352070061963745900}
   - component: {fileID: 4182091716439170586}
-  - component: {fileID: 5967303984894240542}
+  - component: {fileID: -7331836573470893393}
   - component: {fileID: -4006821273326412738}
   - component: {fileID: -535610997738050699}
   - component: {fileID: 6750659282112662939}
@@ -137,7 +137,7 @@ MonoBehaviour:
   Team: 0
   Type: 0
   InitialPositionNotation: 
---- !u!114 &5967303984894240542
+--- !u!114 &-7331836573470893393
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -146,7 +146,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 104878}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91991d6e34d21e04c9ee261d8fb15a43, type: 3}
+  m_Script: {fileID: 11500000, guid: b105629e1781fba4bb124c03ba70cf4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   pieceConfig: {fileID: 11400000, guid: e409b84d5266a544fa6ebc956e20e8cf, type: 2}
@@ -173,9 +173,11 @@ MonoBehaviour:
   - componentID: 1
     component: {fileID: 4182091716439170586}
   - componentID: 2
-    component: {fileID: 5967303984894240542}
+    component: {fileID: 0}
   - componentID: 3
     component: {fileID: -535610997738050699}
+  - componentID: 4
+    component: {fileID: -7331836573470893393}
   _childViews: []
 --- !u!114 &-535610997738050699
 MonoBehaviour:

@@ -14,9 +14,11 @@ GameObject:
   - component: {fileID: 6465112}
   - component: {fileID: 5016636292482899226}
   - component: {fileID: -4191042324077933223}
-  - component: {fileID: 7432276463864204013}
+  - component: {fileID: 5057061189457621861}
   - component: {fileID: 4686974526573705118}
   - component: {fileID: -7426895152106004996}
+  - component: {fileID: 8300020752478890411}
+  - component: {fileID: -7780786682402172546}
   m_Layer: 0
   m_Name: White Rook
   m_TagString: Untagged
@@ -135,7 +137,7 @@ MonoBehaviour:
   Team: 0
   Type: 0
   InitialPositionNotation: 
---- !u!114 &7432276463864204013
+--- !u!114 &5057061189457621861
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -144,7 +146,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 114028}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91991d6e34d21e04c9ee261d8fb15a43, type: 3}
+  m_Script: {fileID: 11500000, guid: b105629e1781fba4bb124c03ba70cf4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   pieceConfig: {fileID: 11400000, guid: e409b84d5266a544fa6ebc956e20e8cf, type: 2}
@@ -171,9 +173,11 @@ MonoBehaviour:
   - componentID: 1
     component: {fileID: -4191042324077933223}
   - componentID: 2
-    component: {fileID: 7432276463864204013}
+    component: {fileID: 0}
   - componentID: 3
     component: {fileID: -7426895152106004996}
+  - componentID: 4
+    component: {fileID: 5057061189457621861}
   _childViews: []
 --- !u!114 &-7426895152106004996
 MonoBehaviour:
@@ -193,6 +197,96 @@ MonoBehaviour:
   _syncScale: 1
   _syncVelocity: 1
   _maintainOwnershipWhileSleeping: 0
+--- !u!114 &8300020752478890411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 114028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d93db3cf6b25c894599cd5d7b44c10c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_InteractionManager: {fileID: 0}
+  m_Colliders: []
+  m_InteractionLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_InteractionLayers:
+    m_Bits: 1
+  m_SelectMode: 1
+  m_CustomReticle: {fileID: 0}
+  m_FirstHoverEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_LastHoverExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_HoverEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_HoverExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FirstSelectEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_LastSelectExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_SelectEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_SelectExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Activated:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Deactivated:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnFirstHoverEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnLastHoverExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnHoverEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnHoverExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnSelectEntered:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnSelectExited:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnSelectCanceled:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnActivate:
+    m_PersistentCalls:
+      m_Calls: []
+  m_OnDeactivate:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &-7780786682402172546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 114028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92291cb7e957168479bc244f8d7886ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4764261137149700646
 PrefabInstance:
   m_ObjectHideFlags: 0

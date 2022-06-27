@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
 {
-    private GameControlScript gameControlScipt;
-
+    private GameSetupControlScript gameSetupControlScript;
     private SimulationBoardLinkScript simulationBoardLink;
 
     private event Action<bool> onRunningStateChanged;
@@ -15,7 +14,7 @@ public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
 
     private void Awake()
     {
-        gameControlScipt = GetComponent<GameControlScript>();
+        gameSetupControlScript = GetComponent<GameSetupControlScript>();
         simulationBoardLink = GetComponent<SimulationBoardLinkScript>();
 
         EventActionBinder.BindSubscribersToAction<IRunningStateChangedSubscriber>((implementation) => onRunningStateChanged += implementation.HandleRunningStateChanged);
@@ -30,7 +29,7 @@ public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
         if (!model.simulationStarted)
         {
             Debug.LogFormat("I am the first one here and will create the DGOs. My ID is {0}", realtime.clientID);
-            gameControlScipt.CreateTurnData();
+            gameSetupControlScript.CreateTurnData();
             model.simulationStarted = true;
             ToggleSimulationRunningState(false);
         }
@@ -79,7 +78,7 @@ public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
 
     private void TakeOwnershipOfAllPieces()
     {
-        foreach (var piece in simulationBoardLink.BoardApi.GetAllPieces())
+        foreach (var piece in simulationBoardLink.BoardApi.GetAllPieces(activeOnly: false))
         {
             piece.GetComponent<RealtimeView>()
                 .RequestOwnership();

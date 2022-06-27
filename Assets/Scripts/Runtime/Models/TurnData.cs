@@ -8,6 +8,8 @@ namespace Assets.Scripts.Runtime.Models
 {
     public class TurnData
     {
+        public int TurnNumber { get; set; }
+
         public TurnMoveData LightTeamMove { get; set; }
 
         public TurnMoveData DarkTeamMove { get; set; }
