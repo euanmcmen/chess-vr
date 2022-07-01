@@ -4,11 +4,11 @@ using UnityEngine;
 public class SimulationDataScript : MonoBehaviour
 {
     [SerializeField]
-    private ChessGameSO gameData;
+    private ChessGameSetSO gameSet;
 
     [SerializeField]
     private ChessClockSO clockData;
 
-    public ChessGameSO GameData => gameData;
+    public ChessGameSetSO GameSet => gameSet;
     public ChessClockSO ClockData => clockData;
 }

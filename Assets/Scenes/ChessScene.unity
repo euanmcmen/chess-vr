@@ -13541,6 +13541,18 @@ PrefabInstance:
       propertyPath: boardApi
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: -4172768940440193418, guid: d73f149db019c9d43a7b168e7bdc68ad,
+        type: 3}
+      propertyPath: gameSet
+      value: 
+      objectReference: {fileID: 11400000, guid: 4bf6cf076c2e0d04e86a743f9e7cdf74,
+        type: 2}
+    - target: {fileID: -4172768940440193418, guid: d73f149db019c9d43a7b168e7bdc68ad,
+        type: 3}
+      propertyPath: gameData
+      value: 
+      objectReference: {fileID: 11400000, guid: 0322829abe895f84d9c10b0dbc9b450e,
+        type: 2}
     - target: {fileID: -2919964515897686091, guid: d73f149db019c9d43a7b168e7bdc68ad,
         type: 3}
       propertyPath: boardApiScript

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Scriptable Objects/Piece Config", order = 3)]
+[CreateAssetMenu(menuName = "Scriptable Objects/Pieces/Piece Config", order = 1)]
 public class PieceConfigSO : ScriptableObject
 {
     [SerializeField]

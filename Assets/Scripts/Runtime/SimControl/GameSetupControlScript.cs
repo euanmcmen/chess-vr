@@ -15,6 +15,8 @@ public class GameSetupControlScript : MonoBehaviour
     [SerializeField]
     private GameObject pieceMovementDataPrefab;
 
+    private event Action<List<string>> onGameParsed;
+
     private SimulationDataScript simulationDataScript;
     private SimulationBoardLinkScript simulationBoardLinkScript;
     private PieceMovementResolver pieceMovementValidator;
@@ -27,9 +29,18 @@ public class GameSetupControlScript : MonoBehaviour
         pieceMovementValidator = new PieceMovementResolver(simulationBoardLinkScript.BoardApi);
     }
 
+    private void Start()
+    {
+        EventActionBinder.BindSubscribersToAction<IGameParsedSubscriber>((implementation) => onGameParsed += implementation.HandleGameParsed);
+    }
+
     public void CreateTurnData()
     {
-        var turnNotations = ChessGameParser.ResolveTurnsInGame(simulationDataScript.GameData.GamePGN);
+        var randomGame = GetRandomGame();
+
+        var turnNotations = ChessGameParser.ResolveTurnsInGame(randomGame.GamePGN);
+
+        onGameParsed.Invoke(turnNotations);
 
         foreach (var turn in turnNotations)
         {
@@ -44,6 +55,13 @@ public class GameSetupControlScript : MonoBehaviour
 
             CreateTurnDataGameObjects(resolvedTurnMoveData);
         }
+    }
+
+    private ChessGameSO GetRandomGame()
+    {
+        var numberOfGames = simulationDataScript.GameSet.ChessGames.Count;
+        var randomGameIndex = UnityEngine.Random.Range(0, numberOfGames);
+        return simulationDataScript.GameSet.ChessGames[randomGameIndex];
     }
 
     private TurnMoveData ResolveMoveDataForTurnTeam(ChessPieceTeam team, string teamMoveNotation)

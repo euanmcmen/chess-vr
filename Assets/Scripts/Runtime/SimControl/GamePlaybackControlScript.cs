@@ -1,13 +1,13 @@
 using Assets.Scripts.Runtime.Logic;
-using Assets.Scripts.Runtime.Logic.Parser.GameParser;
 using Assets.Scripts.Runtime.Logic.Parser.TurnParser;
 using Normal.Realtime;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class GamePlaybackControlScript : RealtimeComponent<GameControlModel>, IRunningStateChangedSubscriber
+public class GamePlaybackControlScript : RealtimeComponent<GameControlModel>, IRunningStateChangedSubscriber, IGameParsedSubscriber
 {
     private event Action<ChessTurnSet> onChessTurnSetParsed;
 
@@ -15,12 +15,17 @@ public class GamePlaybackControlScript : RealtimeComponent<GameControlModel>, IR
     private SimulationBoardLinkScript simulationBoardLinkScript;
 
     private bool isRunning;
+    private List<string> parsedTurns;
 
     private void Awake()
     {
         simulationDataScript = GetComponent<SimulationDataScript>();
         simulationBoardLinkScript = GetComponent<SimulationBoardLinkScript>();
-        
+        parsedTurns = new List<string>();
+    }
+
+    private void Start()
+    {
         EventActionBinder.BindSubscribersToAction<ITurnSetParsedSubscriber>((implementation) => onChessTurnSetParsed += implementation.HandleTurnSetParsedEvent);
     }
 
@@ -37,6 +42,11 @@ public class GamePlaybackControlScript : RealtimeComponent<GameControlModel>, IR
         {
             StartCoroutine(PlayFromCurrentMove());
         }
+    }
+
+    public void HandleGameParsed(List<string> value)
+    {
+        parsedTurns = value;
     }
 
     public IEnumerator PlayFromCurrentMove()
@@ -70,6 +80,8 @@ public class GamePlaybackControlScript : RealtimeComponent<GameControlModel>, IR
             destinationTileHighlightScript.HideHighlight();
 
             model.lastPlayedSequenceId = move.SequenceId;
+
+            yield return new WaitForSeconds(simulationDataScript.ClockData.SecondsBetweenMoves);
         }
     }
 
@@ -77,25 +89,23 @@ public class GamePlaybackControlScript : RealtimeComponent<GameControlModel>, IR
     {
         // Turn Number is 1-based, and index is 0-based.
 
-        var turns = ChessGameParser.ResolveTurnsInGame(simulationDataScript.GameData.GamePGN);
-
         int current = turnNumber - 1;
         int prev = current - 1;
         int next = current + 1;
 
         var chessTurnSet = new ChessTurnSet
         {
-            Current = ChessTurnParser.ResolveChessTurn(turns[current])
+            Current = ChessTurnParser.ResolveChessTurn(parsedTurns[current])
         };
 
         if (prev >= 0)
         {
-            chessTurnSet.Previous = ChessTurnParser.ResolveChessTurn(turns[prev]);
+            chessTurnSet.Previous = ChessTurnParser.ResolveChessTurn(parsedTurns[prev]);
         }
 
-        if (next < turns.Count)
+        if (next < parsedTurns.Count)
         {
-            chessTurnSet.Next = ChessTurnParser.ResolveChessTurn(turns[next]);
+            chessTurnSet.Next = ChessTurnParser.ResolveChessTurn(parsedTurns[next]);
         }
 
         onChessTurnSetParsed.Invoke(chessTurnSet);

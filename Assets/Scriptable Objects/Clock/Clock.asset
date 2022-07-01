@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 044e5fcd96484cb4389ff1bd85c3f5aa, type: 3}
   m_Name: Clock
   m_EditorClassIdentifier: 
-  secondsBetweenTurns: 1
+  secondsBetweenMoves: 1

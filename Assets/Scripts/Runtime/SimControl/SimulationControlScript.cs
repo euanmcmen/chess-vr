@@ -16,14 +16,14 @@ public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
     {
         gameSetupControlScript = GetComponent<GameSetupControlScript>();
         simulationBoardLink = GetComponent<SimulationBoardLinkScript>();
-
-        EventActionBinder.BindSubscribersToAction<IRunningStateChangedSubscriber>((implementation) => onRunningStateChanged += implementation.HandleRunningStateChanged);
-        EventActionBinder.BindSubscribersToAction<IRunningStateChangedSubscriber>((implementation) => onRunningStateChangedClient += implementation.HandleRunningStateChangedClient);
     }
 
     //Start is called before the first frame update
     private IEnumerator Start()
     {
+        EventActionBinder.BindSubscribersToAction<IRunningStateChangedSubscriber>((implementation) => onRunningStateChanged += implementation.HandleRunningStateChanged);
+        EventActionBinder.BindSubscribersToAction<IRunningStateChangedSubscriber>((implementation) => onRunningStateChangedClient += implementation.HandleRunningStateChangedClient);
+
         yield return new WaitUntil(() => realtime.connected);
 
         if (!model.simulationStarted)

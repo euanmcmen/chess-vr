@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Scriptable Objects/Piece Set", order = 4)]
+[CreateAssetMenu(menuName = "Scriptable Objects/Pieces/Piece Set", order = 2)]
 public class ChessPieceSetSO : ScriptableObject
 {
     [SerializeField]
