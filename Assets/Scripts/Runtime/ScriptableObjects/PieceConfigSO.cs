@@ -11,7 +11,12 @@ public class PieceConfigSO : ScriptableObject
     [SerializeField]
     private float pieceMovementFloatHeight;
 
+    [SerializeField]
+    private AudioClip pieceMovementFinishedSoundEffect;
+
     public float PieceMovementCompletesAfterSeconds => pieceMovementCompletesAfterSeconds;
 
     public float PieceMovementFloatHeight => pieceMovementFloatHeight;
+
+    public AudioClip PieceMovementFinishedSoundEffect => pieceMovementFinishedSoundEffect;
 }

@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72510256659f41547bf01aaea8cd2dbd, type: 3}
   m_Name: Global Piece Config
   m_EditorClassIdentifier: 
-  pieceMovementCompletesAfterSeconds: 3
-  pieceMovementFloatHeight: 10
+  pieceMovementCompletesAfterSeconds: 5
+  pieceMovementFloatHeight: 15
+  pieceMovementFinishedSoundEffect: {fileID: 8300000, guid: 67955c46cb41a534fac422023be212da,
+    type: 3}

@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bafcb9e02da05794d8059241665ceb09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameData: {fileID: 11400000, guid: 47e0a0cf1798d1f4bbc7ee83494d6354, type: 2}
+  gameSet: {fileID: 11400000, guid: 4bf6cf076c2e0d04e86a743f9e7cdf74, type: 2}
   clockData: {fileID: 11400000, guid: fdb2a21a48db9e144be5deade8d219d0, type: 2}
 --- !u!114 &-2919964515897686091
 MonoBehaviour:
@@ -125,7 +125,5 @@ MonoBehaviour:
   - componentID: 1
     component: {fileID: -5621592019671754344}
   - componentID: 2
-    component: {fileID: 0}
-  - componentID: 3
     component: {fileID: 8722025722869489832}
   _childViews: []

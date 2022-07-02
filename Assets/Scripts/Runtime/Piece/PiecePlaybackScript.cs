@@ -1,12 +1,13 @@
 using Normal.Realtime;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PiecePlaybackScript : RealtimeComponent<PiecePlaybackModel>, IRunningStateChangedSubscriber
 {
-    [SerializeField]
-    private PieceConfigSO pieceConfig;
+    private PieceConfigDataScript pieceConfigDataScript;
+    private PiecePlaybackSfxScript piecePlaybackSfxScript;
 
     private Dictionary<int, float> sequenceLerpTimes;
 
@@ -16,6 +17,9 @@ public class PiecePlaybackScript : RealtimeComponent<PiecePlaybackModel>, IRunni
 
     private void Awake()
     {
+        piecePlaybackSfxScript = GetComponent<PiecePlaybackSfxScript>();
+        pieceConfigDataScript = GetComponent<PieceConfigDataScript>();
+
         initialY = transform.position.y;
     }
 
@@ -38,7 +42,7 @@ public class PiecePlaybackScript : RealtimeComponent<PiecePlaybackModel>, IRunni
         var currentPositionFloating = GetFloatPositionForPosition(currentPosition);
         var destinationPositionFloating = GetFloatPositionForPosition(destinationPosition);
 
-        var movementPartCompletedAfterSeconds = pieceConfig.PieceMovementCompletesAfterSeconds / 3;
+        var movementPartCompletedAfterSeconds = pieceConfigDataScript.PieceConfig.PieceMovementCompletesAfterSeconds / 3;
 
         // The model move sequence index will be loaded from the model's saved state.
         // Skip forward to the move which should be executed, and proceed from there.
@@ -46,35 +50,21 @@ public class PiecePlaybackScript : RealtimeComponent<PiecePlaybackModel>, IRunni
 
         yield return StartCoroutine(HandleLerpSequenceStep(0, currentPosition, currentPositionFloating, movementPartCompletedAfterSeconds));
 
-        //if (model.moveSequenceIndex <= 0)
-        //{
-        //    model.moveSequenceIndex = 0;
-
-        //    yield return StartCoroutine(HandleLerp(currentPosition, currentPositionFloating, movementPartCompletedAfterSeconds));
-        //}
-
         yield return StartCoroutine(HandleLerpSequenceStep(1, currentPositionFloating, destinationPositionFloating, movementPartCompletedAfterSeconds));
-
-        //if (model.moveSequenceIndex <= 1)
-        //{
-        //    model.moveSequenceIndex = 1;
-
-        //    yield return StartCoroutine(HandleLerp(currentPositionFloating, destinationPositionFloating, movementPartCompletedAfterSeconds));
-        //}
 
         yield return StartCoroutine(HandleLerpSequenceStep(2, destinationPositionFloating, destinationPosition, movementPartCompletedAfterSeconds));
 
-        //if (model.moveSequenceIndex <= 2)
-        //{
-        //    model.moveSequenceIndex = 2;
-
-        //    yield return StartCoroutine(HandleLerp(destinationPositionFloating, destinationPosition, movementPartCompletedAfterSeconds));
-        //}
+        HandleMovementFinished();
 
         model.moveSequenceIndex = 0;
         model.currentLerpTime = 0;
 
         transform.position = destinationPosition;
+    }
+
+    private void HandleMovementFinished()
+    {
+        piecePlaybackSfxScript.PlayLandingSoundEffect();
     }
 
     private void InitialiseLerp()
@@ -132,6 +122,6 @@ public class PiecePlaybackScript : RealtimeComponent<PiecePlaybackModel>, IRunni
 
     private Vector3 GetFloatPositionForPosition(Vector3 position)
     {
-        return new Vector3(position.x, initialY + pieceConfig.PieceMovementFloatHeight, position.z);
+        return new Vector3(position.x, initialY + pieceConfigDataScript.PieceConfig.PieceMovementFloatHeight, position.z);
     }
 }
