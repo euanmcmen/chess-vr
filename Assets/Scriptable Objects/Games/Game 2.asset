@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a8ba876bdb104f041afa084914a5e594, type: 3}
-  m_Name: TestGame2
+  m_Name: Game 2
   m_EditorClassIdentifier: 
   gamePGN: 1. d4 Nf6 2. Nf3 g6 3. g3 Bg7 4. Bg2 O-O 5. O-O d6 6. Nc3 Nbd7 7. b3 e5
     8. dxe5 dxe5 9. e4 Re8 10. Ba3 c6 11. Bd6 Qa5 12. Qd3 Re6 13. b4 Qa3 14. Bc7

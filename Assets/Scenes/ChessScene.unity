@@ -13435,6 +13435,12 @@ PrefabInstance:
       propertyPath: boardApi
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: -4172768940440193418, guid: d73f149db019c9d43a7b168e7bdc68ad,
+        type: 3}
+      propertyPath: gameSet
+      value: 
+      objectReference: {fileID: 11400000, guid: fa503b14fb0d27c4fa464282e8605a34,
+        type: 2}
     - target: {fileID: -2919964515897686091, guid: d73f149db019c9d43a7b168e7bdc68ad,
         type: 3}
       propertyPath: boardApiScript

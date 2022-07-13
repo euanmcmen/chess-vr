@@ -10,10 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 287c9a77e74bfa04e8b67ec1cab4beda, type: 3}
-  m_Name: All Games
+  m_Name: Debug Set
   m_EditorClassIdentifier: 
   chessGames:
-  - {fileID: 11400000, guid: 47e0a0cf1798d1f4bbc7ee83494d6354, type: 2}
-  - {fileID: 11400000, guid: 616b8f05da19d0c488638600b51b18d8, type: 2}
-  - {fileID: 11400000, guid: 0322829abe895f84d9c10b0dbc9b450e, type: 2}
   - {fileID: 11400000, guid: 1416c149d688b084fbb85c1b2522d74a, type: 2}
