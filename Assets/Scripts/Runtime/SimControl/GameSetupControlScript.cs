@@ -6,6 +6,7 @@ using Assets.Scripts.Runtime.Logic.Resolvers;
 using Assets.Scripts.Runtime.Models;
 using Normal.Realtime;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -34,7 +35,7 @@ public class GameSetupControlScript : MonoBehaviour
         EventActionBinder.BindSubscribersToAction<IGameParsedSubscriber>((implementation) => onGameParsed += implementation.HandleGameParsed);
     }
 
-    public void CreateTurnData()
+    public IEnumerator CreateTurnData()
     {
         var randomGame = GetRandomGame();
 
@@ -54,6 +55,8 @@ public class GameSetupControlScript : MonoBehaviour
             };
 
             CreateTurnDataGameObjects(resolvedTurnMoveData);
+
+            yield return null;
         }
     }
 
@@ -169,7 +172,7 @@ public class GameSetupControlScript : MonoBehaviour
 
     private PieceScript GetPieceToMoveFromDisambiguation(IEnumerable<PieceScript> matchingPieces, ChessMove move)
     {
-        return DisambiguationHasPartialNotationOnly(move)
+        return move.DisambiguationOriginBoardPosition is DisambiguationChessBoardPosition
             ? matchingPieces.Single(x => x.CurrentBoardPosition.ColumnLetter == move.DisambiguationOriginBoardPosition.ColumnLetter)
             : matchingPieces.Single(x => x.CurrentBoardPosition.Notation == move.DisambiguationOriginBoardPosition.Notation);
     }
@@ -185,11 +188,6 @@ public class GameSetupControlScript : MonoBehaviour
             Debug.LogErrorFormat("Could not resolve move.  Error: {0}; Team: {1}; Move: {2}", e.Message, team, move.DestinationBoardPosition.Notation);
             throw;
         }
-    }
-
-    private bool DisambiguationHasPartialNotationOnly(ChessMove move)
-    {
-        return move.DisambiguationOriginBoardPosition is DisambiguationChessBoardPosition;
     }
 
     private void CreateTurnDataGameObjects(TurnData resolvedTurnMoveData)

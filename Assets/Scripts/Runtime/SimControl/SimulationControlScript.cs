@@ -29,7 +29,11 @@ public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
         if (!model.simulationStarted)
         {
             Debug.LogFormat("I am the first one here and will create the DGOs. My ID is {0}", realtime.clientID);
-            gameSetupControlScript.CreateTurnData();
+
+            yield return StartCoroutine(gameSetupControlScript.CreateTurnData());
+
+            Debug.LogFormat("...DGOs created.");
+
             model.simulationStarted = true;
             ToggleSimulationRunningState(false);
         }
