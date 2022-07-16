@@ -8,6 +8,7 @@ public class PiecePlaybackScript : RealtimeComponent<PiecePlaybackModel>, IRunni
 {
     private PieceConfigDataScript pieceConfigDataScript;
     private PiecePlaybackSfxScript piecePlaybackSfxScript;
+    private PiecePlaybackVfxScript piecePlaybackVfxScript;
 
     private Dictionary<int, float> sequenceLerpTimes;
 
@@ -19,6 +20,7 @@ public class PiecePlaybackScript : RealtimeComponent<PiecePlaybackModel>, IRunni
     {
         piecePlaybackSfxScript = GetComponent<PiecePlaybackSfxScript>();
         pieceConfigDataScript = GetComponent<PieceConfigDataScript>();
+        piecePlaybackVfxScript = GetComponent<PiecePlaybackVfxScript>();
 
         initialY = transform.position.y;
     }
@@ -65,6 +67,7 @@ public class PiecePlaybackScript : RealtimeComponent<PiecePlaybackModel>, IRunni
     private void HandleMovementFinished()
     {
         piecePlaybackSfxScript.PlayLandingSoundEffect();
+        piecePlaybackVfxScript.PlayLandingVisualEffect();
     }
 
     private void InitialiseLerp()

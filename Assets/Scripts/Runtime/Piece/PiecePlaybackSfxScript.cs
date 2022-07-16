@@ -13,6 +13,6 @@ public class PiecePlaybackSfxScript : MonoBehaviour
 
     public void PlayLandingSoundEffect()
     {
-        pieceAudioSource.PlayOneShot(pieceConfigDataScript.PieceConfig.PieceMovementFinishedSoundEffect);
+        pieceAudioSource.Play();
     }
 }
