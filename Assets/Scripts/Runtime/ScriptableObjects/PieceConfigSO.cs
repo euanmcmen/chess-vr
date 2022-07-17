@@ -12,11 +12,11 @@ public class PieceConfigSO : ScriptableObject
     private float pieceMovementFloatHeight;
 
     [SerializeField]
-    private AudioClip pieceMovementFinishedSoundEffect;
+    private GameObject pieceMovementFinishedFxPrefab;
 
     public float PieceMovementCompletesAfterSeconds => pieceMovementCompletesAfterSeconds;
 
     public float PieceMovementFloatHeight => pieceMovementFloatHeight;
 
-    public AudioClip PieceMovementFinishedSoundEffect => pieceMovementFinishedSoundEffect;
+    public GameObject PieceMovementFinishedFxPrefab => pieceMovementFinishedFxPrefab;
 }

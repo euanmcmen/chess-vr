@@ -7,8 +7,6 @@ using UnityEngine;
 public class PiecePlaybackScript : RealtimeComponent<PiecePlaybackModel>, IRunningStateChangedSubscriber
 {
     private PieceConfigDataScript pieceConfigDataScript;
-    private PiecePlaybackSfxScript piecePlaybackSfxScript;
-    private PiecePlaybackVfxScript piecePlaybackVfxScript;
 
     private Dictionary<int, float> sequenceLerpTimes;
 
@@ -18,9 +16,7 @@ public class PiecePlaybackScript : RealtimeComponent<PiecePlaybackModel>, IRunni
 
     private void Awake()
     {
-        piecePlaybackSfxScript = GetComponent<PiecePlaybackSfxScript>();
         pieceConfigDataScript = GetComponent<PieceConfigDataScript>();
-        piecePlaybackVfxScript = GetComponent<PiecePlaybackVfxScript>();
 
         initialY = transform.position.y;
     }
@@ -56,7 +52,7 @@ public class PiecePlaybackScript : RealtimeComponent<PiecePlaybackModel>, IRunni
 
         yield return StartCoroutine(HandleLerpSequenceStep(2, destinationPositionFloating, destinationPosition, movementPartCompletedAfterSeconds));
 
-        HandleMovementFinished();
+        SpawnMovementFinishedEffects();
 
         model.moveSequenceIndex = 0;
         model.currentLerpTime = 0;
@@ -64,10 +60,17 @@ public class PiecePlaybackScript : RealtimeComponent<PiecePlaybackModel>, IRunni
         transform.position = destinationPosition;
     }
 
-    private void HandleMovementFinished()
+    private void SpawnMovementFinishedEffects()
     {
-        piecePlaybackSfxScript.PlayLandingSoundEffect();
-        piecePlaybackVfxScript.PlayLandingVisualEffect();
+        var instantiationOptions = new Realtime.InstantiateOptions()
+        {
+            destroyWhenOwnerLeaves = false,
+            destroyWhenLastClientLeaves = true,
+            ownedByClient = false
+        };
+
+        Realtime.Instantiate(pieceConfigDataScript.PieceConfig.PieceMovementFinishedFxPrefab.name, transform.position, Quaternion.identity,
+            instantiationOptions);
     }
 
     private void InitialiseLerp()

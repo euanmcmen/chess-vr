@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pieceMovementCompletesAfterSeconds: 5
   pieceMovementFloatHeight: 15
-  pieceMovementFinishedSoundEffect: {fileID: 8300000, guid: 67955c46cb41a534fac422023be212da,
+  pieceMovementFinishedFxPrefab: {fileID: 5860716410421984334, guid: bf546f3111703fb4ea0302132e714129,
     type: 3}
