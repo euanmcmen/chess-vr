@@ -13820,6 +13820,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4726338545949509808, guid: f2fc2da434b97c84a913ebfa434c3b8a,
+        type: 3}
+      propertyPath: musicSetSO
+      value: 
+      objectReference: {fileID: 11400000, guid: e2c366afd2767f740af09098cbf6f049,
+        type: 2}
     - target: {fileID: 4726338545949509809, guid: f2fc2da434b97c84a913ebfa434c3b8a,
         type: 3}
       propertyPath: m_RootOrder

@@ -6,7 +6,7 @@ using UnityEngine;
 public class BackgroundMusicSetSO : ScriptableObject
 {
     [SerializeField]
-    private List<AudioClip> clips;
+    private List<BackgroundMusicSO> musicItems;
 
-    public List<AudioClip> Clips => clips;
+    public List<BackgroundMusicSO> MusicItems => musicItems;
 }

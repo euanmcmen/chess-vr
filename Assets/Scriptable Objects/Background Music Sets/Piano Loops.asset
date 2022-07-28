@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11486048feae13c4eb41d50436bc3357, type: 3}
   m_Name: Piano Loops
   m_EditorClassIdentifier: 
-  clips:
-  - {fileID: 8300000, guid: 1873bc0bb1d8043b89fa92d455631de2, type: 3}
-  - {fileID: 8300000, guid: edcde48ddd595467dbf342ba71883259, type: 3}
+  musicItems:
+  - {fileID: 11400000, guid: d479d65cb0450014f975e09d8aa45027, type: 2}
+  - {fileID: 11400000, guid: dfac19ed760415b468f25e5f83e68446, type: 2}
+  - {fileID: 11400000, guid: 94af9b47ae83c2b4f83aeba38fe50301, type: 2}
