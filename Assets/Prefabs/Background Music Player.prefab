@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4726338545949509809}
   - component: {fileID: 4726338545949509808}
   - component: {fileID: 4726338545949509815}
+  - component: {fileID: 2019606527745219314}
   m_Layer: 0
   m_Name: Background Music Player
   m_TagString: Untagged
@@ -45,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0941b382d3341e241ae6fa37c3759a9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  musicSO: {fileID: 11400000, guid: e2c366afd2767f740af09098cbf6f049, type: 2}
+  musicSetSO: {fileID: 11400000, guid: e2c366afd2767f740af09098cbf6f049, type: 2}
   repeatMode: 0
 --- !u!82 &4726338545949509815
 AudioSource:
@@ -143,3 +144,26 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2019606527745219314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4726338545949509814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -363599832, guid: c424820a8880b8845bda10ec0b41507e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _realtime: {fileID: 0}
+  _sceneViewUUID: 
+  _viewUUID: 
+  _sceneViewPreventOwnershipTakeover: 0
+  _sceneViewDestroyWhenOwnerOrLastClientLeaves: 1
+  _sceneViewDestroyWhenOwnerOrLastClientLeavesMigrated: 0
+  _sceneViewDestroyWhenLastClientLeaves: 1
+  _components:
+  - componentID: 1
+    component: {fileID: 4726338545949509808}
+  _childViews: []
