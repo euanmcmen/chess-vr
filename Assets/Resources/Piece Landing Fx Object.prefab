@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -5631127976560348677}
   - component: {fileID: 4466811180971698765}
   m_Layer: 0
-  m_Name: PieceLandingFxObject
+  m_Name: Piece Landing Fx Object
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

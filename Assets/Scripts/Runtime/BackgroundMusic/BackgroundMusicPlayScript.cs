@@ -29,14 +29,10 @@ public class BackgroundMusicPlayScript : RealtimeComponent<BackgroundMusicPlayMo
     {
         yield return new WaitUntil(() => realtime.connected);
 
-        Debug.LogFormat("Playlist Ids: {0}", model.playlistIds);
-
         if (string.IsNullOrEmpty(model.playlistIds))
         {
             CreatePlaylist();
         }
-
-        Debug.LogFormat("Playlist Ids: {0}", model.playlistIds);
 
         ReadPlaylist();
         PlayClip();
@@ -58,70 +54,18 @@ public class BackgroundMusicPlayScript : RealtimeComponent<BackgroundMusicPlayMo
         PlayClip();
     }
 
-    protected override void OnRealtimeModelReplaced(BackgroundMusicPlayModel previousModel, BackgroundMusicPlayModel currentModel)
-    {
-        if (previousModel != null)
-        {
-            previousModel.playlistIdsDidChange -= HandlePlaylistIdsDidChange;
-        }
-
-        if (currentModel != null)
-        {
-            if (currentModel.isFreshModel)
-            {
-
-            }
-
-            currentModel.playlistIdsDidChange += HandlePlaylistIdsDidChange;
-        }
-    }
-
-    private void HandlePlaylistIdsDidChange(BackgroundMusicPlayModel model, string value)
-    {
-        //if (string.IsNullOrEmpty(model.playlistIds))
-        //{
-        //    Debug.LogWarning("TRIED TO READ Playlist too early");
-        //    return;
-        //}
-
-        //ReadPlaylist();
-        //PlayClip();
-    }
-
     private void CreatePlaylist()
     {
-        if (!string.IsNullOrEmpty(model.playlistIds))
-        {
-            Debug.LogWarning("TRIED TO CREATE Playlist too late.");
-            return;
-        }
-
         var shuffledItems = new List<BackgroundMusicPlaylistItem>(musicSetSO.MusicItems
             .Shuffle()
             .Select(x => new BackgroundMusicPlaylistItem { Id = x.Id, Audio = x.Audio }));
         var playlistIds = string.Join(";", shuffledItems.Select(x => x.Id).ToArray());
 
         model.playlistIds = playlistIds;
-
-        Debug.LogFormat("CREATED Playlist: {0}", model.playlistIds);
     }
 
     private void ReadPlaylist()
     {
-        if (string.IsNullOrEmpty(model.playlistIds))
-        {
-            Debug.LogWarning("TRIED TO READ Playlist too early");
-            return;
-        }
-
-        if (playlistItems != null)
-        {
-            Debug.LogWarning("TRIED TO READ Playlist too early 2");
-            return;
-        }
-
-        Debug.LogFormat("READ Playlist: {0}", model.playlistIds);
-
         playlistItems = new List<BackgroundMusicPlaylistItem>(model.playlistIds.Split(";")
             .Select(x => musicSetSO.MusicItems.Single(y => y.Id == x))
             .Select(x => new BackgroundMusicPlaylistItem() { Id = x.Id, Audio = x.Audio }));

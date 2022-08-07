@@ -12,6 +12,8 @@ public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
 
     private event Action<bool> onRunningStateChangedClient;
 
+    private event Action onSimulationStarted;
+
     private void Awake()
     {
         gameSetupControlScript = GetComponent<GameSetupControlScript>();
@@ -23,6 +25,7 @@ public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
     {
         EventActionBinder.BindSubscribersToAction<IRunningStateChangedSubscriber>((implementation) => onRunningStateChanged += implementation.HandleRunningStateChanged);
         EventActionBinder.BindSubscribersToAction<IRunningStateChangedSubscriber>((implementation) => onRunningStateChangedClient += implementation.HandleRunningStateChangedClient);
+        EventActionBinder.BindSubscribersToAction<ISimulationStartedSubscriber>((implementation) => onSimulationStarted += implementation.HandleSimulationStarted);
 
         yield return new WaitUntil(() => realtime.connected);
 
@@ -32,11 +35,17 @@ public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
 
             yield return StartCoroutine(gameSetupControlScript.CreateTurnData());
 
-            Debug.LogFormat("...DGOs created.");
+            StartSimulation();
 
-            model.simulationStarted = true;
             ToggleSimulationRunningState(false);
+
         }
+    }
+
+    private void StartSimulation()
+    {
+        model.simulationStarted = true;
+        onSimulationStarted.Invoke();
     }
 
     public void ToggleSimulationRunningState(bool value)
