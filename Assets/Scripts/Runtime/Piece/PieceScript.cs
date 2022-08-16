@@ -6,11 +6,22 @@ using UnityEngine;
 
 public class PieceScript : RealtimeComponent<PieceModel>
 {
-    public ChessPieceTeam Team;
-    public ChessPieceType Type;
-    public string InitialPositionNotation;
+    [SerializeField]
+    private ChessPieceTeam team;
+
+    [SerializeField]
+    private ChessPieceType type;
+
+    [SerializeField]
+    private string initialPositionNotation;
 
     public ChessBoardPosition CurrentBoardPosition { get; private set; }
+
+    public ChessPieceTeam Team => team;
+
+    public ChessPieceType Type => type;
+
+    public string InitialPositionNotation => initialPositionNotation;
 
     public bool IsCaptured => model.isCaptured;
 
@@ -26,6 +37,13 @@ public class PieceScript : RealtimeComponent<PieceModel>
         var startingTile = boardApi.GetTileByName(InitialPositionNotation);
 
         SetPositionOnTile(startingTile);
+    }
+
+    public void CompletePieceBuild(ChessPieceTeam team, ChessPieceType type, string initialPositionNotation)
+    {
+        this.team = team;
+        this.type = type;
+        this.initialPositionNotation = initialPositionNotation;
     }
 
     public void SetPositionOnTile(string tileName)

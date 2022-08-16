@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
 {
-    private GameSetupControlScript gameSetupControlScript;
+    private ChessGameSetupControlScript gameSetupControlScript;
     private SimulationBoardLinkScript simulationBoardLink;
 
     private event Action<bool> onRunningStateChanged;
@@ -16,7 +16,7 @@ public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
 
     private void Awake()
     {
-        gameSetupControlScript = GetComponent<GameSetupControlScript>();
+        gameSetupControlScript = GetComponent<ChessGameSetupControlScript>();
         simulationBoardLink = GetComponent<SimulationBoardLinkScript>();
     }
 

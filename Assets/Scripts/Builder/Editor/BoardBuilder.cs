@@ -182,6 +182,8 @@ public class BoardBuilder : EditorWindow
 
             useDarkMaterial = !useDarkMaterial;
         }
+
+        boardOrigin.AddComponent<BoardApiScript>();
     }
 
     private void GenerateGraveBoards()
@@ -317,10 +319,8 @@ public class BoardBuilder : EditorWindow
 
         piece.transform.position = new Vector3(tileTransform.position.x, piece.transform.position.y, tileTransform.position.z);
 
-        var pieceScript = piece.GetComponent<PieceScript>();
-        pieceScript.Team = team;
-        pieceScript.Type = type;
-        pieceScript.InitialPositionNotation = tileTransform.gameObject.name;
+        piece.GetComponent<PieceScript>()
+            .CompletePieceBuild(team, type, tileTransform.gameObject.name);
 
         piece.name = $"{piece.name} {tileTransform.gameObject.name[..1].ToUpper()}";
 

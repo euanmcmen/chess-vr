@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class GameSetupControlScript : MonoBehaviour
+public class ChessGameSetupControlScript : MonoBehaviour
 {
     [SerializeField]
     private GameObject pieceMovementDataPrefab;

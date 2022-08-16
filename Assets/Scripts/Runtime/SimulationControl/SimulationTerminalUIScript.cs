@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SimControlTerminalUIScript : MonoBehaviour, IRunningStateChangedSubscriber
+public class SimulationTerminalUIScript : MonoBehaviour, IRunningStateChangedSubscriber
 {
     [SerializeField]
     private Button playButton;

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class GamePlaybackControlScript : RealtimeComponent<GameControlModel>, IRunningStateChangedSubscriber, IGameParsedSubscriber
+public class ChessGamePlaybackControlScript : RealtimeComponent<ChessGameControlModel>, IRunningStateChangedSubscriber, IGameParsedSubscriber
 {
     private event Action<ChessTurnSet> onChessTurnSetParsed;
 
@@ -56,14 +56,10 @@ public class GamePlaybackControlScript : RealtimeComponent<GameControlModel>, IR
             .OrderBy(x => x.SequenceId)
             .ToList();
 
-        Debug.LogFormat("{0} moves found.  Last move was {1}", moves.Count, model.lastPlayedSequenceId);
-
         foreach (var move in moves)
         {
             if (!isRunning)
                 yield break;
-
-            Debug.LogFormat("Sequence {0} - moving Piece {1} to tile {2}.", move.SequenceId, move.PieceName, move.DestinationTileName);
 
             DispatchChessTurnSetEvents(move.TurnIndex);
 
