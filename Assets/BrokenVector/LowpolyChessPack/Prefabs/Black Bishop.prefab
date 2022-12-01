@@ -148,9 +148,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a04f711840c53174db9b9ec1eba8fe8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Team: 0
-  Type: 0
-  InitialPositionNotation: 
+  team: 0
+  type: 0
+  initialPositionNotation: 
 --- !u!114 &667236671083654069
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,7 +180,7 @@ MonoBehaviour:
   _viewUUID: 
   _sceneViewPreventOwnershipTakeover: 0
   _sceneViewDestroyWhenOwnerOrLastClientLeaves: 1
-  _sceneViewDestroyWhenOwnerOrLastClientLeavesMigrated: 0
+  _sceneViewDestroyWhenOwnerOrLastClientLeavesMigrated: 1
   _sceneViewDestroyWhenLastClientLeaves: 1
   _components:
   - componentID: 1

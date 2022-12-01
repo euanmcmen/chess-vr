@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: InternalSettings
   m_EditorClassIdentifier: 
   _migration:
-    lastPromptedVersion: 3
-    version: 3
+    lastPromptedVersion: 4
+    version: 4
   _projectGUID: 7fc329a0-f5af-4218-a5ea-ffddd036de0f
