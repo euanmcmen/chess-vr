@@ -37,6 +37,8 @@ public class ChessGameSetupControlScript : MonoBehaviour
 
     public IEnumerator CreateTurnData()
     {
+        Debug.Log("CreateTurnData");
+
         var randomGame = GetRandomGame();
 
         var turnNotations = ChessGameParser.ResolveTurnsInGame(randomGame.GamePGN);
@@ -205,7 +207,7 @@ public class ChessGameSetupControlScript : MonoBehaviour
             {
                 destroyWhenOwnerLeaves = false,
                 destroyWhenLastClientLeaves = true,
-                ownedByClient = false
+                ownedByClient = false,
             };
 
             Realtime.Instantiate(pieceMovementDataPrefab.name, instantiationOptions)

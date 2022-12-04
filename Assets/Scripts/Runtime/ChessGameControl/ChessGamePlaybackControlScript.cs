@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class ChessGamePlaybackControlScript : RealtimeComponent<ChessGameControlModel>, IRunningStateChangedSubscriber, IGameParsedSubscriber
+public class ChessGamePlaybackControlScript : RealtimeComponent<ChessGameControlModel>, IRoomConnectedSubscriber, IRunningStateChangedSubscriber, IGameParsedSubscriber
 {
     private event Action<ChessTurnSet> onChessTurnSetParsed;
 
@@ -21,12 +21,15 @@ public class ChessGamePlaybackControlScript : RealtimeComponent<ChessGameControl
     {
         simulationDataScript = GetComponent<SimulationDataScript>();
         simulationBoardLinkScript = GetComponent<SimulationBoardLinkScript>();
-        parsedTurns = new List<string>();
     }
 
     private void Start()
     {
         EventActionBinder.BindSubscribersToAction<ITurnSetParsedSubscriber>((implementation) => onChessTurnSetParsed += implementation.HandleTurnSetParsedEvent);
+    }
+
+    public void HandleRoomConnected(Realtime realtime)
+    {
     }
 
     public void HandleRunningStateChangedClient(bool value)
@@ -46,7 +49,9 @@ public class ChessGamePlaybackControlScript : RealtimeComponent<ChessGameControl
 
     public void HandleGameParsed(List<string> value)
     {
+        Debug.LogFormat("Now length {0}", value.Count);
         parsedTurns = value;
+        model.lastPlayedSequenceId = 0;
     }
 
     public IEnumerator PlayFromCurrentMove()
@@ -88,6 +93,8 @@ public class ChessGamePlaybackControlScript : RealtimeComponent<ChessGameControl
         int current = turnNumber - 1;
         int prev = current - 1;
         int next = current + 1;
+
+        Debug.LogFormat("Current {0}, previous {1}, next {2}, number of parsed turns {3}.", current, prev, next, parsedTurns.Count);
 
         var chessTurnSet = new ChessTurnSet
         {

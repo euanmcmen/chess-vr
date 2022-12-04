@@ -1,9 +1,10 @@
 ﻿using Normal.Realtime;
 using System;
 using System.Collections;
+using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEngine;
 
-public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
+public class SimulationControlScript : RealtimeComponent<SimulationControlModel>, IRoomConnectedSubscriber, IRoomDisconnectedSubscriber
 {
     private ChessGameSetupControlScript gameSetupControlScript;
     private SimulationBoardLinkScript simulationBoardLink;
@@ -21,13 +22,27 @@ public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
     }
 
     //Start is called before the first frame update
-    private IEnumerator Start()
+    private void Start()
     {
         EventActionBinder.BindSubscribersToAction<IRunningStateChangedSubscriber>((implementation) => onRunningStateChanged += implementation.HandleRunningStateChanged);
         EventActionBinder.BindSubscribersToAction<IRunningStateChangedSubscriber>((implementation) => onRunningStateChangedClient += implementation.HandleRunningStateChangedClient);
         EventActionBinder.BindSubscribersToAction<ISimulationStartedSubscriber>((implementation) => onSimulationStarted += implementation.HandleSimulationStarted);
+    }
 
-        yield return new WaitUntil(() => realtime.connected);
+    public void HandleRoomConnected(Realtime realtime)
+    {
+        StartCoroutine(HandleRoomConnectedAsync(realtime));
+    }
+
+    public void HandleRoomDisconnected(Realtime realtime)
+    {
+        model.simulationStarted = false;
+        ToggleSimulationRunningState(false);
+    }
+
+    private IEnumerator HandleRoomConnectedAsync(Realtime realtime)
+    {
+        Debug.LogFormat("Are we connected? '{0}'", model.simulationStarted);
 
         if (!model.simulationStarted)
         {
@@ -38,7 +53,10 @@ public class SimulationControlScript : RealtimeComponent<SimulationControlModel>
             StartSimulation();
 
             ToggleSimulationRunningState(false);
-
+        }
+        else
+        {
+            yield return null;
         }
     }
 
