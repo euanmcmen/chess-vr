@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 2346584532484284129}
   - component: {fileID: 8722025722869489832}
   - component: {fileID: 8445152971935585557}
+  - component: {fileID: 5994656386457331787}
+  - component: {fileID: 1548208778842112853}
   m_Layer: 0
   m_Name: Simulation Manager
   m_TagString: Untagged
@@ -127,3 +129,27 @@ MonoBehaviour:
   - componentID: 2
     component: {fileID: 8722025722869489832}
   _childViews: []
+--- !u!114 &5994656386457331787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2416121555058124362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52cea3933b87ad34fad1f696bade24c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1548208778842112853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2416121555058124362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bd636c4b682b62429d0680096f5f4dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class RoomConnectionControlScript : MonoBehaviour
 {
-    private Realtime realtimeComponent;
-
     private event Action<Realtime> onRoomConnected;
-
     private event Action<Realtime> onRoomDisconnected;
 
     private void Awake()
     {
-        realtimeComponent = FindObjectOfType<Realtime>();
+        var realtimeComponent = FindObjectOfType<Realtime>();
         realtimeComponent.didConnectToRoom += RealtimeComponent_didConnectToRoom;
         realtimeComponent.didDisconnectFromRoom += RealtimeComponent_didDisconnectFromRoom;
     }
