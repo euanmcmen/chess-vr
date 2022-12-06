@@ -1,10 +1,14 @@
 using Normal.Realtime;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class JoinRoomScript : MonoBehaviour
 {
+    [SerializeField]
+    private TMP_InputField inputTextField;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -13,10 +17,9 @@ public class JoinRoomScript : MonoBehaviour
 
     public void JoinSpecificRoom()
     {
-        var roomName = "123456";
-        Debug.LogFormat("Using specific name '{0}'.  Now attempting to connect!", roomName);
+        Debug.LogFormat("Using specific name '{0}'.  Now attempting to connect!", inputTextField.text);
 
-        FindObjectOfType<RoomConnectorScript>().JoinRoomByName(roomName);
+        FindObjectOfType<RoomConnectorScript>().JoinRoomByName(inputTextField.text);
     }
 
     public void JoinRandomRoom()

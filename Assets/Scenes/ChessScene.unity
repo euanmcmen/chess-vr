@@ -3711,6 +3711,18 @@ MonoBehaviour:
   m_VerticalAxis: Vertical
   m_SubmitButton: Submit
   m_CancelButton: Cancel
+--- !u!114 &658313914 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3916906948550762164, guid: bbe1d3de3a2aafc43940273a4e6606f9,
+    type: 3}
+  m_PrefabInstance: {fileID: 7276408811286165120}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &673348751 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1548208778842112853, guid: d73f149db019c9d43a7b168e7bdc68ad,
@@ -12292,6 +12304,11 @@ PrefabInstance:
       propertyPath: boardApiScript
       value: 
       objectReference: {fileID: 1717698992}
+    - target: {fileID: 1548208778842112853, guid: d73f149db019c9d43a7b168e7bdc68ad,
+        type: 3}
+      propertyPath: inputTextField
+      value: 
+      objectReference: {fileID: 658313914}
     - target: {fileID: 2416121555058124360, guid: d73f149db019c9d43a7b168e7bdc68ad,
         type: 3}
       propertyPath: m_RootOrder
@@ -12694,13 +12711,18 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3656059210629386148, guid: bbe1d3de3a2aafc43940273a4e6606f9,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3656059210629386148, guid: bbe1d3de3a2aafc43940273a4e6606f9,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 673348751}
     - target: {fileID: 3656059210629386148, guid: bbe1d3de3a2aafc43940273a4e6606f9,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: JoinRandomRoom
+      value: JoinSpecificRoom
       objectReference: {fileID: 0}
     - target: {fileID: 7276408811664660893, guid: bbe1d3de3a2aafc43940273a4e6606f9,
         type: 3}
